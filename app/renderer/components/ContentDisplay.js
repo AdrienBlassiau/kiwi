@@ -40,7 +40,7 @@ const ContentDisplay = (props) => {
       console.log('FOUND');
       setStatus(statusType.FOUND);
       // console.log(res);
-      props.setUrl(res)
+      props.setUrl(res);
       setResults(res);
     }
   };
@@ -195,24 +195,31 @@ const ContentDisplay = (props) => {
   if (status) {
     if (status === statusType.NOT_FOUND) {
       findMovie = 'NOT_FOUND';
-      circleStatusClass = "circle-status-nok"
+      circleStatusClass = 'circle-status-nok';
     } else if (status === statusType.FOUND && results) {
       findMovie = 'FOUND ! : ' + results[0].movieUrl;
-      circleStatusClass = "circle-status-ok"
+      circleStatusClass = 'circle-status-ok';
     } else {
       findMovie = 'LOADING ...';
-      circleStatusClass = "circle-status-pending"
+      circleStatusClass = 'circle-status-pending';
     }
   }
 
-  const playButton = status === statusType.FOUND ?
-  <div className="circle-around-play" onClick={() => {console.log("okoko");props.setIsPlaying(true)}}>
-    <div className="button-play"></div>
-  </div>:
-  <div className="circle-around-dont-play">
-    <div className="button-play"></div>
-  </div>;
-
+  const playButton =
+    status === statusType.FOUND ? (
+      <div
+        className="circle-around-play"
+        onClick={() => {
+          console.log('okoko');
+          props.setIsPlaying(true);
+        }}>
+        <div className="button-play"></div>
+      </div>
+    ) : (
+      <div className="circle-around-dont-play">
+        <div className="button-play"></div>
+      </div>
+    );
 
   const contentDispay = isOk ? (
     <div style={backgroundImageStyle} className="main-content-display-container">
@@ -248,8 +255,7 @@ const ContentDisplay = (props) => {
                     </span>
                     <span className="data-wrapper-title-facts-status">
                       <div className="circle-status-container">
-                        <div className={"circle-status "+circleStatusClass}>
-                        </div>
+                        <div className={'circle-status ' + circleStatusClass}></div>
                       </div>
                     </span>
                   </div>
@@ -271,9 +277,7 @@ const ContentDisplay = (props) => {
                       Score
                     </div>
                   </div>
-                  <div>
-                    {playButton}
-                  </div>
+                  <div>{playButton}</div>
                 </div>
                 <div className="data-wrapper-resume">
                   <div className="tag-line-master">{tagline}</div>

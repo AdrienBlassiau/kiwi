@@ -16,7 +16,7 @@ const newDriver = () => {
       'plugins.always_open_pdf_externally': true,
       'plugins.plugins_disabled': ['Chrome PDF Viewer'],
     })
-    .windowSize({width: 50, height: 50});
+    .windowSize({ width: 50, height: 50 });
 
   const driver = new selenium.Builder()
     .withCapabilities({

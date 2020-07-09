@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MainContainer from './MainContainer';
 import MainTopBar from './MainTopBar';
+import SearchBar from './SearchBar';
 import Style from '../css/AppCss.js';
 
 import newDriver from '../scrapper/driver.js';
@@ -22,6 +23,7 @@ const MainPage = () => {
       <Style />
       <div className="master-component">
         <MainTopBar />
+        <SearchBar />
         <MainContainer driver={driver} />
       </div>
     </div>

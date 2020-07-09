@@ -23,11 +23,11 @@ const CardManager = (props) => {
   const content = props.movies ? (
     props.movies.map((movie, index) => (
       <ContentCard
-      key={index}
-      movie={movie}
-      driver={props.driver}
-      setIsPlaying={props.setIsPlaying}
-      setUrl={props.setUrl}
+        key={index}
+        movie={movie}
+        driver={props.driver}
+        setIsPlaying={props.setIsPlaying}
+        setUrl={props.setUrl}
       />
     ))
   ) : (

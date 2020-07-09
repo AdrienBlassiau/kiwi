@@ -8,7 +8,12 @@ const ContentCard = (props) => {
   const [show, showModal] = useState(false);
 
   const contentDisplay = show ? (
-    <ContentDisplay movieId={props.movie.id} driver={props.driver} setIsPlaying={props.setIsPlaying} setUrl={props.setUrl}/>
+    <ContentDisplay
+      movieId={props.movie.id}
+      driver={props.driver}
+      setIsPlaying={props.setIsPlaying}
+      setUrl={props.setUrl}
+    />
   ) : null;
 
   return (

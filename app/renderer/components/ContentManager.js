@@ -13,7 +13,7 @@ export default class MainPage extends Component {
       hasMore: true,
       isLoading: false,
       isPlaying: false,
-      url: ""
+      url: '',
     };
     this.getMovies = this.getMovies.bind(this);
     this.setIsPlaying = this.setIsPlaying.bind(this);
@@ -35,7 +35,7 @@ export default class MainPage extends Component {
   }
 
   setUrl(url) {
-    console.log("On set l'url : ",url)
+    console.log("On set l'url : ", url);
     this.setState({
       url: url,
     });
