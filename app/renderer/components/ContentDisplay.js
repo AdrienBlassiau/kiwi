@@ -4,6 +4,7 @@ import axios from 'axios';
 import PercentageCircle from './PercentageCircle';
 import { usePalette } from 'react-palette';
 import { directSearch } from '../scrapper/index.js';
+import { getMovies }   from '../controllers'
 import run from '../scrapper/fetch.js';
 
 const statusType = {

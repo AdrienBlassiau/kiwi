@@ -2,18 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import ContentManager from './ContentManager';
 import ReactDOM from 'react-dom';
 
-export default class MainContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-  }
+const MainContainer = (props) => {
+  const myRef = useRef(null);
 
-  render() {
-    console.log(this.props.driver);
-    return (
-      <div ref={this.myRef} className="main-container">
-        <ContentManager myRef={this.myRef} driver={this.props.driver} />
-      </div>
-    );
-  }
-}
+  return (
+    <div ref={myRef} className="main-container">
+      <ContentManager myRef={myRef} getters={props.getters} setters={props.setters} />
+    </div>
+  );
+};
+
+export default MainContainer;

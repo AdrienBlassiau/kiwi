@@ -794,6 +794,7 @@ a:link:active, a:visited:active {
 	margin:10px;
 	overflow: auto;
 	justify-content: space-between;
+	overflow-x: hidden;
 }
 
 .main-search-container{

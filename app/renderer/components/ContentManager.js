@@ -1,103 +1,45 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
 import CardManager from './CardManager';
 import PlayerContainer from './PlayerContainer';
+import {getMovies} from '../controllers/'
+import {setSource} from '../utils'
 
-export default class MainPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movies: [],
-      page: 1,
-      hasMore: true,
-      isLoading: false,
-      isPlaying: false,
-      url: '',
+const MainPage = (props) => {
+  const { moviesData } = props.getters.general;
+  const { page, hasMore } = props.getters.popular;
+  const { isPlaying, url } = props.getters.stream;
+  const { driver } = props.getters.driver;
+  const { setMoviesData } = props.setters.general;
+  const { setPage, setHasMore } = props.setters.popular;
+  const { setIsPlaying, setUrl } = props.setters.stream;
+
+  const getPopularMovies = () => {
+    const callback = (data) => {
+      console.log(data)
+      setMoviesData(moviesData.concat(setSource(data,"popular")))
+      setHasMore(data.length - 1 > 0);
     };
-    this.getMovies = this.getMovies.bind(this);
-    this.setIsPlaying = this.setIsPlaying.bind(this);
-    this.setUrl = this.setUrl.bind(this);
+
+    getMovies(page, callback, 'popular');
+    setPage(page+1);
   }
 
-  componentDidMount() {
-    this.getMovies(1);
-    this.getMovies(2);
-    this.setState({
-      page: 3,
-    });
-  }
+  const display = isPlaying ? (
+    <PlayerContainer url={url} driver={driver} setIsPlaying={setIsPlaying} />
+  ) : (
+    <CardManager
+      myRef={props.myRef}
+      getMovies={getPopularMovies}
+      hasMore={hasMore}
+      moviesData={moviesData}
+      driver={driver}
+      setIsPlaying={setIsPlaying}
+      setUrl={setUrl}
+    />
+  );
 
-  setIsPlaying(status) {
-    this.setState({
-      isPlaying: status,
-    });
-  }
+  return display;
+};
 
-  setUrl(url) {
-    console.log("On set l'url : ", url);
-    this.setState({
-      url: url,
-    });
-  }
-
-  API(page) {
-    return (
-      ' https://api.themoviedb.org/3/movie/popular?api_key=0ec464bc3151bee6274e541b3030fa57&language=en-US&page=' +
-      page
-    );
-  }
-
-  getMovies(pageNumber) {
-    this.setState({
-      isLoading: true,
-    });
-    let page = pageNumber ? pageNumber : this.state.page;
-    // console.log( 'IXI : ', page )
-    axios
-      .get(this.API(page))
-      .then((response) => {
-        let data = response.data.results;
-        // console.log( 'On a des desta' )
-        // console.log( data )
-        this.setState({
-          movies: this.state.movies.concat(data),
-          hasMore: data.length - 1 > 0,
-          page: page + 1,
-          isLoading: false,
-        });
-      })
-      .catch((error) =>
-        this.setState({
-          isLoading: false,
-        }),
-      );
-  }
-
-  render() {
-    const isPlaying = this.state.isPlaying;
-    const display = isPlaying ? (
-      <PlayerContainer
-        url={this.state.url}
-        driver={this.props.driver}
-        setIsPlaying={this.setIsPlaying}
-      />
-    ) : (
-      <CardManager
-        getMovies={this.getMovies}
-        hasMore={this.state.hasMore}
-        movies={this.state.movies}
-        myRef={this.props.myRef}
-        driver={this.props.driver}
-        setIsPlaying={this.setIsPlaying}
-        setUrl={this.setUrl}
-      />
-    );
-    // const display2 = <PlayerContainer
-    //     url={this.state.url}
-    //     driver={this.props.driver}
-    //     setIsPlaying={this.setIsPlaying}
-    //   />;
-    return display;
-  }
-}
+export default MainPage;

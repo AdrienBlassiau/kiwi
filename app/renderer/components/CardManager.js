@@ -11,17 +11,17 @@ const CardManager = (props) => {
 
   const component = ReactDOM.findDOMNode(myLocalRef.current);
 
-  const [isFetching, setIsFetching] = InfiniteScroll(props.myRef, fetchMoreListItems);
-
-  function fetchMoreListItems() {
+  const fetchMoreListItems = () => {
     setTimeout(() => {
       props.getMovies();
       setIsFetching(false);
     }, 1000);
   }
 
-  const content = props.movies ? (
-    props.movies.map((movie, index) => (
+  const [isFetching, setIsFetching] = InfiniteScroll(props.myRef, fetchMoreListItems);
+
+  const content = props.moviesData ? (
+    props.moviesData.map((movie, index) => (
       <ContentCard
         key={index}
         movie={movie}

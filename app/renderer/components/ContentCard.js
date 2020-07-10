@@ -47,9 +47,9 @@ const ContentCard = (props) => {
           </div>
           <div className="data-container">
             <div className="movie-title">
-              <a href="/tv/57243?language=en-US" title={props.movie.title}>
+              <div href="" title={props.movie.title}>
                 {props.movie.title}
-              </a>
+              </div>
             </div>
             <div>{props.movie.release_date}</div>
           </div>
