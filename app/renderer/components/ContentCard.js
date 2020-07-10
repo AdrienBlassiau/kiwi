@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from 'react';
 // import Style from '../css/ContentCardCss.js';
 import PercentageCircle from './PercentageCircle';
-import ContentDisplay from './ContentDisplay';
-import Modal from './Modal';
 
 const ContentCard = (props) => {
-  const [show, showModal] = useState(false);
 
-  const contentDisplay = show ? (
-    <ContentDisplay
-      movieId={props.movie.id}
-      driver={props.driver}
-      setIsPlaying={props.setIsPlaying}
-      setUrl={props.setUrl}
-    />
-  ) : null;
+  const showModalContainer = () => {
+    props.setCurrentMovie(props.movie.id);
+    props.setShowModal(true);
+  };
 
   return (
     <div>
-      <Modal onClose={() => showModal(false)} show={show}>
-        {contentDisplay}
-      </Modal>
-      <div className="card-main-style" onClick={showModal}>
+      <div className="card-main-style" onClick={showModalContainer}>
         <div className="image-container">
           <div className="wrapper">
             <div className="image-link" title={props.movie.title}>

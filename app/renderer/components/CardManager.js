@@ -16,7 +16,7 @@ const CardManager = (props) => {
       props.getMovies();
       setIsFetching(false);
     }, 1000);
-  }
+  };
 
   const [isFetching, setIsFetching] = InfiniteScroll(props.myRef, fetchMoreListItems);
 
@@ -28,6 +28,8 @@ const CardManager = (props) => {
         driver={props.driver}
         setIsPlaying={props.setIsPlaying}
         setUrl={props.setUrl}
+        setCurrentMovie={props.setCurrentMovie}
+        setShowModal={props.setShowModal}
       />
     ))
   ) : (

@@ -5,8 +5,8 @@ import SearchBar from './SearchBar';
 import Style from '../css/AppCss.js';
 
 import newDriver from '../scrapper/driver.js';
-import { getMovies }   from '../controllers'
-import {setSource} from '../utils'
+import { getMovies } from '../controllers';
+import { setSource } from '../utils';
 
 // import Style from '../css/App.css';
 // import '../css/Icon.css';
@@ -28,6 +28,10 @@ const MainPage = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  // [Movie] : movie data before streaming
+  const [currentMovie, setCurrentMovie] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
   // [Stream] : Stream data
   const [isPlaying, setIsPlaying] = useState(false);
   const [url, setUrl] = useState('');
@@ -37,16 +41,25 @@ const MainPage = () => {
       driver,
     },
     search: {
-      active,value,label,result
+      active,
+      value,
+      label,
+      result,
     },
     general: {
       moviesData,
     },
     popular: {
-      page,hasMore,
+      page,
+      hasMore,
+    },
+    movie: {
+      currentMovie,
+      showModal,
     },
     stream: {
-      isPlaying,url,
+      isPlaying,
+      url,
     },
   };
 
@@ -55,16 +68,25 @@ const MainPage = () => {
       setDriver,
     },
     search: {
-      setActive,setValue,setLabel,setResult,
+      setActive,
+      setValue,
+      setLabel,
+      setResult,
     },
     general: {
       setMoviesData,
     },
     popular: {
-      setPage,setHasMore,
+      setPage,
+      setHasMore,
+    },
+    movie: {
+      setCurrentMovie,
+      setShowModal,
     },
     stream: {
-      setIsPlaying,setUrl,
+      setIsPlaying,
+      setUrl,
     },
   };
 
@@ -75,9 +97,11 @@ const MainPage = () => {
       setHasMore(data1.length - 1 > 0);
       // setMoviesData(moviesData.concat(data1))
       const callback2 = (data2) => {
-        setMoviesData(moviesData.concat(setSource(data1,"popular").concat(setSource(data2,"popular"))));
+        setMoviesData(
+          moviesData.concat(setSource(data1, 'popular').concat(setSource(data2, 'popular'))),
+        );
         setHasMore(data2.length - 1 > 0);
-      }
+      };
 
       getMovies(2, callback2, 'popular');
     };

@@ -4,7 +4,9 @@ import axios from 'axios';
 import PercentageCircle from './PercentageCircle';
 import { usePalette } from 'react-palette';
 import { directSearch } from '../scrapper/index.js';
-import { getMovies }   from '../controllers'
+import { getMovies } from '../controllers';
+import { hexToRgb } from '../utils';
+
 import run from '../scrapper/fetch.js';
 
 const statusType = {
@@ -12,17 +14,6 @@ const statusType = {
   PENDING: 'pending',
   NOT_FOUND: 'not_found',
 };
-
-function hexToRgb(hex) {
-  var res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return res
-    ? {
-        r: parseInt(res[1], 16),
-        g: parseInt(res[2], 16),
-        b: parseInt(res[3], 16),
-      }
-    : null;
-}
 
 const ContentDisplay = (props) => {
   const [isLoading, setIsLoading] = useState(false);

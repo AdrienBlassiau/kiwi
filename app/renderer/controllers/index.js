@@ -18,7 +18,7 @@ const popularUrl = (pageNumber) => {
   );
 };
 
-const getMovies = (pageNumber,callback, type) => {
+const getMovies = (pageNumber, callback, type) => {
   let url = '';
 
   if (type === fetchType.POPULAR) {
@@ -39,5 +39,5 @@ const getMovies = (pageNumber,callback, type) => {
 // export default getMovies
 
 module.exports = {
-	getMovies,
+  getMovies,
 };
