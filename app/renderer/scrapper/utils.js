@@ -95,6 +95,8 @@ var unpacker = {
   },
 };
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 module.exports = {
   filterVideoLinkList,
   extractImdbId,
@@ -102,4 +104,5 @@ module.exports = {
   normalizeUrl,
   formatTitle,
   unpacker,
+  wait,
 };

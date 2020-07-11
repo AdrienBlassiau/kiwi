@@ -797,6 +797,12 @@ a:link:active, a:visited:active {
 	overflow-x: hidden;
 }
 
+.invisible-item {
+	width: 170px;
+	height: 323px;
+	visibility: hidden;
+}
+
 .main-search-container{
 	display: flex;
 	width: 100%;

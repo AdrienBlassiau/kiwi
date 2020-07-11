@@ -6,57 +6,106 @@ import ContentDisplay from './ContentDisplay';
 import Modal from './Modal';
 
 import { getMovies } from '../controllers/';
-import { setSource } from '../utils';
 
 const MainPage = (props) => {
+  const { cacheData } = props.getters.cache;
   const { driver } = props.getters.driver;
-  const { moviesData } = props.getters.general;
-  const { page, hasMore } = props.getters.popular;
-  const { currentMovie, showModal } = props.getters.movie;
-  const { isPlaying, url } = props.getters.stream;
+  const {
+    moviesData,
+    gridType,
+    gridInfos,
+    page,
+    hasMore,
+    numberPerLine,
+    itemsToAdd,
+  } = props.getters.grid;
+  const {
+    currentMovieId,
+    currentMovieUrl,
+    currentMovieData,
+    showModal,
+    isPlaying,
+  } = props.getters.movie;
 
-  const { setMoviesData } = props.setters.general;
-  const { setPage, setHasMore } = props.setters.popular;
-  const { setCurrentMovie, setShowModal } = props.setters.movie;
-  const { setIsPlaying, setUrl } = props.setters.stream;
+  const { setCacheData } = props.setters.cache;
+  const {
+    setMoviesData,
+    setGridType,
+    setGridInfos,
+    setPage,
+    setHasMore,
+    configureGrid,
+    setNumberPerline,
+    setItemsToAdd,
+  } = props.setters.grid;
+  const {
+    setCurrentMovieId,
+    setCurrentMovieUrl,
+    setCurrentMovieData,
+    setShowModal,
+    setIsPlaying,
+  } = props.setters.movie;
 
-  const getPopularMovies = () => {
-    const callback = (data) => {
-      console.log(data);
-      setMoviesData(moviesData.concat(setSource(data, 'popular')));
+  const cache = { cacheData, setCacheData };
+
+  const getMoviesGrid = () => {
+    const callback = (data, url) => {
+      // console.log("VOICI CE QUE L'on met")
+      // console.log(data);
+      setMoviesData(moviesData.concat(data));
       setHasMore(data.length - 1 > 0);
     };
 
-    getMovies(page, callback, 'popular');
+    getMovies([page, gridInfos], callback, gridType, cache);
     setPage(page + 1);
   };
 
+  const onCloseModal = () => {
+    setCurrentMovieId(null);
+    setCurrentMovieUrl('');
+    setCurrentMovieData(null);
+    setShowModal(false);
+  };
+
   const display = isPlaying ? (
-    <PlayerContainer url={url} driver={driver} setIsPlaying={setIsPlaying} />
-  ) : (
-  <React.Fragment>
-    <CardManager
-      myRef={props.myRef}
-      getMovies={getPopularMovies}
-      hasMore={hasMore}
-      moviesData={moviesData}
+    <PlayerContainer
+      currentMovieUrl={currentMovieUrl}
+      currentMovieData={currentMovieData}
       driver={driver}
+      cache={cache}
       setIsPlaying={setIsPlaying}
-      setUrl={setUrl}
-      setCurrentMovie={setCurrentMovie}
-      setShowModal={setShowModal}
     />
-    { showModal ?
-    <Modal onClose={() => setShowModal(false)} show={showModal}>
-      <ContentDisplay
-        movieId={currentMovie}
+  ) : (
+    <React.Fragment>
+      <CardManager
+        myRef={props.myRef}
+        getMovies={getMoviesGrid}
+        hasMore={hasMore}
+        moviesData={moviesData}
         driver={driver}
         setIsPlaying={setIsPlaying}
-        setUrl={setUrl}
+        setCurrentMovieId={setCurrentMovieId}
+        setShowModal={setShowModal}
+        cache={cache}
+        gridInfos={gridInfos}
+        itemsToAdd={itemsToAdd}
       />
-    </Modal> : null}
-  </React.Fragment>
-  )
+      {showModal ? (
+        <Modal onClose={onCloseModal} show={showModal}>
+          <ContentDisplay
+            currentMovieId={currentMovieId}
+            currentMovieUrl={currentMovieUrl}
+            currentMovieData={currentMovieData}
+            setCurrentMovieData={setCurrentMovieData}
+            setCurrentMovieUrl={setCurrentMovieUrl}
+            driver={driver}
+            setIsPlaying={setIsPlaying}
+            cache={cache}
+          />
+        </Modal>
+      ) : null}
+    </React.Fragment>
+  );
   return display;
 };
 

@@ -8,7 +8,6 @@ import ReactDOM from 'react-dom';
 
 const CardManager = (props) => {
   const myLocalRef = React.createRef();
-
   const component = ReactDOM.findDOMNode(myLocalRef.current);
 
   const fetchMoreListItems = () => {
@@ -20,18 +19,29 @@ const CardManager = (props) => {
 
   const [isFetching, setIsFetching] = InfiniteScroll(props.myRef, fetchMoreListItems);
 
+  console.log("SIZE")
+  console.log(props.itemsToAdd)
+  const moreItems = [...Array(props.itemsToAdd)].map((e, i) => (
+    <div className="card-loader-style" key={i}>
+      <div className="invisible-item"></div>
+    </div>
+  ));
+
+  // console.log(props.moviesData)
   const content = props.moviesData ? (
-    props.moviesData.map((movie, index) => (
-      <ContentCard
-        key={index}
-        movie={movie}
-        driver={props.driver}
-        setIsPlaying={props.setIsPlaying}
-        setUrl={props.setUrl}
-        setCurrentMovie={props.setCurrentMovie}
-        setShowModal={props.setShowModal}
-      />
-    ))
+    <React.Fragment>
+      {props.moviesData.map((movie, index) => (
+        <ContentCard
+          key={index}
+          movie={movie}
+          driver={props.driver}
+          setIsPlaying={props.setIsPlaying}
+          setCurrentMovieId={props.setCurrentMovieId}
+          setShowModal={props.setShowModal}
+        />
+      ))}
+      {moreItems}
+    </React.Fragment>
   ) : (
     <div></div>
   );

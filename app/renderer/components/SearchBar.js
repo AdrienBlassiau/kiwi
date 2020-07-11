@@ -2,29 +2,34 @@ import React, { useState, useEffect } from 'react';
 
 import SearchIcon from '@material-ui/icons/Search';
 import axios from 'axios';
+import { getMovies } from '../controllers';
 
 const SearchBar = (props) => {
   const { active, value, label, result } = props.getters.search;
   const { setActive, setValue, setLabel, setResult } = props.setters.search;
+  const { moviesData, gridType, gridInfos, page, hasMore } = props.getters.grid;
+  const {
+    setMoviesData,
+    setGridType,
+    setGridInfos,
+    setPage,
+    setHasMore,
+    configureGrid,
+  } = props.setters.grid;
 
-  const API = (query) => {
-    return (
-      'https://api.themoviedb.org/3/search/movie?api_key=0ec464bc3151bee6274e541b3030fa57&query=' +
-      query +
-      '&language=en-US&page=1&include_adult=true'
-    );
-  };
+  const cache = props.cache;
 
-  const searchMovie = (pageNumber) => {
-    const url = API(pageNumber);
-    console.log(url);
-    axios.get(API(pageNumber)).then((response) => {
-      let data = response.data.results;
-      // console.log( 'On a des desta' )
-      // console.log( data )
+  const searchMovies = (query) => {
+    const callback = (data, url) => {
+      console.log("VOICI CE QUE L'on met");
       console.log(data);
       setResult(data);
-    });
+      setMoviesData(moviesData.concat(data));
+      setHasMore(data.length - 1 > 0);
+    };
+
+    getMovies([page, query], callback, 'search', cache);
+    setPage(page + 1);
   };
 
   const changeValue = (event) => {
@@ -34,10 +39,17 @@ const SearchBar = (props) => {
 
   const handleKeyPress = (event) => {
     if (event.which === 13) {
-      const encoded = encodeURI(value);
-      searchMovie(encoded);
+      const query = encodeURI(value);
+      console.log("avant",gridInfos,"apres",query)
+      if(gridInfos != query){
+        configureGrid('search', query);
+      }
     }
   };
+
+  useEffect(() => {
+    console.log('On change les infos');
+  }, [gridInfos]);
 
   const predicted = 'California';
   const locked = false;

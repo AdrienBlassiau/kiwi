@@ -1,45 +1,54 @@
 import React, { useState, useEffect } from 'react';
+import { usePalette } from 'react-palette';
 import Moment from 'react-moment';
 import axios from 'axios';
 import PercentageCircle from './PercentageCircle';
-import { usePalette } from 'react-palette';
-import { directSearch } from '../scrapper/index.js';
+import { directSearchSite } from '../scrapper/index.js';
 import { getMovies } from '../controllers';
-import { hexToRgb } from '../utils';
+import * as utils from '../utils';
 
 import run from '../scrapper/fetch.js';
 
-const statusType = {
-  FOUND: 'found',
-  PENDING: 'pending',
-  NOT_FOUND: 'not_found',
-};
-
 const ContentDisplay = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [movie, setMovie] = useState(null);
+  const statusType = utils.statusType;
+  const [isLoading, setIsLoading] = useState(true);
+
   const [status, setStatus] = useState(statusType.PENDING);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState({});
 
-  const manageResult = (res) => {
-    console.log('RES : ');
-    console.log(res);
-    if (res.length === 0) {
-      console.log('NOT_FOUND');
-      setStatus(statusType.NOT_FOUND);
-      setResults(null);
-    } else {
-      console.log('FOUND');
-      setStatus(statusType.FOUND);
-      // console.log(res);
-      props.setUrl(res);
-      setResults(res);
-    }
-  };
+  const cache = props.cache;
+  const currentMovieId = props.currentMovieId;
+  const currentMovieData = props.currentMovieData;
+  const currentMovieUrl = props.currentMovieUrl;
+  const setCurrentMovieData = props.setCurrentMovieData;
+  const setCurrentMovieUrl = props.setCurrentMovieUrl;
 
-  const runSearch = (title, date) => {
-    if (!results) {
-      directSearch(
+  const runSearch = (title, date, url, update) => {
+    console.log('On fait une search');
+    const callback = (content) => {
+      const data = content.data;
+      const type = content.type;
+
+      if (data.length === 0) {
+        console.log('NOT_FOUND');
+        setStatus(statusType.NOT_FOUND);
+        setResults(null);
+      } else {
+        console.log('FOUND');
+        console.log(content);
+        setStatus(statusType.FOUND);
+        // console.log(res);
+        console.log(cache);
+        console.log(type, data), console.log({ ...results, [type]: data });
+        setResults({ ...results, [type]: data });
+        console.log('FIN DU CALLBACK');
+      }
+    };
+    console.log(results);
+    if (results !== {}) {
+      console.log('ON LANCE LA');
+      console.log(url);
+      directSearchSite(
         {
           title: title,
           is_movie: true,
@@ -47,149 +56,84 @@ const ContentDisplay = (props) => {
         },
         0,
         0,
-        manageResult,
+        callback,
+        cache.cacheData[url],
       );
     }
   };
 
-  const API = (movieId) => {
-    return (
-      ' https://api.themoviedb.org/3/movie/' +
-      movieId +
-      '?api_key=0ec464bc3151bee6274e541b3030fa57&append_to_response=release_dates,credits,images,translations'
-    );
-  };
+  const getCurrentMovie = (currentMovieId) => {
+    const callback = (data, url) => {
+      setCurrentMovieData(data);
+      setCurrentMovieUrl(url);
+      setIsLoading(false);
 
-  const getMovie = (movieId) => {
-    setIsLoading(true);
-    axios
-      .get(API(movieId))
-      .then((response) => {
-        let data = response.data;
-        setMovie(data);
-        setIsLoading(false);
-        const title = data.title;
-        const year = data.release_date.split('-')[0];
-        // run(props.driver)
-        runSearch(title, year);
-      })
-      .catch((error) => setIsLoading(false));
+      const title = data.title;
+      const year = data.release_date.split('-')[0];
+
+      runSearch(title, year, url);
+    };
+    getMovies(currentMovieId, callback, 'movie', cache);
   };
 
   useEffect(() => {
-    getMovie(props.movieId);
+    getCurrentMovie(currentMovieId);
   }, []);
 
-  const genres = movie
-    ? movie.genres.map((item, key) => {
-        const white_space = key < movie.genres.length - 1 ? <span>,&nbsp;</span> : null;
-        const content = (
-          <span key={key} href="/genre/18-drame/movie">
-            {item.name}
-            {white_space}
-          </span>
-        );
-        return content;
-      })
-    : null;
+  useEffect(() => {
+    if (currentMovieData) {
+      setIsLoading(false);
+    }
+  }, [currentMovieData]);
 
-  const translation = movie
-    ? movie.translations.translations.filter((data) => data.iso_3166_1 === 'FR')[0]
-    : null;
-  console.log(translation);
-  const overview = translation ? translation.data.overview : '';
-  const tagline = translation ? translation.data.tagline : '';
+  useEffect(() => {
+    const url = currentMovieUrl;
+    if (results) {
+      cache.setCacheData((prevState) => ({
+        ...prevState,
+        [url]: { ...cache.cacheData[url], streamData: results },
+      }));
+    }
+  }, [results]);
 
-  const runtime = movie ? movie.runtime : null;
-  var hours = Math.floor(runtime / 60);
-  var minutes = runtime % 60;
-  var minutes = minutes < 10 ? '0' + minutes : minutes;
+  const genres = !isLoading ? utils.getGenre(currentMovieData) : null;
 
-  const realeaseDateContent = movie
-    ? movie.release_dates.results.filter((data) => data.iso_3166_1 === 'US')[0]
-    : null;
+  const [overview, tagline] = !isLoading
+    ? utils.getTranslation(currentMovieData, 'FR')
+    : [null, null];
+  console.log('overview :', overview, 'tag:', tagline);
 
-  const certif = realeaseDateContent ? realeaseDateContent.release_dates[0].certification : '';
-  const realeaseDate = realeaseDateContent ? realeaseDateContent.release_dates[0].release_date : '';
-  const country = realeaseDateContent ? realeaseDateContent.iso_3166_1 : '';
+  const [hours, minutes] = !isLoading ? utils.getRuntime(currentMovieData) : ['', ''];
 
-  const posterArray = movie
-    ? movie.images.posters.filter((data) => data.iso_639_1 === 'fr')[0]
-    : [];
-  const posterFinalArray = movie ? (posterArray ? posterArray : movie.images.posters[0]) : [];
-  const poster = posterFinalArray
-    ? 'https://image.tmdb.org/t/p/w300_and_h450_bestv2/' + posterFinalArray.file_path
-    : '';
-  console.log(poster);
+  const year = !isLoading ? utils.getYear(currentMovieData) : '';
 
-  const backgroundImage = movie
-    ? 'https://image.tmdb.org/t/p/w1920_and_h800_multi_faces' + movie.backdrop_path
-    : '';
+  const [certif, realeaseDate, country] = !isLoading
+    ? utils.getReleaseData(currentMovieData, 'US')
+    : ['', '', ''];
 
-  const { data, loading, error } = usePalette(poster);
-  const mainColorPalette = data.vibrant;
+  const poster = !isLoading ? utils.getPoster(currentMovieData, 'fr') : '';
 
-  const color1 = hexToRgb(data.darkVibrant);
-  const color2 = hexToRgb(data.darkMuted);
+  const backgroundImage = !isLoading ? utils.getBackgroundImage(currentMovieData) : '';
 
-  const backgroundImageStyle =
-    movie && color1
-      ? {
-          backgroundImage: "url('" + backgroundImage + "')",
-          borderBottom: '1px solid ' + data.darkVibrant,
-        }
-      : {};
+  const credits = !isLoading ? utils.getCredits(currentMovieData) : null;
 
-  const backgroundImageColor =
-    color1 && color2
-      ? {
-          backgroundImage:
-            'linear-gradient(to right, rgba(' +
-            color1.r +
-            ', ' +
-            color1.g +
-            ', ' +
-            color1.b +
-            ', 1.00) 150px, rgba(' +
-            color2.r +
-            ', ' +
-            color2.g +
-            ', ' +
-            color2.b +
-            ', 0.84) 100%)',
-        }
-      : {};
+  const [color1, color2, data] = utils.getColors(currentMovieData, poster);
 
-  const credits = movie
-    ? movie.credits.crew.map((item, key) => {
-        const content =
-          key < movie.credits.crew.length - 1 && key < 6 ? (
-            <div key={key} className="profile">
-              <div className="profile-name">
-                <div>{item.name}</div>
-              </div>
-              <div className="character">{item.job}</div>
-            </div>
-          ) : null;
-        return content;
-      })
-    : null;
-
-  const isOk = movie && credits && backgroundImageColor && poster && backgroundImage;
-
-  const year = movie ? movie.release_date.split('-')[0] : '';
+  const [backgroundImageStyle, backgroundImageColor] =
+    !isLoading && color1 && color2
+      ? utils.getBackgroundData(color1, color2, backgroundImage, data)
+      : [{}, {}];
 
   let findMovie = null;
   let circleStatusClass = null;
-  console.log('STATUS :');
-  console.log(status);
-  console.log('OK');
+
+  console.log(results);
   if (status) {
     if (status === statusType.NOT_FOUND) {
       findMovie = 'NOT_FOUND';
       circleStatusClass = 'circle-status-nok';
     } else if (status === statusType.FOUND && results) {
-      findMovie = 'FOUND ! : ' + results[0].movieUrl;
+      findMovie = 'FOUND ! : ';
       circleStatusClass = 'circle-status-ok';
     } else {
       findMovie = 'LOADING ...';
@@ -213,7 +157,7 @@ const ContentDisplay = (props) => {
       </div>
     );
 
-  const contentDispay = isOk ? (
+  const contentDispay = !isLoading ? (
     <div style={backgroundImageStyle} className="main-content-display-container">
       <div style={backgroundImageColor} className="main-content-display-back">
         <div className="main-content-single-column">
@@ -221,7 +165,10 @@ const ContentDisplay = (props) => {
             <div className="poster-wrapper">
               <div className="poster-more-display">
                 <div className="main-content-poster">
-                  <img className="main-content-poster-content" src={poster} alt={movie.title}></img>
+                  <img
+                    className="main-content-poster-content"
+                    src={poster}
+                    alt={currentMovieData.title}></img>
                 </div>
               </div>
             </div>
@@ -229,7 +176,9 @@ const ContentDisplay = (props) => {
               <section className="data-wrapper">
                 <div className="data-wrapper-title">
                   <div className="data-wrapper-title-text">
-                    <span className="data-wrapper-title-text-content">{movie.title}</span>{' '}
+                    <span className="data-wrapper-title-text-content">
+                      {currentMovieData.title}
+                    </span>{' '}
                     <span className="data-wrapper-title-text-date">({year})</span>
                   </div>
                   <div className="data-wrapper-title-facts">
@@ -239,7 +188,7 @@ const ContentDisplay = (props) => {
                       <span></span>
                     )}
                     <span className="data-wrapper-title-facts-relea">
-                      {movie.release_date} ({country})
+                      {currentMovieData.release_date} ({country})
                     </span>
                     <span className="data-wrapper-title-facts-genre">{genres}</span>
                     <span className="data-wrapper-title-facts-runtime">
@@ -256,7 +205,7 @@ const ContentDisplay = (props) => {
                   <div className="data-wrapper-infos">
                     <div className="chart-block">
                       <PercentageCircle
-                        percentage={movie.vote_average}
+                        percentage={currentMovieData.vote_average}
                         width={50}
                         height={50}
                         border={4}

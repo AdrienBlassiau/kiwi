@@ -6,12 +6,15 @@ import Style from '../css/AppCss.js';
 
 import newDriver from '../scrapper/driver.js';
 import { getMovies } from '../controllers';
-import { setSource } from '../utils';
 
 // import Style from '../css/App.css';
 // import '../css/Icon.css';
 
 const MainPage = () => {
+  // [Cache] : cache system, it's a dict with request as key and duration,
+  // type and adress as content
+  const [cacheData, setCacheData] = useState([]);
+
   // [Driver] : selenium driver, for scrapping with click, ...
   const [driver, setDriver] = useState(null);
 
@@ -21,22 +24,35 @@ const MainPage = () => {
   const [label, setLabel] = useState('Search for a movie or a tv show ...');
   const [result, setResult] = useState(null);
 
-  // [General] : general movie data, use to avoid multi fetching ...
+  // [grid] : movie data we can see on main site grid, fetch state information
   const [moviesData, setMoviesData] = useState([]);
-
-  // [Popular] : popular movie data, fetch state information
+  const [gridType, setGridType] = useState('popular');
+  const [gridInfos, setGridInfos] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [numberPerLine, setNumberPerline] = useState(1);
+  const [itemsToAdd, setItemsToAdd] = useState(1);
 
   // [Movie] : movie data before streaming
-  const [currentMovie, setCurrentMovie] = useState(null);
+  const [currentMovieData, setCurrentMovieData] = useState(null);
+  const [currentMovieUrl, setCurrentMovieUrl] = useState('');
+  const [currentMovieId, setCurrentMovieId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  // [Stream] : Stream data
   const [isPlaying, setIsPlaying] = useState(false);
-  const [url, setUrl] = useState('');
+
+  const configureGrid = (type, info) => {
+    console.log('On configure la grid');
+    setMoviesData([]);
+    setGridType(type);
+    setGridInfos(info);
+    setPage(1);
+    setHasMore(true);
+  };
 
   const getters = {
+    cache: {
+      cacheData,
+    },
     driver: {
       driver,
     },
@@ -46,24 +62,28 @@ const MainPage = () => {
       label,
       result,
     },
-    general: {
+    grid: {
       moviesData,
-    },
-    popular: {
+      gridType,
+      gridInfos,
       page,
       hasMore,
+      numberPerLine,
+      itemsToAdd,
     },
     movie: {
-      currentMovie,
+      currentMovieId,
+      currentMovieUrl,
+      currentMovieData,
       showModal,
-    },
-    stream: {
       isPlaying,
-      url,
     },
   };
 
   const setters = {
+    cache: {
+      setCacheData,
+    },
     driver: {
       setDriver,
     },
@@ -73,50 +93,68 @@ const MainPage = () => {
       setLabel,
       setResult,
     },
-    general: {
+    grid: {
       setMoviesData,
-    },
-    popular: {
+      setGridType,
+      setGridInfos,
       setPage,
       setHasMore,
+      configureGrid,
+      setNumberPerline,
+      setItemsToAdd,
     },
     movie: {
-      setCurrentMovie,
+      setCurrentMovieId,
+      setCurrentMovieUrl,
+      setCurrentMovieData,
       setShowModal,
-    },
-    stream: {
       setIsPlaying,
-      setUrl,
     },
   };
 
+  const cache = { cacheData, setCacheData };
+
+  const updateNumberPerLine = () => {
+    console.log("INNER")
+    console.log(window.innerWidth)
+    const number = Math.floor((window.innerWidth - 20) / 170);
+    const lastLineItems = moviesData.length % number;
+    console.log('length:', moviesData.length);
+    console.log('numberperline:', number);
+    console.log('to add', number - lastLineItems);
+    setItemsToAdd(lastLineItems===0 ? 0 : number - lastLineItems);
+  };
+
   useEffect(() => {
+    updateNumberPerLine();
+  }, [moviesData]);
+
+  useEffect(() => {
+    console.log('On change le contenu de la page principale');
     setters.driver.setDriver(newDriver);
 
-    const callback1 = (data1) => {
+    const callback1 = (data1, url1) => {
       setHasMore(data1.length - 1 > 0);
-      // setMoviesData(moviesData.concat(data1))
-      const callback2 = (data2) => {
-        setMoviesData(
-          moviesData.concat(setSource(data1, 'popular').concat(setSource(data2, 'popular'))),
-        );
+      const callback2 = (data2, url2) => {
+        setMoviesData(moviesData.concat(data1).concat(data2));
         setHasMore(data2.length - 1 > 0);
       };
 
-      getMovies(2, callback2, 'popular');
+      getMovies([2, gridInfos], callback2, gridType, cache);
     };
 
-    getMovies(1, callback1, 'popular');
+    getMovies([1, gridInfos], callback1, gridType, cache);
 
     setPage(3);
-  }, []);
+
+  }, [gridInfos]);
 
   return (
     <div>
       <Style />
       <div className="master-component">
         <MainTopBar getters={getters} setters={setters} />
-        <SearchBar getters={getters} setters={setters} />
+        <SearchBar getters={getters} setters={setters} cache={cache} />
         <MainContainer getters={getters} setters={setters} />
       </div>
     </div>

@@ -3,9 +3,8 @@ import React, { useState, useEffect } from 'react';
 import PercentageCircle from './PercentageCircle';
 
 const ContentCard = (props) => {
-
   const showModalContainer = () => {
-    props.setCurrentMovie(props.movie.id);
+    props.setCurrentMovieId(props.movie.id);
     props.setShowModal(true);
   };
 
