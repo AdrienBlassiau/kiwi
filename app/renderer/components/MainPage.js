@@ -15,8 +15,9 @@ const MainPage = () => {
   // type and adress as content
   const [cacheData, setCacheData] = useState([]);
 
+  console.log("DRIVER SET !!")
   // [Driver] : selenium driver, for scrapping with click, ...
-  const [driver, setDriver] = useState(null);
+  const [driver, setDriver] = useState(newDriver);
 
   // [Search] : searchBar states
   const [active, setActive] = useState(false);
@@ -115,14 +116,14 @@ const MainPage = () => {
   const cache = { cacheData, setCacheData };
 
   const updateNumberPerLine = () => {
-    console.log("INNER")
-    console.log(window.innerWidth)
+    console.log('INNER');
+    console.log(window.innerWidth);
     const number = Math.floor((window.innerWidth - 20) / 170);
     const lastLineItems = moviesData.length % number;
     console.log('length:', moviesData.length);
     console.log('numberperline:', number);
     console.log('to add', number - lastLineItems);
-    setItemsToAdd(lastLineItems===0 ? 0 : number - lastLineItems);
+    setItemsToAdd(lastLineItems === 0 ? 0 : number - lastLineItems);
   };
 
   useEffect(() => {
@@ -131,7 +132,7 @@ const MainPage = () => {
 
   useEffect(() => {
     console.log('On change le contenu de la page principale');
-    setters.driver.setDriver(newDriver);
+    // setters.driver.setDriver();
 
     const callback1 = (data1, url1) => {
       setHasMore(data1.length - 1 > 0);
@@ -146,7 +147,6 @@ const MainPage = () => {
     getMovies([1, gridInfos], callback1, gridType, cache);
 
     setPage(3);
-
   }, [gridInfos]);
 
   return (

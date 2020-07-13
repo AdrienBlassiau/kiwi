@@ -64,7 +64,7 @@ const searchSite = async (item) => {
   console.log('searchSite :');
   try {
     const res = await scrape(item);
-    console.log(res)
+    console.log(res);
     const selectedMovie = res.filter((element, index) => {
       let movieTitle = element.movieTitle;
       let movieDate = element.movieDate;

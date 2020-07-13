@@ -862,12 +862,20 @@ a:link:active, a:visited:active {
 	border-radius: 0 5px 5px 0;
 }
 
+.close-icon-master{
+	display: flex;
+	justify-content:center;
+	align-items:center;
+	width: 50px;
+	height: 100%;
+	cursor: pointer;
+}
+
 
 .field {
   width: 100%;
   height: 100%;
   position: relative;
-  border-radius: 0 5px 5px 0;
 }
 
 .field:hover {

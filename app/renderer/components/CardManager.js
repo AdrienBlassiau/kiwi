@@ -19,8 +19,8 @@ const CardManager = (props) => {
 
   const [isFetching, setIsFetching] = InfiniteScroll(props.myRef, fetchMoreListItems);
 
-  console.log("SIZE")
-  console.log(props.itemsToAdd)
+  console.log('SIZE');
+  console.log(props.itemsToAdd);
   const moreItems = [...Array(props.itemsToAdd)].map((e, i) => (
     <div className="card-loader-style" key={i}>
       <div className="invisible-item"></div>

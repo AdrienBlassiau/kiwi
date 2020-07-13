@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import SearchIcon from '@material-ui/icons/Search';
+import CloseIcon from '@material-ui/icons/Close';
+
 import axios from 'axios';
 import { getMovies } from '../controllers';
 
@@ -40,8 +42,8 @@ const SearchBar = (props) => {
   const handleKeyPress = (event) => {
     if (event.which === 13) {
       const query = encodeURI(value);
-      console.log("avant",gridInfos,"apres",query)
-      if(gridInfos != query){
+      console.log('avant', gridInfos, 'apres', query);
+      if (gridInfos != query) {
         configureGrid('search', query);
       }
     }
@@ -50,6 +52,11 @@ const SearchBar = (props) => {
   useEffect(() => {
     console.log('On change les infos');
   }, [gridInfos]);
+
+  const closeSearch = () => {
+    // console.log("RANDOM: ",Math.random())
+    configureGrid('popular', Math.random());
+  }
 
   const predicted = 'California';
   const locked = false;
@@ -78,6 +85,10 @@ const SearchBar = (props) => {
             />
           </div>
         </div>
+        {gridType === "search" ?
+        <div className={'close-icon-master ' + (active ? 'active-color' : '')}>
+          <CloseIcon onClick={closeSearch} style={{ color: active ? 'var(--dark-color)' : 'white' }}/>
+        </div>: <div></div>}
       </div>
     </div>
   );
