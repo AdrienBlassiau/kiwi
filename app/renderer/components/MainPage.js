@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MainContainer from './MainContainer';
 import MainTopBar from './MainTopBar';
+import BottomBar from './BottomBar';
 import SearchBar from './SearchBar';
 import Style from '../css/AppCss.js';
 
@@ -156,6 +157,7 @@ const MainPage = () => {
         <MainTopBar getters={getters} setters={setters} />
         <SearchBar getters={getters} setters={setters} cache={cache} />
         <MainContainer getters={getters} setters={setters} />
+        <BottomBar getters={getters} setters={setters} cache={cache} />
       </div>
     </div>
   );
