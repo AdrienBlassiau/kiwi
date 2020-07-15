@@ -36,25 +36,41 @@ const VideoPlayer = (props) => {
   // url: the url we want to read
   const [url, setUrl] = useState(movieUrl);
 
+  // [FULLSCREENs]: about the fullscreen state
+  // isFullScreen: if we are fullscreen or not
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   // [MODE]: about some modes
   // pip: the status of the pip mode
   // light: the status of the light mode
   const [pip, setPip] = useState(false);
   const [light, setLight] = useState(false);
 
-  // [CONTROLS]
-  const [controls, setControls] = useState(false);
+  // [CONTROLS]: about the controls
+  // defaultControls: if we want to show or not the default controls
+  // customControls: if we want to show or not the custom controls
+  // timer: the time after we hide the controls (fullscreen only)
+  const [defaultControls, setDefaultControls] = useState(false);
+  const [customControls, setCustomControls] = useState(true);
   const [timer, setTimer] = useState(null);
-  const [showControls, setShowControls] = useState(true);
 
-  // [VOLUME]
+  // [VOLUME]: about the video volume
+  // volume: the selected volume
+  // muted: if the media is muted or not
   const [volume, setVolume] = useState(1.0);
   const [muted, setMuted] = useState(false);
 
-  // [VIDEO]
+  // [VIDEO]: about the video time and playing status
+  // playing: if the video is paying or not
+  // seeking: if we are seeking (changing video time) or not
+  // played: the percentage of time played
+  // playedSeconds: the number of seconds played
+  // played: the percentage of time loaded
+  // playedSeconds: the number of seconds loaded
+  // intent: the percentage of time intended
+  // duration: the duration of the video in seconds
   const [playing, setPlaying] = useState(true);
   const [seeking, setSeeking] = useState(false);
-  const [seeked, setSeeked] = useState(0);
   const [played, setPlayed] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
   const [loaded, setLoaded] = useState(0);
@@ -62,34 +78,51 @@ const VideoPlayer = (props) => {
   const [intent, setIntent] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  // [RATE]
-  const [playbackRate, setPlaybackRate] = useState(1.0);
+  // [RATE]: about the video frame rate
+  // playbackRate: the current rate
+  // enablePlaybackRate: if we enable the rate to be changed
+  // rateOpen : if the rate box is open or not
+  // rateSelection: the different rates
+  const defaultRate = 1.0;
+  const [playbackRate, setPlaybackRate] = useState(defaultRate);
   const [enablePlaybackRate, setEnablePlaybackRate] = useState(false);
-  const [speedOpen, setSpeedOpen] = useState(false);
-  const speedSelection = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+  const [rateOpen, setRateOpen] = useState(false);
+  const rateSelection = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
-  // [LOOP]
+  // [LOOP]: about the video loop status
+  // loop: if we want to loop or not
   const [loop, setLoop] = useState(false);
 
-  // [SUBTITLES]
-  const [currentTrack, setCurrentTrack] = useState('');
+  // [SUBTITLES]: about the video subtitles
+  // currentSubtitles: the current text to show
+  // subtitlesOpen: if the subtitles box is open or not
+  // subtitlesSelection: the choice of subtitles languages
+  // selectedSubtitles: the selected subtitles languages
+  // index in subtitlesSelection
+  const [currentSubtitles, setCurrentSubtitles] = useState('');
   const [enableSubtitles, setEnableSubtitles] = useState(true);
   const [subtitlesOpen, setSubtitlesOpen] = useState(false);
   const [selectedSubtitles, setSelectedSubtitles] = useState(0);
   const [subtitlesSelection, setSubtitlesSelection] = useState([]);
 
-  // [REF]
+  // [REF]: some references for special features
+  // playerRef: the video player ref
+  // fullscreenRef: the container ref for fullscreen
+  // myStateRef: a copy of our state for special purpose
   const playerRef = useRef(null);
   const fullscreenRef = useRef(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
   const [myState, _setMyState] = React.useState(0);
-
   const myStateRef = React.useRef(myState);
+
+  const dataState = () => {
+    return ({setIsLoading,isLoading,movieUrl,url,isFullscreen,pip,light,defaultControls,customControls,timer,volume,muted,playing,seeking,played,playedSeconds,loaded,loadedSeconds,intent,duration,playbackRate,enablePlaybackRate,rateOpen,loop,currentSubtitles,enableSubtitles,subtitlesOpen,selectedSubtitles,subtitlesSelection})
+  }
+
   const setMyState = (data) => {
     myStateRef.current = data;
     _setMyState(data);
   };
+
 
   const load = (url) => {
     setUrl(url);
@@ -101,9 +134,9 @@ const VideoPlayer = (props) => {
   const setnewTimer = () => {
     let state = myStateRef.current;
     let newTimer = setTimeout(() => {
-        let showControls = state.showControls;
+        let customControls = state.customControls;
         handleControlsOff()
-        setMyState({ ...state,showControls: false});
+        setMyState({ ...state,customControls: false});
     },5000)
     setTimer(newTimer)
     setMyState({ ...state, timer: newTimer });
@@ -116,7 +149,7 @@ const VideoPlayer = (props) => {
       console.log("We stop playing")
 
       handleControlsOn()
-      setMyState({ ...state, showControls: true });
+      setMyState({ ...state, customControls: true });
       clearTimeout(timer);
       setTimer(null)
       setMyState({ ...state, timer: null});
@@ -127,7 +160,7 @@ const VideoPlayer = (props) => {
       console.log("We start playing")
 
       handleControlsOn()
-      setMyState({ ...state, showControls: true });
+      setMyState({ ...state, customControls: true });
       clearTimeout(timer);
       setnewTimer()
     }
@@ -145,13 +178,13 @@ const VideoPlayer = (props) => {
   };
 
   const handleToggleControls = () => {
-    setControls(!controls);
+    setDefaultControls(!defaultControls);
   };
 
   useEffect(() => {
     setUrl(null);
     load(url);
-  }, [controls]);
+  }, [defaultControls]);
 
   const listener = (e) => {
     let state = myStateRef.current;
@@ -196,7 +229,7 @@ const VideoPlayer = (props) => {
 
   const moveOnVideo = () => {
     let state = myStateRef.current;
-    let showControls = state.showControls;
+    let customControls = state.customControls;
     let isFullscreen = state.isFullscreen;
     let playing = state.playing;
     let timer = state.timer;
@@ -204,7 +237,7 @@ const VideoPlayer = (props) => {
     if (isFullscreen && playing){
       console.log("C'est FULL SCREEN")
       handleControlsOn()
-      setMyState({ ...state, showControls: true });
+      setMyState({ ...state, customControls: true });
       clearTimeout(timer);
       setnewTimer()
     }
@@ -255,12 +288,12 @@ const VideoPlayer = (props) => {
 
   const handleControlsOn = () => {
     console.log('Controls ON');
-    setShowControls(true);
+    setCustomControls(true);
   };
 
   const handleControlsOff = () => {
     console.log('Controls OFF');
-    setShowControls(false);
+    setCustomControls(false);
   };
 
   const handlePause = () => {
@@ -336,9 +369,9 @@ const VideoPlayer = (props) => {
               track.oncuechange = function (e) {
                 var cue = this.activeCues[0];
                 if (cue) {
-                  setCurrentTrack(cue.text);
+                  setCurrentSubtitles(cue.text);
                 } else {
-                  setCurrentTrack('');
+                  setCurrentSubtitles('');
                 }
               };
             } else {
@@ -368,7 +401,7 @@ const VideoPlayer = (props) => {
   }, [enableSubtitles]);
 
   const handleProgress = (state) => {
-    setMyState({ ...state, duration: duration, playing: playing, showControls: showControls,isFullscreen:isFullscreen,timer:timer});
+    setMyState(dataState());
 
     if (!seeking) {
       setPlayed(state.played);
@@ -523,13 +556,13 @@ const VideoPlayer = (props) => {
     </Slider>
   );
 
-  const speed = speedOpen ? (
+  const speed = rateOpen ? (
     <div
       className="speed-tab"
-      onMouseEnter={() => setSpeedOpen(true)}
-      onMouseLeave={() => setSpeedOpen(false)}>
+      onMouseEnter={() => setRateOpen(true)}
+      onMouseLeave={() => setRateOpen(false)}>
       <div className="speed-title">Speed</div>
-      {speedSelection.map((item, key) => (
+      {rateSelection.map((item, key) => (
         <div
           key={key}
           className={'speed-choice ' + (playbackRate === item ? 't-c-selected' : '')}
@@ -577,11 +610,11 @@ const VideoPlayer = (props) => {
     <div className={'master-component ' + (isLoading ? 'player-none' : 'player-block')}>
       <div className="plyr-container">
         <div className="plyr-container-full" ref={fullscreenRef}>
-          <div className={"plyr-controls-wrapper "+ (showControls ? '' : 'player-none')}>
+          <div className={"plyr-controls-wrapper "+ (customControls ? '' : 'player-none')}>
             <div className="custom-video-button progress-bar">{progress}</div>
             <div
               className="custom-video-button track-text"
-              dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentTrack : '' }}></div>
+              dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentSubtitles : '' }}></div>
 
             <div className="controls-bar-group">
               <div className="custom-video-button" onClick={handlePlayPause}>
@@ -611,8 +644,8 @@ const VideoPlayer = (props) => {
                   'custom-video-button tab-container ' + (enablePlaybackRate ? 't-c-selected' : '')
                 }
                 onClick={() => setEnablePlaybackRate(!enablePlaybackRate)}
-                onMouseEnter={() => setSpeedOpen(true)}
-                onMouseLeave={() => setSpeedOpen(false)}>
+                onMouseEnter={() => setRateOpen(true)}
+                onMouseLeave={() => setRateOpen(false)}>
                 {speed}
                 <SpeedRoundedIcon />
               </div>
@@ -646,10 +679,10 @@ const VideoPlayer = (props) => {
             url={url}
             pip={pip}
             playing={playing}
-            controls={controls}
+            controls={defaultControls}
             light={light}
             loop={loop}
-            playbackRate={enablePlaybackRate ? playbackRate : 1.0}
+            playbackRate={enablePlaybackRate ? playbackRate : defaultRate}
             volume={volume}
             muted={muted}
             onClick={clickOnVideo}
