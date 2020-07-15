@@ -14,7 +14,7 @@ const VideoLoader = (props) => {
 
   return (
     <div className="loading-container">
-      <div> Loading ...</div>
+      <div>{props.message}</div>
       <div>{jokes}</div>
     </div>
   );

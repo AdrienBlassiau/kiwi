@@ -76,10 +76,12 @@ app.on('ready', async () => {
       });
 
       app.on('before-quit', () => {
+        console.log("On QUITTE");
         forceQuit = true;
       });
     } else {
       mainWindow.on('closed', () => {
+        console.log("On CLOSED");
         mainWindow = null;
       });
     }

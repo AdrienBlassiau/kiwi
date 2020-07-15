@@ -24,9 +24,7 @@ import SubtitlesRoundedIcon from '@material-ui/icons/SubtitlesRounded';
 // Sliders components for soud and control
 import { Slider, Direction } from 'react-player-controls';
 
-
 const VideoPlayer = (props) => {
-
   // [PROPS]: some props ...
   const setIsLoading = props.setIsLoading;
   const isLoading = props.isLoading;
@@ -93,6 +91,14 @@ const VideoPlayer = (props) => {
   // loop: if we want to loop or not
   const [loop, setLoop] = useState(false);
 
+  // [POSITION]: about cursor position status
+  // move: the move position
+  // click: the click position
+  // keydown: the key down code
+  const [move, setMove] = useState(null);
+  const [click, setClick] = useState(null);
+  const [keydown, setKeyDown] = useState(null);
+
   // [SUBTITLES]: about the video subtitles
   // currentSubtitles: the current text to show
   // subtitlesOpen: if the subtitles box is open or not
@@ -108,248 +114,87 @@ const VideoPlayer = (props) => {
   // [REF]: some references for special features
   // playerRef: the video player ref
   // fullscreenRef: the container ref for fullscreen
-  // myStateRef: a copy of our state for special purpose
   const playerRef = useRef(null);
   const fullscreenRef = useRef(null);
-  const [myState, _setMyState] = React.useState(0);
-  const myStateRef = React.useRef(myState);
 
-  const dataState = () => {
-    return ({setIsLoading,isLoading,movieUrl,url,isFullscreen,pip,light,defaultControls,customControls,timer,volume,muted,playing,seeking,played,playedSeconds,loaded,loadedSeconds,intent,duration,playbackRate,enablePlaybackRate,rateOpen,loop,currentSubtitles,enableSubtitles,subtitlesOpen,selectedSubtitles,subtitlesSelection})
-  }
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
-  const setMyState = (data) => {
-    myStateRef.current = data;
-    _setMyState(data);
-  };
-
-
-  const load = (url) => {
-    setUrl(url);
-    setPlayed(0);
-    setLoaded(0);
-    setPip(false);
-  };
-
-  const setnewTimer = () => {
-    let state = myStateRef.current;
-    let newTimer = setTimeout(() => {
-        let customControls = state.customControls;
-        handleControlsOff()
-        setMyState({ ...state,customControls: false});
-    },5000)
-    setTimer(newTimer)
-    setMyState({ ...state, timer: newTimer });
-  }
-
-
-  const handleControlsFullScreen = () => {
-    if(!playing && isFullscreen){
-      let state = myStateRef.current;
-      console.log("We stop playing")
-
-      handleControlsOn()
-      setMyState({ ...state, customControls: true });
-      clearTimeout(timer);
-      setTimer(null)
-      setMyState({ ...state, timer: null});
-      handleControlsOn()
-    }
-    else if(playing && isFullscreen){
-      let state = myStateRef.current;
-      console.log("We start playing")
-
-      handleControlsOn()
-      setMyState({ ...state, customControls: true });
-      clearTimeout(timer);
-      setnewTimer()
-    }
-  }
-
-  const handlePlayPause = () => {
-    handleControlsFullScreen()
-    setPlaying(!playing);
-    // Manage controls showing (only usefull if we are fullscreen)
-  };
-
-  const handleStop = () => {
-    setUrl(null);
-    setPlaying(false);
-  };
-
-  const handleToggleControls = () => {
-    setDefaultControls(!defaultControls);
-  };
-
-  useEffect(() => {
-    setUrl(null);
-    load(url);
-  }, [defaultControls]);
-
-  const listener = (e) => {
-    let state = myStateRef.current;
-    let duration = state.duration;
-    let playedSeconds = state.playedSeconds;
-    let playing = state.playing;
-
-    if (e.keyCode == '37') {
-      let newPlayedSeconds = playedSeconds - 10;
-      let newPlayed = newPlayedSeconds / duration;
-      playerRef.current.seekTo(parseFloat(newPlayed));
-      setMyState({ ...state, played: newPlayed, playedSeconds: newPlayedSeconds });
-    } else if (e.keyCode == '39') {
-      let newPlayedSeconds = playedSeconds + 10;
-      let newPlayed = newPlayedSeconds / duration;
-      playerRef.current.seekTo(parseFloat(newPlayed));
-      setMyState({ ...state, played: newPlayed, playedSeconds: newPlayedSeconds });
-    } else if (e.keyCode == '32') {
-      playing ? handlePause() : handlePlay();
-      setMyState({ ...state, playing: !playing });
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('keydown', listener);
-    window.addEventListener('click', listener);
-  }, []);
-
-  const clickOnVideo = (e) => {
-    let state = myStateRef.current;
-    let duration = state.duration;
-    let playedSeconds = state.playedSeconds;
-    let playing = state.playing;
-    let timer = state.timer;
-
-    // Manage playing status
-    playing ? handlePause() : handlePlay();
-    setMyState({ ...state, playing: !playing });
-    e.stopPropagation();
-
-  };
-
-  const moveOnVideo = () => {
-    let state = myStateRef.current;
-    let customControls = state.customControls;
-    let isFullscreen = state.isFullscreen;
-    let playing = state.playing;
-    let timer = state.timer;
-
-    if (isFullscreen && playing){
-      console.log("C'est FULL SCREEN")
-      handleControlsOn()
-      setMyState({ ...state, customControls: true });
-      clearTimeout(timer);
-      setnewTimer()
+  const setNewTimer = (createNew) => {
+    clearTimeout(timer);
+    if (createNew){
+      let newTimer = setTimeout(() => {
+        handleControlsOff();
+      }, 5000);
+      handleNewTimer(newTimer);
     }
     else{
-      clearTimeout(timer);
+      handleNewTimer(null);
     }
-  }
-
-  const handleToggleLight = () => {
-    setLight(!light);
   };
 
-  const handleToggleLoop = () => {
-    setLoop(!loop);
+  const handleChangeOnFullScreen = () => {
+    // console.log('onChangeFullScreen');
+    if (playing && isFullscreen) {
+      // console.log('ON');
+      handleControlsOn();
+      setNewTimer(true);
+    }
+    else{
+      // console.log('OFF');
+      handleControlsOn();
+      setNewTimer(false);
+    }
+  };
+
+  const handlePlayPause = () => {
+    // console.log('onPlayPause');
+    handleChangeOnFullScreen();
+    setPlaying(!playing);
   };
 
   const handleVolumeChange = (changeValue) => {
+    // console.log('onVolumeChange');
     setVolume(parseFloat(changeValue));
   };
 
   const handleToggleMuted = () => {
+    // console.log('onToggleMuted');
     setMuted(!muted);
   };
 
   const handleSetPlaybackRate = (e) => {
+    // console.log('onSetPlaybackRate');
     setPlaybackRate(parseFloat(e.target.value));
   };
 
-  const handleTogglePIP = () => {
-    setPip(!pip);
-  };
-
-  const handlePlay = () => {
-    console.log('onPlay');
-    handleControlsFullScreen();
-    setPlaying(true);
-  };
-
-  const handleEnablePIP = () => {
-    console.log('onEnablePIP');
-    setPip(true);
-  };
-
-  const handleDisablePIP = () => {
-    console.log('onDisablePIP');
-    setPip(false);
-  };
-
   const handleControlsOn = () => {
-    console.log('Controls ON');
+    // console.log('onControllOn');
     setCustomControls(true);
   };
 
   const handleControlsOff = () => {
-    console.log('Controls OFF');
+    // console.log('onControllOff');
     setCustomControls(false);
   };
 
-  const handlePause = () => {
-    console.log('onPause');
-    handleControlsFullScreen();
-    setPlaying(false);
-  };
-
-  const handleSeekMouseDown = (e) => {
-    console.log('MOUSE DOWN');
-    setSeeking(true);
+  const handleNewTimer = (newTimer) => {
+    // console.log('onNewTimer');
+    clearTimeout(timer);
+    setTimer(newTimer);
   };
 
   const handleSeekChange = (changeValue) => {
-    console.log('CHANGE:');
-    console.log(changeValue);
-    // console.log(e.target.value)
-    console.log(parseFloat(changeValue));
+    // console.log('onSeekCange:');
     setPlayed(parseFloat(changeValue));
     playerRef.current.seekTo(parseFloat(changeValue));
   };
 
-  const handleSeekMouseMove = (e) => {
-    console.log('MOUSE MOVE:');
-    console.log(e.target.value);
-    // setPlayed(parseFloat(e.target.value))
-  };
-
-  const handleSeekMouseUp = (changeValue) => {
-    console.log('MOUSE UP:');
-    setSeeking(false);
-    playerRef.current.seekTo(parseFloat(changeValue));
-  };
-
-  const handleReady = () => {
-    console.log('onReady');
-
-    // We remove the loading messages
-    setIsLoading(false);
-
-    // We setup the subtitles
-    var video = document.querySelector('video');
-    const tracks = video.textTracks;
-    if (tracks) {
-      console.log(tracks);
-      const subtitleSelectionList = [];
-      for (var i = 0, L = tracks.length; i < L; i++) {
-        subtitleSelectionList.push(tracks[i].language);
-        tracks[i].mode = 'hidden';
-      }
-      setSubtitlesSelection(subtitleSelectionList);
-    }
-    setSubtitlesOnProgress();
-  };
-
-  const onChangeSpeed = (e, item) => {
+  const handleChangeSpeed = (e, item) => {
+    // console.log('onChangeSpeed');
     e.stopPropagation();
     setEnablePlaybackRate(item !== 1.0);
     setPlaybackRate(item);
@@ -383,25 +228,121 @@ const VideoPlayer = (props) => {
     }
   };
 
-  const onChangeSubtitles = (e, item) => {
-    e.stopPropagation();
-    setEnableSubtitles(true);
-    const subtitlesLang = subtitlesSelection[item];
-    setSelectedSubtitles(item);
-  };
-
-  useEffect(() => {
-    setSubtitlesOnProgress();
-  }, [selectedSubtitles]);
-
   useEffect(() => {
     if (enableSubtitles) {
       setSubtitlesOnProgress();
     }
   }, [enableSubtitles]);
 
+  useEffect(() => {
+    setSubtitlesOnProgress();
+  }, [selectedSubtitles]);
+
+  const handleChangeSubtitles = (e, item) => {
+    // console.log('onChangeSubtitles');
+    e.stopPropagation();
+    setEnableSubtitles(true);
+    const subtitlesLang = subtitlesSelection[item];
+    setSelectedSubtitles(item);
+  };
+
+
+  useEffect(() => {
+    handleChangeOnFullScreen()
+  }, [isFullscreen]);
+
+  const handleClickFullscreen = () => {
+    // console.log('onClickFullScreen');
+    screenfull.toggle(findDOMNode(fullscreenRef.current));
+    setIsFullscreen(!screenfull.isFullscreen);
+  };
+
+  useEffect(() => {
+    playing ? handlePause() : handlePlay();
+  }, [click]);
+
+  const handleClick = (e) => {
+    // console.log('onClick');
+    setClick([e.pageX,e.pageY])
+    e.stopPropagation();
+  };
+
+  useEffect(() => {
+    handleChangeOnFullScreen()
+  }, [move]);
+
+  const handleMove = (e) => {
+    // console.log('onMove');
+    setMove([e.pageX,e.pageY])
+  };
+
+  const handleReady = () => {
+    // console.log('onReady');
+
+    // We remove the loading messages
+    setIsLoading(false);
+
+    // We setup the subtitles
+    var video = document.querySelector('video');
+    const tracks = video.textTracks;
+    if (tracks) {
+      // console.log(tracks);
+      const subtitleSelectionList = [];
+      for (var i = 0, L = tracks.length; i < L; i++) {
+        subtitleSelectionList.push(tracks[i].language);
+        tracks[i].mode = 'hidden';
+      }
+      setSubtitlesSelection(subtitleSelectionList);
+    }
+    setSubtitlesOnProgress();
+    handlePlay();
+  };
+
+  const handleStart = (e) => {
+    // console.log('onStart');
+  };
+
+  const handlePlay = () => {
+    // console.log('onPlay');
+    handleChangeOnFullScreen();
+    setPlaying(true);
+  };
+
+  const handleEnablePIP = () => {
+    // console.log('onEnablePIP');
+    setPip(true);
+  };
+
+  const handleDisablePIP = () => {
+    // console.log('onDisablePIP');
+    setPip(false);
+  };
+
+  const handlePause = () => {
+    // console.log('onPause');
+    handleChangeOnFullScreen();
+    setPlaying(false);
+  };
+
+  const handleBuffer = (e) => {
+    // console.log('onBuffer', e);
+  };
+
+  const handleSeek = (e) => {
+    // console.log('onSeek', e);
+  };
+
+  const handleEnded = () => {
+    // console.log('onEnded');
+    setPlaying(loop);
+  };
+
+  const handleError = (e) => {
+    // console.log('onError', e);
+  };
+
   const handleProgress = (state) => {
-    setMyState(dataState());
+    // console.log('onProgress');
 
     if (!seeking) {
       setPlayed(state.played);
@@ -411,39 +352,39 @@ const VideoPlayer = (props) => {
     }
   };
 
-  const handleEnded = () => {
-    console.log('onEnded');
-    setPlaying(loop);
-  };
-
   const handleDuration = (duration) => {
-    console.log('onDuration', duration);
+    // console.log('onDuration', duration);
     setDuration(duration);
   };
 
-  const handleClickFullscreen = () => {
-    screenfull.toggle(findDOMNode(fullscreenRef.current));
-    setIsFullscreen(!screenfull.isFullscreen);
-  };
-
-  const renderLoadButton = (url, label) => {
-    return <button onClick={() => load(url)}>{label}</button>;
-  };
+  useEffect(() => {
+    if (keydown == '37') {
+      let newPlayedSeconds = playedSeconds - 10;
+      let newPlayed = newPlayedSeconds / duration;
+      playerRef.current.seekTo(parseFloat(newPlayed));
+    } else if (keydown == '39') {
+      let newPlayedSeconds = playedSeconds + 10;
+      let newPlayed = newPlayedSeconds / duration;
+      playerRef.current.seekTo(parseFloat(newPlayed));
+    } else if (keydown == '32') {
+      playing ? handlePause() : handlePlay();
+    }
+  }, [keydown]);
 
   const handleKeyDown = (e) => {
-    e = e || window.event;
-
-    if (e.keyCode == '37') {
-      console.log('VOICI:', playerRef.current.duration);
-      console.log('VOICI:', played);
-      // setPlayed(duration * played - 60)
-    } else if (e.keyCode == '39') {
-      console.log('VOICI:', playerRef.current.duration * played);
-      // setPlayed(duration * played + 60)
-    }
+    // console.log('onKeyDown');
+    setKeyDown([e.keyCode])
   };
 
-  const fullScreenIcon = isFullscreen ? <FullscreenExitRoundedIcon /> : <FullscreenRoundedIcon />;
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+  }, []);
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////  CONTROLS  /////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   const soundIcon = muted ? (
     <VolumeOffRoundedIcon />
@@ -454,6 +395,8 @@ const VideoPlayer = (props) => {
   ) : (
     <VolumeMuteRoundedIcon />
   );
+
+  const fullScreenIcon = isFullscreen ? <FullscreenExitRoundedIcon /> : <FullscreenRoundedIcon />;
 
   const style1 = (value) => {
     return {
@@ -505,13 +448,10 @@ const VideoPlayer = (props) => {
       isEnabled={true}
       direction={Direction.HORIZONTAL}
       onChange={(changeValue) => handleSeekChange(changeValue)}
-      onChangeStart={(startValue) => console.log('On change Start:', startValue)}
-      onChangeEnd={(endValue) => console.log('On change End', endValue)}
-      onIntent={(intent) => {
-        console.log('on intent', intent);
-        setIntent(intent);
-      }}
-      onIntentStart={(intent) => console.log('On intent s: ', intent)}
+      // onChangeStart={(startValue) => console.log('On change Start:', startValue)}
+      // onChangeEnd={(endValue) => console.log('On change End', endValue)}
+      onIntent={(intent) => setIntent(intent)}
+      // onIntentStart={(intent) => console.log('On intent s: ', intent)}
       onIntentEnd={(intent) => setIntent(0)}
       style={style3('100%')}>
       <SliderBar
@@ -566,7 +506,7 @@ const VideoPlayer = (props) => {
         <div
           key={key}
           className={'speed-choice ' + (playbackRate === item ? 't-c-selected' : '')}
-          onClick={(e) => onChangeSpeed(e, item)}>
+          onClick={(e) => handleChangeSpeed(e, item)}>
           {item == 1.0 ? 'Normal' : 'x ' + item}
         </div>
       ))}
@@ -583,93 +523,85 @@ const VideoPlayer = (props) => {
         <div
           key={key}
           className={'captions-choice ' + (selectedSubtitles === key ? 't-c-selected' : '')}
-          onClick={(e) => onChangeSubtitles(e, key)}>
+          onClick={(e) => handleChangeSubtitles(e, key)}>
           {item}
         </div>
       ))}
     </div>
   ) : null;
 
-  const handleBuffer = (e) => {
-    console.log('onBuffer',e)
-  }
+  const controls = (
+    <div className={'plyr-controls-wrapper ' + (customControls ? '' : 'player-none')}>
+      <div className="custom-video-button progress-bar">{progress}</div>
+      <div
+        className="custom-video-button track-text"
+        dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentSubtitles : '' }}></div>
 
-  const handleSeek = (e) => {
-    console.log('onSeek',e)
-  }
+      <div className="controls-bar-group">
+        <div className="custom-video-button" onClick={handlePlayPause}>
+          {playing ? <StopRoundedIcon /> : <PlayArrowRoundedIcon />}
+        </div>
+        <div className="custom-video-button custom-sound">
+          <div className="custom-sound-icon" onClick={handleToggleMuted}>
+            {soundIcon}
+          </div>
+          <div>{sound}</div>
+        </div>
+      </div>
 
-  const handleError = (e) => {
-    console.log('onError', e)
-  }
+      <div className="custom-video-button">
+        <div className="video-time">
+          <Duration seconds={duration * played} />
+        </div>
+        <div>/</div>
+        <div className="video-time">
+          <Duration seconds={duration} />
+        </div>
+      </div>
 
-  const handleStart = (e) => {
-    console.log('onStart')
-  }
+      <div className="controls-bar-group">
+        <div
+          className={
+            'custom-video-button tab-container ' + (enablePlaybackRate ? 't-c-selected' : '')
+          }
+          onClick={() => setEnablePlaybackRate(!enablePlaybackRate)}
+          onMouseEnter={() => setRateOpen(true)}
+          onMouseLeave={() => setRateOpen(false)}>
+          {speed}
+          <SpeedRoundedIcon />
+        </div>
+        <div
+          className={'custom-video-button tab-container ' + (enableSubtitles ? 't-c-selected' : '')}
+          onClick={() => setEnableSubtitles(!enableSubtitles)}
+          onMouseEnter={() => setSubtitlesOpen(true)}
+          onMouseLeave={() => setSubtitlesOpen(false)}>
+          {subtitles}
+          <SubtitlesRoundedIcon />
+        </div>
+        <div
+          className={'custom-video-button tab-container ' + (pip ? 't-c-selected' : '')}
+          onClick={() => setPip(!pip)}>
+          <PictureInPictureRoundedIcon />
+        </div>
+      </div>
+
+      <div className="custom-video-button" onClick={handleClickFullscreen}>
+        {fullScreenIcon}
+      </div>
+    </div>
+  );
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////  COMPONENTS  ////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className={'master-component ' + (isLoading ? 'player-none' : 'player-block')}>
       <div className="plyr-container">
         <div className="plyr-container-full" ref={fullscreenRef}>
-          <div className={"plyr-controls-wrapper "+ (customControls ? '' : 'player-none')}>
-            <div className="custom-video-button progress-bar">{progress}</div>
-            <div
-              className="custom-video-button track-text"
-              dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentSubtitles : '' }}></div>
-
-            <div className="controls-bar-group">
-              <div className="custom-video-button" onClick={handlePlayPause}>
-                {playing ? <StopRoundedIcon /> : <PlayArrowRoundedIcon />}
-              </div>
-              <div className="custom-video-button custom-sound">
-                <div className="custom-sound-icon" onClick={handleToggleMuted}>
-                  {soundIcon}
-                </div>
-                <div>{sound}</div>
-              </div>
-            </div>
-
-            <div className="custom-video-button">
-              <div className="video-time">
-                <Duration seconds={duration * played} />
-              </div>
-              <div>/</div>
-              <div className="video-time">
-                <Duration seconds={duration} />
-              </div>
-            </div>
-
-            <div className="controls-bar-group">
-              <div
-                className={
-                  'custom-video-button tab-container ' + (enablePlaybackRate ? 't-c-selected' : '')
-                }
-                onClick={() => setEnablePlaybackRate(!enablePlaybackRate)}
-                onMouseEnter={() => setRateOpen(true)}
-                onMouseLeave={() => setRateOpen(false)}>
-                {speed}
-                <SpeedRoundedIcon />
-              </div>
-              <div
-                className={
-                  'custom-video-button tab-container ' + (enableSubtitles ? 't-c-selected' : '')
-                }
-                onClick={() => setEnableSubtitles(!enableSubtitles)}
-                onMouseEnter={() => setSubtitlesOpen(true)}
-                onMouseLeave={() => setSubtitlesOpen(false)}>
-                {subtitles}
-                <SubtitlesRoundedIcon />
-              </div>
-              <div
-                className={'custom-video-button tab-container ' + (pip ? 't-c-selected' : '')}
-                onClick={() => setPip(!pip)}>
-                <PictureInPictureRoundedIcon />
-              </div>
-            </div>
-
-            <div className="custom-video-button" onClick={handleClickFullscreen}>
-              {fullScreenIcon}
-            </div>
-          </div>
+          {controls}
           <ReactPlayer
             tabIndex="0"
             className="react-player"
@@ -685,8 +617,8 @@ const VideoPlayer = (props) => {
             playbackRate={enablePlaybackRate ? playbackRate : defaultRate}
             volume={volume}
             muted={muted}
-            onClick={clickOnVideo}
-            onMouseMove={moveOnVideo}
+            onClick={handleClick}
+            onMouseMove={handleMove}
             onReady={handleReady}
             onStart={handleStart}
             onPlay={handlePlay}

@@ -51,23 +51,23 @@ const PlayerContainer = (props) => {
 
   console.log('MOVIE URL', movieUrl ? movieUrl[0].url : 'NOT ok');
 
-  // const videoPlayer = !movieUrl ? (
-  //   <VideoLoader />
-  // ) : (
-  //   <React.Fragment>
-  //     <div className={'custom-react-player-master ' + (isLoading ? 'player-none' : 'player-block')}>
-  //       <VideoPlayer movieUrl={movieUrl[0].url} setIsLoading={setIsLoading} isLoading={isLoading} />
-  //     </div>
-  //     {isLoading ? <VideoLoader /> : null}
-  //   </React.Fragment>
-  // );
-
-  const videoPlayer = (
-    <VideoPlayer
-      movieUrl="https://streamtape.com/get_video?id=zxxePLx4JRSYVwx&expires=1594877582&ip=FOSOD0xEDOONFt&token=l9zrU2Njuhzn&stream=1"
-      setIsLoading={setIsLoading}
-    />
+  const videoPlayer = !movieUrl ? (
+    <VideoLoader message={"Scrapping ..."}/>
+  ) : (
+    <React.Fragment>
+      <div className={'custom-react-player-master ' + (isLoading ? 'player-none' : 'player-block')}>
+        <VideoPlayer movieUrl={movieUrl[0].url} setIsLoading={setIsLoading} isLoading={isLoading} />
+      </div>
+      {isLoading ? <VideoLoader message={"Loading the video ..."}/> : null}
+    </React.Fragment>
   );
+
+  // const videoPlayer = (
+  //   <VideoPlayer
+  //     movieUrl="https://streamtape.com/get_video?id=zxxePLx4JRSYVwx&expires=1594919993&ip=FOSOD0xEDOONFt&token=AJeKKWaPVgZM"
+  //     setIsLoading={setIsLoading}
+  //   />
+  // );
 
   const overview = props.currentMovieData.overview;
 
