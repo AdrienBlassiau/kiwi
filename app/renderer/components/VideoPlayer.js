@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { findDOMNode } from 'react-dom';
-import screenfull from 'screenfull';
 import ReactPlayer from 'react-player';
+
+// fullscreen manager
+import screenfull from 'screenfull';
 
 // Duration manager
 import Duration from './Duration';
@@ -24,38 +26,59 @@ import { Slider, Direction } from 'react-player-controls';
 
 
 const VideoPlayer = (props) => {
+
+  // [PROPS]: some props ...
   const setIsLoading = props.setIsLoading;
   const isLoading = props.isLoading;
   const movieUrl = props.movieUrl;
 
+  // [URL]: about the url of th media
+  // url: the url we want to read
   const [url, setUrl] = useState(movieUrl);
+
+  // [MODE]: about some modes
+  // pip: the status of the pip mode
+  // light: the status of the light mode
   const [pip, setPip] = useState(false);
-  const [playing, setPlaying] = useState(true);
+  const [light, setLight] = useState(false);
+
+  // [CONTROLS]
   const [controls, setControls] = useState(false);
   const [timer, setTimer] = useState(null);
   const [showControls, setShowControls] = useState(true);
-  const [seeking, setSeeking] = useState(false);
-  const [seeked, setSeeked] = useState(0);
-  const [light, setLight] = useState(false);
+
+  // [VOLUME]
   const [volume, setVolume] = useState(1.0);
   const [muted, setMuted] = useState(false);
+
+  // [VIDEO]
+  const [playing, setPlaying] = useState(true);
+  const [seeking, setSeeking] = useState(false);
+  const [seeked, setSeeked] = useState(0);
   const [played, setPlayed] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
   const [loaded, setLoaded] = useState(0);
   const [loadedSeconds, setLoadedSeconds] = useState(0);
   const [intent, setIntent] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  // [RATE]
   const [playbackRate, setPlaybackRate] = useState(1.0);
   const [enablePlaybackRate, setEnablePlaybackRate] = useState(false);
   const [speedOpen, setSpeedOpen] = useState(false);
-  const [loop, setLoop] = useState(false);
-  const [currentTrack, setCurrentTrack] = useState('');
+  const speedSelection = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
+  // [LOOP]
+  const [loop, setLoop] = useState(false);
+
+  // [SUBTITLES]
+  const [currentTrack, setCurrentTrack] = useState('');
   const [enableSubtitles, setEnableSubtitles] = useState(true);
   const [subtitlesOpen, setSubtitlesOpen] = useState(false);
   const [selectedSubtitles, setSelectedSubtitles] = useState(0);
   const [subtitlesSelection, setSubtitlesSelection] = useState([]);
 
+  // [REF]
   const playerRef = useRef(null);
   const fullscreenRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -67,8 +90,6 @@ const VideoPlayer = (props) => {
     myStateRef.current = data;
     _setMyState(data);
   };
-
-  const speedSelection = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
   const load = (url) => {
     setUrl(url);
