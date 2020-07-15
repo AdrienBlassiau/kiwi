@@ -3,6 +3,7 @@ import MainContainer from './MainContainer';
 import MainTopBar from './MainTopBar';
 import BottomBar from './BottomBar';
 import SearchBar from './SearchBar';
+import StreamBar from './StreamBar';
 import Style from '../css/AppCss.js';
 
 import newDriver from '../scrapper/driver.js';
@@ -16,7 +17,7 @@ const MainPage = () => {
   // type and adress as content
   const [cacheData, setCacheData] = useState([]);
 
-  console.log("DRIVER SET !!")
+  console.log('DRIVER SET !!');
   // [Driver] : selenium driver, for scrapping with click, ...
   const [driver, setDriver] = useState(newDriver);
 
@@ -150,12 +151,17 @@ const MainPage = () => {
     setPage(3);
   }, [gridInfos]);
 
+  console.log('currentMovieData: ', currentMovieData);
   return (
     <div>
       <Style />
       <div className="master-component">
         <MainTopBar getters={getters} setters={setters} />
-        <SearchBar getters={getters} setters={setters} cache={cache} />
+        {isPlaying ? (
+          <StreamBar getters={getters} setters={setters} cache={cache} />
+        ) : (
+          <SearchBar getters={getters} setters={setters} cache={cache} />
+        )}
         <MainContainer getters={getters} setters={setters} />
         <BottomBar getters={getters} setters={setters} cache={cache} />
       </div>

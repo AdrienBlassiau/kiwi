@@ -1,6 +1,8 @@
 const axios = require('axios');
 
 const API_KEY = '0ec464bc3151bee6274e541b3030fa57';
+const token =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1ZjBjOWJhYjBiNWQ5IiwiZXhwIjoiMjAyMC0wNy0xNSAxOTozNjo0MyIsInRlc3QiOiIrXC89In0.gfNEAHVJ2qF7tsddsm_gYVqK557sO3w1oxyIDHKZb8YrJlm6mY8UST95QavIUO7-bJFUj5SKZMvXKagG837ysQ';
 const LANGUAGE = 'en-US';
 const ADULT = false;
 
@@ -49,6 +51,8 @@ const searchUrl = (data) => {
     ADULT
   );
 };
+
+const jokesUrl = 'https://api-light.com/api/get/random';
 
 const getMovies = (data, callback, type, cache) => {
   let url = '';
@@ -101,8 +105,26 @@ const getMovies = (data, callback, type, cache) => {
   }
 };
 
+const getJokes = (callback) => {
+  let config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    },
+  };
+
+  axios
+    .get(jokesUrl, config)
+    .then((response) => {
+      const data = response.data[0];
+      callback(data.content);
+    })
+    .catch((error) => console.log(error));
+};
+
 // export default getMovies
 
 module.exports = {
   getMovies,
+  getJokes,
 };

@@ -56,7 +56,7 @@ const SearchBar = (props) => {
   const closeSearch = () => {
     // console.log("RANDOM: ",Math.random())
     configureGrid('popular', Math.random());
-  }
+  };
 
   const predicted = 'California';
   const locked = false;
@@ -85,10 +85,16 @@ const SearchBar = (props) => {
             />
           </div>
         </div>
-        {gridType === "search" ?
-        <div className={'close-icon-master ' + (active ? 'active-color' : '')}>
-          <CloseIcon onClick={closeSearch} style={{ color: active ? 'var(--dark-color)' : 'white' }}/>
-        </div>: <div></div>}
+        {gridType === 'search' ? (
+          <div className={'close-icon-master ' + (active ? 'active-color' : '')}>
+            <CloseIcon
+              onClick={closeSearch}
+              style={{ color: active ? 'var(--dark-color)' : 'white' }}
+            />
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

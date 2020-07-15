@@ -3,7 +3,8 @@ import Moment from 'react-moment';
 import axios from 'axios';
 import { usePalette } from 'react-palette';
 import { directSearchStream } from '../scrapper/index.js';
-import ReactPlayer from 'react-player';
+import VideoPlayer from './VideoPlayer';
+import VideoLoader from './VideoLoader';
 
 const PlayerContainer = (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,25 +51,35 @@ const PlayerContainer = (props) => {
 
   console.log('MOVIE URL', movieUrl ? movieUrl[0].url : 'NOT ok');
 
+  // const videoPlayer = !movieUrl ? (
+  //   <VideoLoader />
+  // ) : (
+  //   <React.Fragment>
+  //     <div className={'custom-react-player-master ' + (isLoading ? 'player-none' : 'player-block')}>
+  //       <VideoPlayer movieUrl={movieUrl[0].url} setIsLoading={setIsLoading} isLoading={isLoading} />
+  //     </div>
+  //     {isLoading ? <VideoLoader /> : null}
+  //   </React.Fragment>
+  // );
+
   const videoPlayer = (
-    <div>
-      <div onClick={() => props.setIsPlaying(false)}>Playing :{streamData.fmovies.movieUrl}</div>
-      {movieUrl ? (
-        <div className="player-wrapper">
-          <ReactPlayer
-            className="react-player fixed-bottom"
-            url={movieUrl[0].url}
-            width="100%"
-            height="100%"
-            controls={true}
-            volume={1}
-          />
-        </div>
-      ) : null}
-    </div>
+    <VideoPlayer
+      movieUrl="https://streamtape.com/get_video?id=zxxePLx4JRSYVwx&expires=1594877582&ip=FOSOD0xEDOONFt&token=l9zrU2Njuhzn&stream=1"
+      setIsLoading={setIsLoading}
+    />
   );
 
-  return videoPlayer;
+  const overview = props.currentMovieData.overview;
+
+  return (
+    <div className="video-player-and-infos-container">
+      <div className="video-player-container">{videoPlayer}</div>
+      <div className="video-bottom-info">
+        <div className="video-bottom-info-title">Summary: </div>
+        <div className="video-bottom-info-content">{overview}</div>
+      </div>
+    </div>
+  );
 };
 
 export default PlayerContainer;

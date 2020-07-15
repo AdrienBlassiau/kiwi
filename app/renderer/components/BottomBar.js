@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const BottomBar = (props) => {
-
   return (
     <div className="main-bottom-container">
       <div className="main-bottom-data">

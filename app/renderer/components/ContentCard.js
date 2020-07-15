@@ -23,7 +23,7 @@ const ContentCard = (props) => {
             </div>
           </div>
         </div>
-{/*        <div className="data-container-master">
+        {/*        <div className="data-container-master">
           <div className="consensus-tight">
             <PercentageCircle
               percentage={props.movie.vote_average}
