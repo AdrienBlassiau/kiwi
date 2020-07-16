@@ -23,8 +23,8 @@ const SearchBar = (props) => {
 
   const searchMovies = (query) => {
     const callback = (data, url) => {
-      console.log("VOICI CE QUE L'on met");
-      console.log(data);
+      // console.log("VOICI CE QUE L'on met");
+      // console.log(data);
       setResult(data);
       setMoviesData(moviesData.concat(data));
       setHasMore(data.length - 1 > 0);

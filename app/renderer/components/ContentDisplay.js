@@ -24,30 +24,30 @@ const ContentDisplay = (props) => {
   const setCurrentMovieUrl = props.setCurrentMovieUrl;
 
   const runSearch = (title, date, url, update) => {
-    console.log('On fait une search');
+    // console.log('On fait une search');
     const callback = (content) => {
       const data = content.data;
       const type = content.type;
 
       if (data.length === 0) {
-        console.log('NOT_FOUND');
+        // console.log('NOT_FOUND');
         setStatus(statusType.NOT_FOUND);
         setResults(null);
       } else {
-        console.log('FOUND');
-        console.log(content);
+        // console.log('FOUND');
+        // console.log(content);
         setStatus(statusType.FOUND);
         // console.log(res);
-        console.log(cache);
-        console.log(type, data), console.log({ ...results, [type]: data });
+        // console.log(cache);
+        // console.log(type, data), console.log({ ...results, [type]: data });
         setResults({ ...results, [type]: data });
-        console.log('FIN DU CALLBACK');
+        // console.log('FIN DU CALLBACK');
       }
     };
     console.log(results);
     if (results !== {}) {
-      console.log('ON LANCE LA');
-      console.log(url);
+      // console.log('ON LANCE LA');
+      // console.log(url);
       directSearchSite(
         {
           title: title,
@@ -101,7 +101,7 @@ const ContentDisplay = (props) => {
   const [overview, tagline] = !isLoading
     ? utils.getTranslation(currentMovieData, 'FR')
     : [null, null];
-  console.log('overview :', overview, 'tag:', tagline);
+  // console.log('overview :', overview, 'tag:', tagline);
 
   const [hours, minutes] = !isLoading ? utils.getRuntime(currentMovieData) : ['', ''];
 
@@ -127,7 +127,7 @@ const ContentDisplay = (props) => {
   let findMovie = null;
   let circleStatusClass = null;
 
-  console.log(results);
+  // console.log(results);
   if (status) {
     if (status === statusType.NOT_FOUND) {
       findMovie = 'NOT_FOUND';
@@ -146,7 +146,7 @@ const ContentDisplay = (props) => {
       <div
         className="circle-around-play"
         onClick={() => {
-          console.log('okoko');
+          // console.log('okoko');
           props.setIsPlaying(true);
         }}>
         <div className="button-play"></div>

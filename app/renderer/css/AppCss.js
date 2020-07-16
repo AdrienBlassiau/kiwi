@@ -115,7 +115,6 @@ a:link:active, a:visited:active {
 	align-items: center;
 	height: 100%;
 	justify-content: space-between;
-	width: 70px;
 }
 
 .opacity-c {
@@ -159,8 +158,12 @@ a:link:active, a:visited:active {
 }
 
 .custom-icon-bar {
+	display: flex;
+    justify-content: center;
+    align-items: center;
 	font-weight: bolder !important ;
 	cursor: pointer;
+	margin: 0 5px;
 }
 
 .line-x{

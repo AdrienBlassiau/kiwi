@@ -359,11 +359,11 @@ const VideoPlayer = (props) => {
 
   useEffect(() => {
     if (keydown == '37') {
-      let newPlayedSeconds = playedSeconds - 10;
+      let newPlayedSeconds = playedSeconds - 5;
       let newPlayed = newPlayedSeconds / duration;
       playerRef.current.seekTo(parseFloat(newPlayed));
     } else if (keydown == '39') {
-      let newPlayedSeconds = playedSeconds + 10;
+      let newPlayedSeconds = playedSeconds + 5;
       let newPlayed = newPlayedSeconds / duration;
       playerRef.current.seekTo(parseFloat(newPlayed));
     } else if (keydown == '32') {
@@ -618,6 +618,7 @@ const VideoPlayer = (props) => {
             volume={volume}
             muted={muted}
             onClick={handleClick}
+            onDoubleClick={handleClickFullscreen}
             onMouseMove={handleMove}
             onReady={handleReady}
             onStart={handleStart}

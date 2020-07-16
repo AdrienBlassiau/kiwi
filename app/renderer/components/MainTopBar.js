@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+import Crop169RoundedIcon from '@material-ui/icons/Crop169Rounded';
+import RemoveIcon from '@material-ui/icons/Remove';
+import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
+
 const remote = require('electron').remote;
 
 const minimize = () => {
@@ -34,10 +38,14 @@ const MainTopBar = () => {
           </div>
         </div>
         <div className="tob-bar-action">
-          <div onClick={minimize} className="custom-icon-bar opacity-c icon-minimize"></div>
-          <div onClick={maximize} className="custom-icon-bar opacity-c icon-maximize"></div>
-          <div onClick={close} className="custom-icon-bar red-close">
-            <div className="line-x">✕</div>
+          <div onClick={minimize} className="custom-icon-bar opacity-c">
+            <RemoveIcon />
+          </div>
+          <div onClick={maximize} className="custom-icon-bar opacity-c">
+            <Crop169RoundedIcon />
+          </div>
+          <div onClick={close} className="custom-icon-bar opacity-c">
+            <CloseRoundedIcon />
           </div>
         </div>
       </div>

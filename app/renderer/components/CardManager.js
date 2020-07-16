@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import InfiniteScroll from './InfiniteScroll';
 import ContentLoader from 'react-content-loader';
 import ContentCard from './ContentCard';
 import ReactDOM from 'react-dom';
@@ -7,27 +6,15 @@ import ReactDOM from 'react-dom';
 // import Style from '../css/CardManagerCss.js';
 
 const CardManager = (props) => {
-  const myLocalRef = React.createRef();
-  const component = ReactDOM.findDOMNode(myLocalRef.current);
 
-  const fetchMoreListItems = () => {
-    setTimeout(() => {
-      props.getMovies();
-      setIsFetching(false);
-    }, 1000);
-  };
+  const isFetching = props.isFetching;
 
-  const [isFetching, setIsFetching] = InfiniteScroll(props.myRef, fetchMoreListItems);
-
-  console.log('SIZE');
-  console.log(props.itemsToAdd);
   const moreItems = [...Array(props.itemsToAdd)].map((e, i) => (
     <div className="card-loader-style" key={i}>
       <div className="invisible-item"></div>
     </div>
   ));
 
-  // console.log(props.moviesData)
   const content = props.moviesData ? (
     <React.Fragment>
       {props.moviesData.map((movie, index) => (
@@ -40,7 +27,7 @@ const CardManager = (props) => {
           setShowModal={props.setShowModal}
         />
       ))}
-      {moreItems}
+      {isFetching ? null : moreItems}
     </React.Fragment>
   ) : (
     <div></div>
@@ -69,7 +56,7 @@ const CardManager = (props) => {
   const hasMore = props.hasMore;
 
   return (
-    <div ref={myLocalRef} className="popular-movies-list">
+    <div className="popular-movies-list">
       {content}
       {hasMore && isFetching && loader}
     </div>
