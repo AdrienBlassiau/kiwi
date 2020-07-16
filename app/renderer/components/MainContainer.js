@@ -6,9 +6,14 @@ import PlayerContainer from './PlayerContainer';
 import ContentDisplay from './ContentDisplay';
 import Modal from './Modal';
 
-import { getMovies } from '../controllers/';
-
 const MainContainer = (props) => {
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
   const { cacheData } = props.getters.cache;
   const { driver } = props.getters.driver;
   const {
@@ -78,7 +83,7 @@ const MainContainer = (props) => {
   }, [isFetching]);
 
   useEffect(() => {
-    if (scroll && !isFetching){
+    if (scroll && !isFetching && hasMore){
       const component = ReactDOM.findDOMNode(myRef.current);
       if (component.scrollHeight != component.scrollTop + component.clientHeight || isFetching){
         return;

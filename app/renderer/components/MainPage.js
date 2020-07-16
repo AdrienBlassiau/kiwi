@@ -14,6 +14,12 @@ import Style from '../css/AppCss.js';
 
 const MainPage = () => {
 
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
   // [Cache] : cache system, it's a dict with request as key and duration,
   // type and adress as content
   const [cacheData, setCacheData] = useState([]);
@@ -25,7 +31,6 @@ const MainPage = () => {
   const [active, setActive] = useState(false);
   const [value, setValue] = useState('');
   const [label, setLabel] = useState('Search for a movie or a tv show ...');
-  const [result, setResult] = useState(null);
 
   // [grid] : movie data we can see on main site grid, fetch state information
   const [moviesData, setMoviesData] = useState([]);
@@ -58,6 +63,7 @@ const MainPage = () => {
       console.log("data: ")
       console.log(data);
       setMoviesData(moviesData.concat(data));
+      console.log("LENGTH:",data.length)
       setHasMore(data.length - 1 > 0);
     };
 
@@ -83,8 +89,7 @@ const MainPage = () => {
     search: {
       active,
       value,
-      label,
-      result,
+      label
     },
     grid: {
       moviesData,
@@ -117,8 +122,7 @@ const MainPage = () => {
     search: {
       setActive,
       setValue,
-      setLabel,
-      setResult,
+      setLabel
     },
     grid: {
       setMoviesData,

@@ -7,8 +7,15 @@ import axios from 'axios';
 import { getMovies } from '../controllers';
 
 const SearchBar = (props) => {
-  const { active, value, label, result } = props.getters.search;
-  const { setActive, setValue, setLabel, setResult } = props.setters.search;
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
+  const { active, value, label } = props.getters.search;
+  const { setActive, setValue, setLabel } = props.setters.search;
   const { moviesData, gridType, gridInfos, page, hasMore } = props.getters.grid;
   const {
     setMoviesData,
@@ -19,51 +26,37 @@ const SearchBar = (props) => {
     configureGrid,
   } = props.setters.grid;
 
-  const cache = props.cache;
-
-  const searchMovies = (query) => {
-    const callback = (data, url) => {
-      // console.log("VOICI CE QUE L'on met");
-      // console.log(data);
-      setResult(data);
-      setMoviesData(moviesData.concat(data));
-      setHasMore(data.length - 1 > 0);
-    };
-
-    getMovies([page, query], callback, 'search', cache);
-    setPage(page + 1);
-  };
-
   const changeValue = (event) => {
     const value = event.target.value;
     setValue(value);
   };
 
+  const closeSearch = () => {
+    configureGrid('popular', '');
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
+
   const handleKeyPress = (event) => {
     if (event.which === 13) {
       const query = encodeURI(value);
-      console.log('avant', gridInfos, 'apres', query);
       if (gridInfos != query) {
         configureGrid('search', query);
       }
     }
   };
 
-  useEffect(() => {
-    console.log('On change les infos');
-  }, [gridInfos]);
 
-  const closeSearch = () => {
-    // console.log("RANDOM: ",Math.random())
-    configureGrid('popular', Math.random());
-  };
-
-  const predicted = 'California';
-  const locked = false;
-
-  const fieldClassName = `field ${(locked ? active : active || value) && 'active'} ${
-    locked && !active && 'locked'
-  }`;
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////  COMPONENTS  ///////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className="main-search-container">
