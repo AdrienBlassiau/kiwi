@@ -88,6 +88,7 @@ const MainPage = () => {
     setCurrentMovieBasics(null);
     setStatus(utils.statusType.PENDING);
     setShowModal(false);
+    setIsLoading(true)
   };
 
   const setRequestStatus = (data) => {
