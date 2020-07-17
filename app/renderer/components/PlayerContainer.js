@@ -10,45 +10,43 @@ const PlayerContainer = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [movieUrl, setMovieUrl] = useState(null);
   const { cacheData, setCacheData } = props.cache;
-  const driver = props.driver;
+  const currentMovieData = props.currentMovieData;
+  const [urlList, setUrlList] = useState([])
 
-  // console.log("On entre, voici l'etat du cache : ", cacheData);
-  const url = props.currentMovieUrl;
-  const streamData = props.cache.cacheData[url].streamData;
-  // console.log('On va envoyer :', streamData);
 
   useEffect(() => {
-    const callback = (res, name) => {
-      // console.log(name);
-      const scrapperData = props.cache.cacheData[url].streamData[name];
-      // console.log('previous:', scrapperData);
-      const newScrapperData = { ...scrapperData, resolve: res };
-      // console.log('after:', newScrapperData);
+    let newUrlList = []
+    if (hasStreamData){
+      for (const item in streamData) {
+        const currentItem = streamData[item]
+        if (currentItem && currentItem.hasOwnProperty('resolve')){
+          console.log(">>>>>>>>>>>>>>>>><< RES:",currentItem.resolve)
+          const resolved = currentItem.resolve
+          if (currentItem.resolve.length > 0){
+            console.log(">>>>>>>>>>>>>>>>><< DATA:",resolved)
+            console.log("NEW URL LIST:",newUrlList)
+            newUrlList = newUrlList.concat(resolved)
+          }
+        }
+      }
+    }
+    console.log(newUrlList)
+    setUrlList(newUrlList)
+  }, [props.cache]);
 
-      const newStreamData = { ...streamData, [name]: newScrapperData };
-      // console.log(newStreamData);
-      setCacheData((prevState) => ({
-        ...prevState,
-        [url]: { ...cacheData[url], streamData: newStreamData },
-      }));
-      setMovieUrl(res);
-    };
+  console.log("On entre, voici les datas: ", currentMovieData);
+  const id = currentMovieData.id
+  const cacheDataMovie = props.cache.cacheData[id]
+  // const streamData = props.cache.cacheData[id].streamData;
+  console.log('On va envoyer :', cacheDataMovie);
+  const hasStreamData = cacheDataMovie.hasOwnProperty('streamData')
+  const streamData = cacheDataMovie.streamData
+  const urlData = hasStreamData ? Object.entries(streamData).map(item => {console.log(">>>>>>>>>>>>>>>>><< ITEM:",item)}) : null;
+  console.log("URL LIST",urlList)
 
-    directSearchStream(
-      {
-        streamData: streamData,
-        driver: driver,
-        is_movie: true,
-      },
-      0,
-      0,
-      callback,
-    );
-
-    // directSearchStream(5, url, props.driver, setMovieUrl);
-    // console.log('END');
-  }, []);
-
+  const urlShow = urlList.map((item,key) => {
+    return(<div key={key}>{item.url}</div>)
+  });
   // console.log('MOVIE URL', movieUrl ? movieUrl[0].url : 'NOT ok');
 
   // const videoPlayer = !movieUrl ? (
@@ -64,7 +62,7 @@ const PlayerContainer = (props) => {
 
   const videoPlayer = (
     <VideoPlayer
-      movieUrl="https://streamtape.com/get_video?id=zxxePLx4JRSYVwx&expires=1594919993&ip=FOSOD0xEDOONFt&token=AJeKKWaPVgZM"
+      movieUrl="http://streamtape.com/get_video?id=zKykazbJpxFYr1L&expires=1595067661&ip=FOSOD0xEDOONFt&token=BNScMF5ctvBU"
       setIsLoading={setIsLoading}
     />
   );
@@ -76,7 +74,7 @@ const PlayerContainer = (props) => {
       <div className="video-player-container">{videoPlayer}</div>
       <div className="video-bottom-info">
         <div className="video-bottom-info-title">Summary: </div>
-        <div className="video-bottom-info-content">{overview}</div>
+        <div className="video-bottom-info-content">{urlShow}</div>
       </div>
     </div>
   );

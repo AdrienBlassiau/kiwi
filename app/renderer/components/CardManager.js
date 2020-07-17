@@ -4,7 +4,6 @@ import ContentCard from './ContentCard';
 import ReactDOM from 'react-dom';
 
 const CardManager = (props) => {
-
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
@@ -13,6 +12,8 @@ const CardManager = (props) => {
 
   const isFetching = props.isFetching;
   const hasMore = props.hasMore;
+  const callQueue = props.callQueue;
+  const setCallQueue = props.setCallQueue;
 
   const moreItems = [...Array(props.itemsToAdd)].map((e, i) => (
     <div className="card-loader-style" key={i}>
@@ -34,8 +35,10 @@ const CardManager = (props) => {
           movie={movie}
           driver={props.driver}
           setIsPlaying={props.setIsPlaying}
-          setCurrentMovieId={props.setCurrentMovieId}
+          setCurrentMovieBasics={props.setCurrentMovieBasics}
           setShowModal={props.setShowModal}
+          callQueue={callQueue}
+          setCallQueue={setCallQueue}
         />
       ))}
       {isFetching ? null : moreItems}

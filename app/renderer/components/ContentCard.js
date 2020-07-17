@@ -3,9 +3,20 @@ import React, { useState, useEffect } from 'react';
 import PercentageCircle from './PercentageCircle';
 
 const ContentCard = (props) => {
+
+  const callQueue = props.callQueue;
+  const setCallQueue = props.setCallQueue;
+
   const showModalContainer = () => {
-    props.setCurrentMovieId(props.movie.id);
+    console.log(props.movie);
+    const id = props.movie.id;
+    const title = props.movie.title;
+    const date = props.movie.release_date.split('-')[0];
+    props.setCurrentMovieBasics({ id, title, date });
     props.setShowModal(true);
+    callQueue.push({ id, title, date })
+    console.log("CALL QUEUE ! ",callQueue)
+    setCallQueue(callQueue)
   };
 
   return (

@@ -10,75 +10,33 @@ import * as utils from '../utils';
 import run from '../scrapper/fetch.js';
 
 const ContentDisplay = (props) => {
-  const statusType = utils.statusType;
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
+  const status = props.status;
+  // const setStatus = props.setStatus;
+
+  // const statusType = utils.statusType;
   const [isLoading, setIsLoading] = useState(true);
 
-  const [status, setStatus] = useState(statusType.PENDING);
-  const [results, setResults] = useState({});
-
   const cache = props.cache;
-  const currentMovieId = props.currentMovieId;
+  const currentMovieBasics = props.currentMovieBasics;
   const currentMovieData = props.currentMovieData;
-  const currentMovieUrl = props.currentMovieUrl;
   const setCurrentMovieData = props.setCurrentMovieData;
-  const setCurrentMovieUrl = props.setCurrentMovieUrl;
+  const setCurrentMovieKey = props.setCurrentMovieKey;
 
-  const runSearch = (title, date, url, update) => {
-    // console.log('On fait une search');
-    const callback = (content) => {
-      const data = content.data;
-      const type = content.type;
+  const id = props.currentMovieBasics.id;
+  const title = props.currentMovieBasics.title;
+  const date = props.currentMovieBasics.date;
 
-      if (data.length === 0) {
-        // console.log('NOT_FOUND');
-        setStatus(statusType.NOT_FOUND);
-        setResults(null);
-      } else {
-        // console.log('FOUND');
-        // console.log(content);
-        setStatus(statusType.FOUND);
-        // console.log(res);
-        // console.log(cache);
-        // console.log(type, data), console.log({ ...results, [type]: data });
-        setResults({ ...results, [type]: data });
-        // console.log('FIN DU CALLBACK');
-      }
-    };
-    console.log(results);
-    if (results !== {}) {
-      // console.log('ON LANCE LA');
-      // console.log(url);
-      directSearchSite(
-        {
-          title: title,
-          is_movie: true,
-          release_date: date,
-        },
-        0,
-        0,
-        callback,
-        cache.cacheData[url],
-      );
-    }
-  };
-
-  const getCurrentMovie = (currentMovieId) => {
-    const callback = (data, url) => {
-      setCurrentMovieData(data);
-      setCurrentMovieUrl(url);
-      setIsLoading(false);
-
-      const title = data.title;
-      const year = data.release_date.split('-')[0];
-
-      runSearch(title, year, url);
-    };
-    getMovies(currentMovieId, callback, 'movie', cache);
-  };
-
-  useEffect(() => {
-    getCurrentMovie(currentMovieId);
-  }, []);
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (currentMovieData) {
@@ -86,15 +44,25 @@ const ContentDisplay = (props) => {
     }
   }, [currentMovieData]);
 
+  const handleCurrentMovie = (currentMovieBasics) => {
+    const callback = (data, key) => {
+      setCurrentMovieData(data);
+      setCurrentMovieKey(key);
+      setIsLoading(false);
+    };
+    getMovies(currentMovieBasics.id, callback, 'movie', cache);
+  };
+
   useEffect(() => {
-    const url = currentMovieUrl;
-    if (results) {
-      cache.setCacheData((prevState) => ({
-        ...prevState,
-        [url]: { ...cache.cacheData[url], streamData: results },
-      }));
-    }
-  }, [results]);
+    console.log('handleCurrent');
+    handleCurrentMovie(currentMovieBasics);
+  }, []);
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////  COMPONENTS  ///////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   const genres = !isLoading ? utils.getGenre(currentMovieData) : null;
 
@@ -124,25 +92,25 @@ const ContentDisplay = (props) => {
       ? utils.getBackgroundData(color1, color2, backgroundImage, data)
       : [{}, {}];
 
-  let findMovie = null;
-  let circleStatusClass = null;
+  // let findMovie = null;
+  // let circleStatusClass = null;
 
-  // console.log(results);
-  if (status) {
-    if (status === statusType.NOT_FOUND) {
-      findMovie = 'NOT_FOUND';
-      circleStatusClass = 'circle-status-nok';
-    } else if (status === statusType.FOUND && results) {
-      findMovie = 'FOUND ! : ';
-      circleStatusClass = 'circle-status-ok';
-    } else {
-      findMovie = 'LOADING ...';
-      circleStatusClass = 'circle-status-pending';
-    }
-  }
+  // // console.log(results);
+  // if (status) {
+  //   if (status === statusType.NOT_FOUND) {
+  //     findMovie = 'NOT_FOUND';
+  //     circleStatusClass = 'circle-status-nok';
+  //   } else if (status === statusType.FOUND) {
+  //     findMovie = 'FOUND ! : ';
+  //     circleStatusClass = 'circle-status-ok';
+  //   } else {
+  //     findMovie = 'LOADING ...';
+  //     circleStatusClass = 'circle-status-pending';
+  //   }
+  // }
 
   const playButton =
-    status === statusType.FOUND ? (
+    // status === statusType.FOUND ? (
       <div
         className="circle-around-play"
         onClick={() => {
@@ -151,11 +119,11 @@ const ContentDisplay = (props) => {
         }}>
         <div className="button-play"></div>
       </div>
-    ) : (
-      <div className="circle-around-dont-play">
-        <div className="button-play"></div>
-      </div>
-    );
+    // ) : (
+    //   <div className="circle-around-dont-play">
+    //     <div className="button-play"></div>
+    //   </div>
+    // );
 
   const contentDispay = !isLoading ? (
     <div style={backgroundImageStyle} className="main-content-display-container">
@@ -196,7 +164,7 @@ const ContentDisplay = (props) => {
                     </span>
                     <span className="data-wrapper-title-facts-status">
                       <div className="circle-status-container">
-                        <div className={'circle-status ' + circleStatusClass}></div>
+{/*                        <div className={'circle-status ' + circleStatusClass}></div>*/}
                       </div>
                     </span>
                   </div>

@@ -4,14 +4,28 @@ import Crop169RoundedIcon from '@material-ui/icons/Crop169Rounded';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
 const remote = require('electron').remote;
 
-const minimize = () => {
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
+const handleMinimize = () => {
   var window = remote.getCurrentWindow();
   window.minimize();
 };
 
-const maximize = () => {
+const handleMaximize = () => {
   var window = remote.getCurrentWindow();
   if (!window.isMaximized()) {
     window.maximize();
@@ -20,10 +34,16 @@ const maximize = () => {
   }
 };
 
-const closeWindow = () => {
+const handleClose = () => {
   var window = remote.getCurrentWindow();
   window.close();
 };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////  COMPONENTS  ///////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
 const MainTopBar = () => {
   return (
@@ -38,13 +58,13 @@ const MainTopBar = () => {
           </div>
         </div>
         <div className="tob-bar-action">
-          <div onClick={minimize} className="custom-icon-bar opacity-c">
+          <div onClick={handleMinimize} className="custom-icon-bar opacity-c">
             <RemoveIcon />
           </div>
-          <div onClick={maximize} className="custom-icon-bar opacity-c">
+          <div onClick={handleMaximize} className="custom-icon-bar opacity-c">
             <Crop169RoundedIcon />
           </div>
-          <div onClick={close} className="custom-icon-bar opacity-c">
+          <div onClick={handleClose} className="custom-icon-bar opacity-c">
             <CloseRoundedIcon />
           </div>
         </div>

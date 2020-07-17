@@ -125,13 +125,12 @@ const VideoPlayer = (props) => {
 
   const setNewTimer = (createNew) => {
     clearTimeout(timer);
-    if (createNew){
+    if (createNew) {
       let newTimer = setTimeout(() => {
         handleControlsOff();
       }, 5000);
       handleNewTimer(newTimer);
-    }
-    else{
+    } else {
       handleNewTimer(null);
     }
   };
@@ -142,8 +141,7 @@ const VideoPlayer = (props) => {
       // console.log('ON');
       handleControlsOn();
       setNewTimer(true);
-    }
-    else{
+    } else {
       // console.log('OFF');
       handleControlsOn();
       setNewTimer(false);
@@ -246,9 +244,8 @@ const VideoPlayer = (props) => {
     setSelectedSubtitles(item);
   };
 
-
   useEffect(() => {
-    handleChangeOnFullScreen()
+    handleChangeOnFullScreen();
   }, [isFullscreen]);
 
   const handleClickFullscreen = () => {
@@ -263,17 +260,17 @@ const VideoPlayer = (props) => {
 
   const handleClick = (e) => {
     // console.log('onClick');
-    setClick([e.pageX,e.pageY])
+    setClick([e.pageX, e.pageY]);
     e.stopPropagation();
   };
 
   useEffect(() => {
-    handleChangeOnFullScreen()
+    handleChangeOnFullScreen();
   }, [move]);
 
   const handleMove = (e) => {
     // console.log('onMove');
-    setMove([e.pageX,e.pageY])
+    setMove([e.pageX, e.pageY]);
   };
 
   const handleReady = () => {
@@ -373,7 +370,7 @@ const VideoPlayer = (props) => {
 
   const handleKeyDown = (e) => {
     // console.log('onKeyDown');
-    setKeyDown([e.keyCode])
+    setKeyDown([e.keyCode]);
   };
 
   useEffect(() => {

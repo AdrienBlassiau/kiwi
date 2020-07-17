@@ -7,7 +7,6 @@ import ContentDisplay from './ContentDisplay';
 import Modal from './Modal';
 
 const MainContainer = (props) => {
-
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
@@ -26,15 +25,20 @@ const MainContainer = (props) => {
     itemsToAdd,
     isFetching,
     scroll,
-    getMoviesGrid
+    getMoviesGrid,
   } = props.getters.grid;
   const {
-    currentMovieId,
-    currentMovieUrl,
+    currentMovieBasics,
+    currentMovieKey,
     currentMovieData,
+    status,
     showModal,
     isPlaying,
   } = props.getters.movie;
+  const {
+    callQueue,
+    occupied
+  } = props.getters.queue;
 
   const { setCacheData } = props.setters.cache;
   const {
@@ -47,20 +51,25 @@ const MainContainer = (props) => {
     setNumberPerline,
     setItemsToAdd,
     setIsFetching,
-    setScroll
+    setScroll,
   } = props.setters.grid;
   const {
-    setCurrentMovieId,
-    setCurrentMovieUrl,
+    setCurrentMovieBasics,
+    setCurrentMovieKey,
     setCurrentMovieData,
+    setStatus,
+    setRequestStatus,
     setShowModal,
     setIsPlaying,
-    onCloseModal
+    onCloseModal,
   } = props.setters.movie;
+  const {
+    setCallQueue,
+    setOccupied
+  } = props.setters.queue;
 
   const cache = { cacheData, setCacheData };
   const myRef = useRef(null);
-
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -69,13 +78,13 @@ const MainContainer = (props) => {
   /////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
-    if (isFetching){
+    if (isFetching) {
       setIsFetching(false);
     }
   }, [moviesData]);
 
   useEffect(() => {
-    if (isFetching){
+    if (isFetching) {
       setTimeout(() => {
         getMoviesGrid();
       }, 1000);
@@ -83,12 +92,11 @@ const MainContainer = (props) => {
   }, [isFetching]);
 
   useEffect(() => {
-    if (scroll && !isFetching && hasMore){
+    if (scroll && !isFetching && hasMore) {
       const component = ReactDOM.findDOMNode(myRef.current);
-      if (component.scrollHeight != component.scrollTop + component.clientHeight || isFetching){
+      if (component.scrollHeight != component.scrollTop + component.clientHeight || isFetching) {
         return;
-      }
-      else{
+      } else {
         setIsFetching(true);
         return;
       }
@@ -97,15 +105,14 @@ const MainContainer = (props) => {
 
   const handleScroll = () => {
     const component = ReactDOM.findDOMNode(myRef.current);
-    setScroll([component.scrollHeight,component.scrollTop,component.clientHeight])
-  }
+    setScroll([component.scrollHeight, component.scrollTop, component.clientHeight]);
+  };
 
   useEffect(() => {
     const component = ReactDOM.findDOMNode(myRef.current);
     component.addEventListener('scroll', handleScroll);
     return () => component.removeEventListener('scroll', handleScroll);
   }, []);
-
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -115,7 +122,7 @@ const MainContainer = (props) => {
 
   const display = isPlaying ? (
     <PlayerContainer
-      currentMovieUrl={currentMovieUrl}
+      currentMovieKey={currentMovieKey}
       currentMovieData={currentMovieData}
       driver={driver}
       cache={cache}
@@ -129,21 +136,24 @@ const MainContainer = (props) => {
         moviesData={moviesData}
         driver={driver}
         setIsPlaying={setIsPlaying}
-        setCurrentMovieId={setCurrentMovieId}
+        setCurrentMovieBasics={setCurrentMovieBasics}
         setShowModal={setShowModal}
         cache={cache}
         gridInfos={gridInfos}
         itemsToAdd={itemsToAdd}
+        callQueue={callQueue}
+        setCallQueue={setCallQueue}
       />
       {showModal ? (
         <Modal onClose={onCloseModal} show={showModal}>
           <ContentDisplay
-            currentMovieId={currentMovieId}
-            currentMovieUrl={currentMovieUrl}
+            currentMovieBasics={currentMovieBasics}
             currentMovieData={currentMovieData}
             setCurrentMovieData={setCurrentMovieData}
-            setCurrentMovieUrl={setCurrentMovieUrl}
-            driver={driver}
+            setCurrentMovieKey={setCurrentMovieKey}
+            setStatus={setStatus}
+            setRequestStatus={setRequestStatus}
+            status={status}
             setIsPlaying={setIsPlaying}
             cache={cache}
           />

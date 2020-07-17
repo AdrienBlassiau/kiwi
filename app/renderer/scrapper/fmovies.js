@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 const baseUrl = 'https://fmovies.to';
 const { wait } = require('./utils');
 const timeout = 5000;
+const { newDriver, safeQuit } = require('./driver');
 
 const fetchPage = async (url, n) => {
   const jar = request.jar();
@@ -22,6 +23,7 @@ const fetchPage = async (url, n) => {
 };
 
 const scrape = async (item) => {
+  console.log('On scrape');
   try {
     const title = encodeURI(item.title);
     const searchUrl = `${baseUrl}/search?keyword=${title}`;
@@ -60,7 +62,7 @@ const scrape = async (item) => {
   }
 };
 
-const searchSite = async (item) => {
+const searchSite = async (item, n) => {
   console.log('searchSite :');
   try {
     const res = await scrape(item);
@@ -71,9 +73,12 @@ const searchSite = async (item) => {
       return movieTitle.toLowerCase() == item.title.toLowerCase() && movieDate == item.release_date;
     });
     // console.log('IN');
-    return { data: selectedMovie.length > 0 ? selectedMovie[0] : [], type: 'fmovies' };
+    const streamData = selectedMovie.length > 0 ? selectedMovie[0] : {};
+    return searchStream(streamData);
+    // return { data: selectedMovie.length > 0 ? selectedMovie[0] : [], type: 'fmovies' };
   } catch (error) {
-    console.log(err);
+    if (n === 0) throw error;
+    return searchSite(item, n - 1);
     throw error;
   }
 };
@@ -135,8 +140,8 @@ async function clickUntilOk(driver, selector, n, text) {
       await driver.switchTo().defaultContent();
       console.log("On est plus sur l'IFRAME");
       await removeOverlay(driver);
-      // console.log(err)
-      if (n === 0) throw err;
+      console.log("N:",n)
+      if (n === 0) return "";
       console.log('REQUEST NOK !');
       return clickUntilOk(driver, selector, n - 1, text);
     });
@@ -158,8 +163,13 @@ async function processArray(resolvePromises, array, $, driver) {
 
     if (text.includes('Stream')) {
       console.log("C'EST DU STREAM");
-      let urlRes = await clickUntilOk(driver, selector, 10, text);
-      await resolvePromises.push({ url: 'http:' + urlRes, type: text, language: 'V.O.' });
+      let urlRes = await clickUntilOk(driver, selector, 5, text);
+      if (urlRes===""){
+        await resolvePromises.push({});
+      }
+      else{
+        await resolvePromises.push({ url: 'http:' + urlRes, type: text, language: 'V.O.' });
+      }
       console.log('On push:', urlRes);
     }
   }
@@ -188,20 +198,35 @@ async function run_aux(maxTries, url, driver) {
     if (maxTries <= 0) {
       console.log('Retry');
       // console.error('Exception!\n', err.stack, '\n');
-      throw err;
+      return resolvePromises;
     }
     return run_aux(maxTries - 1, url, driver);
   }
 }
 
-async function searchStream(item) {
-  console.log('DANS LE SEARCH STREAM');
+// async function searchStream(item) {
+async function searchStream(streamData) {
+  console.log('DANS LE SEARCH STREAM', streamData);
+  console.log(JSON.stringify(streamData) !== JSON.stringify({}));
+  if (JSON.stringify(streamData) !== JSON.stringify({})) {
+    const driver = newDriver();
+    console.log(driver);
+    const url = streamData.movieUrl;
+    const res = await run_aux(5, url, driver);
 
-  const streamData = item.streamData['fmovies'];
-  const url = streamData.movieUrl;
-  const res = await run_aux(5, url, item.driver);
-
-  return Promise.all(res);
+    console.log('streamdata:', streamData);
+    console.log('res:', res);
+    const finalStreamData = { ...streamData, resolve: res };
+    console.log('finalStreamData:', finalStreamData);
+    // safeQuit(driver)
+    // driver.quit()
+    const content = { data: finalStreamData, type: 'fmovies' };
+    return Promise.all([content, driver]);
+  } else {
+    const finalStreamData = { ...streamData, resolve: [] };
+    const content = { data: finalStreamData, type: 'fmovies' };
+    return Promise.all([content, null]);
+  }
 }
 
 module.exports = { searchSite, searchStream };

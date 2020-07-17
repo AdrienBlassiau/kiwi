@@ -10,10 +10,13 @@ import SearchBar from './SearchBar';
 import StreamBar from './StreamBar';
 
 import Style from '../css/AppCss.js';
+import * as utils from '../utils';
 
+import * as handleNumberPerLine from '../events/handleNumberPerLine';
+import * as handleFirstLoad from '../events/handleFirstLoad';
+import * as handleStreamSearch from '../events/handleStreamSearch';
 
 const MainPage = () => {
-
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
@@ -45,10 +48,15 @@ const MainPage = () => {
 
   // [Movie] : movie data before streaming
   const [currentMovieData, setCurrentMovieData] = useState(null);
-  const [currentMovieUrl, setCurrentMovieUrl] = useState('');
-  const [currentMovieId, setCurrentMovieId] = useState(null);
+  const [currentMovieKey, setCurrentMovieKey] = useState('');
+  const [currentMovieBasics, setCurrentMovieBasics] = useState(null);
+  const [status, setStatus] = useState(utils.statusType.PENDING);
   const [showModal, setShowModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // [Call Queue] : the call stack
+  const [callQueue, setCallQueue] = useState([]);
+  const [occupied, setOccupied] = useState(null);
 
   const configureGrid = (type, info) => {
     setMoviesData([]);
@@ -59,11 +67,11 @@ const MainPage = () => {
   };
 
   const getMoviesGrid = () => {
-    const callback = (data, url) => {
-      console.log("data: ")
+    const callback = (data, key) => {
+      console.log('data: ');
       console.log(data);
       setMoviesData(moviesData.concat(data));
-      console.log("LENGTH:",data.length)
+      console.log('LENGTH:', data.length);
       setHasMore(data.length - 1 > 0);
     };
 
@@ -72,12 +80,20 @@ const MainPage = () => {
   };
 
   const onCloseModal = () => {
-    setCurrentMovieId(null);
-    setCurrentMovieUrl('');
     setCurrentMovieData(null);
+    setCurrentMovieKey('');
+    setCurrentMovieBasics(null);
+    setStatus(utils.statusType.PENDING);
     setShowModal(false);
   };
 
+  const setRequestStatus = (data) => {
+    if (data.length === 0) {
+      setStatus(statusType.NOT_FOUND);
+    } else {
+      setStatus(statusType.FOUND);
+    }
+  };
 
   const getters = {
     cache: {
@@ -89,7 +105,7 @@ const MainPage = () => {
     search: {
       active,
       value,
-      label
+      label,
     },
     grid: {
       moviesData,
@@ -101,14 +117,19 @@ const MainPage = () => {
       itemsToAdd,
       isFetching,
       scroll,
-      getMoviesGrid
+      getMoviesGrid,
     },
     movie: {
-      currentMovieId,
-      currentMovieUrl,
+      currentMovieBasics,
+      currentMovieKey,
       currentMovieData,
+      status,
       showModal,
       isPlaying,
+    },
+    queue: {
+      callQueue,
+      occupied
     },
   };
 
@@ -122,7 +143,7 @@ const MainPage = () => {
     search: {
       setActive,
       setValue,
-      setLabel
+      setLabel,
     },
     grid: {
       setMoviesData,
@@ -134,19 +155,26 @@ const MainPage = () => {
       setNumberPerline,
       setItemsToAdd,
       setIsFetching,
-      setScroll
+      setScroll,
     },
     movie: {
-      setCurrentMovieId,
-      setCurrentMovieUrl,
+      setCurrentMovieBasics,
+      setCurrentMovieKey,
       setCurrentMovieData,
+      setStatus,
+      setRequestStatus,
       setShowModal,
       setIsPlaying,
-      onCloseModal
+      onCloseModal,
+    },
+    queue: {
+      setCallQueue,
+      setOccupied
     },
   };
 
   const cache = { cacheData, setCacheData };
+  const queue = { callQueue, occupied, setCallQueue, setOccupied };
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -154,31 +182,14 @@ const MainPage = () => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  const handleNumberPerLine = () => {
-    // console.log('INNER');
-    // console.log(window.innerWidth);
-    const number = Math.floor((window.innerWidth - 20) / 170);
-    const lastLineItems = moviesData.length % number;
-    // console.log('length:', moviesData.length);
-    // console.log('numberperline:', number);
-    // console.log('to add', number - lastLineItems);
-    setItemsToAdd(lastLineItems === 0 ? 0 : number - lastLineItems);
-  };
+  // [FILL LINE]: Compute the number of card remaining to fill the empty space
+  handleNumberPerLine.handler(moviesData, setItemsToAdd);
 
-  useEffect(() => {
-    handleNumberPerLine();
-  }, [moviesData]);
+  // [FIRST LOADING EVENT]: 2 useEffect to load 2*20 data on first page.
+  handleFirstLoad.handler(moviesData, getMoviesGrid, gridInfos, page);
 
-  useEffect(() => {
-    if (page==2){
-      getMoviesGrid()
-    }
-  }, [moviesData]);
-
-  useEffect(() => {
-    getMoviesGrid()
-
-  }, [gridInfos]);
+  // [STREAM SEARCH]: Stream search event
+  handleStreamSearch.handler(cache, currentMovieBasics, queue);
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@ const newDriver = () => {
     .setChromeOptions(chromeOptions)
     .build();
 
-  // driver.manage().window().maximize();
+  driver.manage().window().maximize();
 
   // driver.getSession().then((session) => {
   //   const cmd = new command.Command('SEND_COMMAND')
@@ -46,4 +46,14 @@ const newDriver = () => {
   return driver;
 };
 
-export default newDriver;
+const safeQuit = (driver) => {
+  console.log("BEFORE CLOSE:",driver)
+  if (driver) {
+    driver.quit();
+  }
+};
+
+module.exports = {
+  newDriver,
+  safeQuit,
+};

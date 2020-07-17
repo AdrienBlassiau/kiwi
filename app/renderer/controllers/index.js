@@ -56,26 +56,31 @@ const jokesUrl = 'https://api-light.com/api/get/random';
 
 const getMovies = (data, callback, type, cache) => {
   let url = '';
+  let key = '';
 
   console.log('On entre dans get movies');
   if (type === fetchType.POPULAR) {
     url = popularUrl(data);
+    key = url;
   } else if (type === fetchType.MOVIE) {
     url = movieUrl(data);
+    key = url;
   } else if (type === fetchType.SEARCH) {
     url = searchUrl(data);
+    key = url;
   } else {
     url = movieUrl(data);
+    key = url;
   }
 
-  console.log(url);
+  console.log(key);
 
-  if (cache.cacheData[url] != undefined) {
+  if (cache.cacheData[key] != undefined) {
     console.log('Dans le chache !');
-    let dataToRetrieve = cache.cacheData[url].data;
-    callback(dataToRetrieve, url);
+    let dataToRetrieve = cache.cacheData[key].data;
+    callback(dataToRetrieve, key);
   } else {
-    console.log('Pas dans le chache ! : ', url);
+    console.log('Pas dans le chache ! : ', key);
     axios
       .get(url)
       .then((response) => {
@@ -94,12 +99,12 @@ const getMovies = (data, callback, type, cache) => {
           data: data,
           type: type,
         };
-        console.log('URL :', url);
+        console.log('key :', key);
         cache.setCacheData((prevState) => ({
           ...prevState,
-          [url]: dataToAdd,
+          [key]: dataToAdd,
         }));
-        callback(data, url);
+        callback(data, key);
       })
       .catch((error) => console.log(error));
   }
