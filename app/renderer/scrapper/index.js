@@ -1,8 +1,11 @@
 const fmovies = require('./fmovies');
 
 const tvScrapers = [];
-const movieScrapers = [{ fun: fmovies, name: 'fmovies' },{ fun: fmovies, name: 'fmovies'}];
-const totalScrapper = movieScrapers.length
+const movieScrapers = [
+  { fun: fmovies, name: 'fmovies' },
+  { fun: fmovies, name: 'fmovies' },
+];
+const totalScrapper = movieScrapers.length;
 
 const n = 5;
 
@@ -29,5 +32,5 @@ function directSearchSite(item, season, episode, callback, customCache) {
 
 module.exports = {
   directSearchSite,
-  totalScrapper
+  totalScrapper,
 };

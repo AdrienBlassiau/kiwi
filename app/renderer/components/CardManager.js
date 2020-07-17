@@ -10,16 +10,14 @@ const CardManager = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  const isFetching = props.isFetching;
   const hasMore = props.hasMore;
+  const isFetching = props.isFetching;
+  const moviesData = props.moviesData;
+  const setCurrentMovieBasics = props.setCurrentMovieBasics;
+  const setShowModal = props.setShowModal;
+  const itemsToAdd = props.itemsToAdd;
   const callQueue = props.callQueue;
   const setCallQueue = props.setCallQueue;
-
-  const moreItems = [...Array(props.itemsToAdd)].map((e, i) => (
-    <div className="card-loader-style" key={i}>
-      <div className="invisible-item"></div>
-    </div>
-  ));
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -27,18 +25,22 @@ const CardManager = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  const content = props.moviesData ? (
+  const moreItems = [...Array(itemsToAdd)].map((e, i) => (
+    <div className="card-loader-style" key={i}>
+      <div className="invisible-item"></div>
+    </div>
+  ));
+
+  const content = moviesData ? (
     <React.Fragment>
-      {props.moviesData.map((movie, index) => (
+      {moviesData.map((movie, index) => (
         <ContentCard
           key={index}
           movie={movie}
-          driver={props.driver}
-          setIsPlaying={props.setIsPlaying}
-          setCurrentMovieBasics={props.setCurrentMovieBasics}
-          setShowModal={props.setShowModal}
           callQueue={callQueue}
           setCallQueue={setCallQueue}
+          setCurrentMovieBasics={setCurrentMovieBasics}
+          setShowModal={setShowModal}
         />
       ))}
       {isFetching ? null : moreItems}
@@ -47,7 +49,7 @@ const CardManager = (props) => {
     <div></div>
   );
 
-  const MyLoader = (props) => (
+  const MyLoader = () => (
     <ContentLoader
       speed={2}
       width={170}

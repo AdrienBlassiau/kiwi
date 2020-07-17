@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import CardManager from './CardManager';
@@ -14,7 +14,6 @@ const MainContainer = (props) => {
   /////////////////////////////////////////////////////////////////////////////
 
   const { cacheData } = props.getters.cache;
-  const { driver } = props.getters.driver;
   const {
     moviesData,
     gridType,
@@ -33,12 +32,11 @@ const MainContainer = (props) => {
     currentMovieData,
     status,
     showModal,
+    isLoading,
     isPlaying,
   } = props.getters.movie;
-  const {
-    callQueue,
-    occupied
-  } = props.getters.queue;
+  const { callQueue, occupied } = props.getters.queue;
+  const { myRef } = props.getters.scroll;
 
   const { setCacheData } = props.setters.cache;
   const {
@@ -60,59 +58,13 @@ const MainContainer = (props) => {
     setStatus,
     setRequestStatus,
     setShowModal,
+    setIsLoading,
     setIsPlaying,
     onCloseModal,
   } = props.setters.movie;
-  const {
-    setCallQueue,
-    setOccupied
-  } = props.setters.queue;
+  const { setCallQueue, setOccupied } = props.setters.queue;
 
   const cache = { cacheData, setCacheData };
-  const myRef = useRef(null);
-
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-
-  useEffect(() => {
-    if (isFetching) {
-      setIsFetching(false);
-    }
-  }, [moviesData]);
-
-  useEffect(() => {
-    if (isFetching) {
-      setTimeout(() => {
-        getMoviesGrid();
-      }, 1000);
-    }
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (scroll && !isFetching && hasMore) {
-      const component = ReactDOM.findDOMNode(myRef.current);
-      if (component.scrollHeight != component.scrollTop + component.clientHeight || isFetching) {
-        return;
-      } else {
-        setIsFetching(true);
-        return;
-      }
-    }
-  }, [scroll]);
-
-  const handleScroll = () => {
-    const component = ReactDOM.findDOMNode(myRef.current);
-    setScroll([component.scrollHeight, component.scrollTop, component.clientHeight]);
-  };
-
-  useEffect(() => {
-    const component = ReactDOM.findDOMNode(myRef.current);
-    component.addEventListener('scroll', handleScroll);
-    return () => component.removeEventListener('scroll', handleScroll);
-  }, []);
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -122,10 +74,9 @@ const MainContainer = (props) => {
 
   const display = isPlaying ? (
     <PlayerContainer
-      currentMovieKey={currentMovieKey}
-      currentMovieData={currentMovieData}
-      driver={driver}
       cache={cache}
+      currentMovieData={currentMovieData}
+      currentMovieKey={currentMovieKey}
       setIsPlaying={setIsPlaying}
     />
   ) : (
@@ -134,12 +85,8 @@ const MainContainer = (props) => {
         hasMore={hasMore}
         isFetching={isFetching}
         moviesData={moviesData}
-        driver={driver}
-        setIsPlaying={setIsPlaying}
         setCurrentMovieBasics={setCurrentMovieBasics}
         setShowModal={setShowModal}
-        cache={cache}
-        gridInfos={gridInfos}
         itemsToAdd={itemsToAdd}
         callQueue={callQueue}
         setCallQueue={setCallQueue}
@@ -147,15 +94,12 @@ const MainContainer = (props) => {
       {showModal ? (
         <Modal onClose={onCloseModal} show={showModal}>
           <ContentDisplay
-            currentMovieBasics={currentMovieBasics}
+            status={status}
+            isLoading={isLoading}
             currentMovieData={currentMovieData}
-            setCurrentMovieData={setCurrentMovieData}
-            setCurrentMovieKey={setCurrentMovieKey}
             setStatus={setStatus}
             setRequestStatus={setRequestStatus}
-            status={status}
             setIsPlaying={setIsPlaying}
-            cache={cache}
           />
         </Modal>
       ) : null}

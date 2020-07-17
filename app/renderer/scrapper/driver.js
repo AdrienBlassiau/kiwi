@@ -47,7 +47,7 @@ const newDriver = () => {
 };
 
 const safeQuit = (driver) => {
-  console.log("BEFORE CLOSE:",driver)
+  console.log('BEFORE CLOSE:', driver);
   if (driver) {
     driver.quit();
   }

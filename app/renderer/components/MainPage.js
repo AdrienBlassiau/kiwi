@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import newDriver from '../scrapper/driver.js';
 import { getMovies } from '../controllers';
@@ -15,6 +15,8 @@ import * as utils from '../utils';
 import * as handleNumberPerLine from '../events/handleNumberPerLine';
 import * as handleFirstLoad from '../events/handleFirstLoad';
 import * as handleStreamSearch from '../events/handleStreamSearch';
+import * as handleScrollLoad from '../events/handleScrollLoad';
+import * as handleModalSearch from '../events/handleModalSearch';
 
 const MainPage = () => {
   /////////////////////////////////////////////////////////////////////////////
@@ -26,9 +28,6 @@ const MainPage = () => {
   // [Cache] : cache system, it's a dict with request as key and duration,
   // type and adress as content
   const [cacheData, setCacheData] = useState([]);
-
-  // [Driver] : selenium driver, for scrapping with click, ...
-  const [driver, setDriver] = useState(newDriver);
 
   // [Search] : searchBar states
   const [active, setActive] = useState(false);
@@ -52,11 +51,15 @@ const MainPage = () => {
   const [currentMovieBasics, setCurrentMovieBasics] = useState(null);
   const [status, setStatus] = useState(utils.statusType.PENDING);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
 
   // [Call Queue] : the call stack
   const [callQueue, setCallQueue] = useState([]);
   const [occupied, setOccupied] = useState(null);
+
+  // [scroll ref] : reference for scrolling
+  const myRef = useRef(null);
 
   const configureGrid = (type, info) => {
     setMoviesData([]);
@@ -99,9 +102,6 @@ const MainPage = () => {
     cache: {
       cacheData,
     },
-    driver: {
-      driver,
-    },
     search: {
       active,
       value,
@@ -125,20 +125,21 @@ const MainPage = () => {
       currentMovieData,
       status,
       showModal,
+      isLoading,
       isPlaying,
     },
     queue: {
       callQueue,
-      occupied
+      occupied,
+    },
+    scroll: {
+      myRef,
     },
   };
 
   const setters = {
     cache: {
       setCacheData,
-    },
-    driver: {
-      setDriver,
     },
     search: {
       setActive,
@@ -164,12 +165,13 @@ const MainPage = () => {
       setStatus,
       setRequestStatus,
       setShowModal,
+      setIsLoading,
       setIsPlaying,
       onCloseModal,
     },
     queue: {
       setCallQueue,
-      setOccupied
+      setOccupied,
     },
   };
 
@@ -188,8 +190,32 @@ const MainPage = () => {
   // [FIRST LOADING EVENT]: 2 useEffect to load 2*20 data on first page.
   handleFirstLoad.handler(moviesData, getMoviesGrid, gridInfos, page);
 
+  // [SCROLL MORE LOADING EVENT]: Load as data as we can per 20,
+  // every time we scroll
+  handleScrollLoad.handler(
+    myRef,
+    scroll,
+    setScroll,
+    isFetching,
+    setIsFetching,
+    hasMore,
+    getMoviesGrid,
+    moviesData,
+  );
+
   // [STREAM SEARCH]: Stream search event
   handleStreamSearch.handler(cache, currentMovieBasics, queue);
+
+  // [MODAL CONTENT]: Get modal content data
+  handleModalSearch.handler(
+    currentMovieData,
+    setCurrentMovieData,
+    setCurrentMovieKey,
+    setIsLoading,
+    currentMovieBasics,
+    showModal,
+    cache,
+  );
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////

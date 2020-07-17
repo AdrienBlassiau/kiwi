@@ -140,8 +140,8 @@ async function clickUntilOk(driver, selector, n, text) {
       await driver.switchTo().defaultContent();
       console.log("On est plus sur l'IFRAME");
       await removeOverlay(driver);
-      console.log("N:",n)
-      if (n === 0) return "";
+      console.log('N:', n);
+      if (n === 0) return '';
       console.log('REQUEST NOK !');
       return clickUntilOk(driver, selector, n - 1, text);
     });
@@ -164,10 +164,9 @@ async function processArray(resolvePromises, array, $, driver) {
     if (text.includes('Stream')) {
       console.log("C'EST DU STREAM");
       let urlRes = await clickUntilOk(driver, selector, 5, text);
-      if (urlRes===""){
+      if (urlRes === '') {
         await resolvePromises.push({});
-      }
-      else{
+      } else {
         await resolvePromises.push({ url: 'http:' + urlRes, type: text, language: 'V.O.' });
       }
       console.log('On push:', urlRes);

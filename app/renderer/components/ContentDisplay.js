@@ -17,46 +17,11 @@ const ContentDisplay = (props) => {
   /////////////////////////////////////////////////////////////////////////////
 
   const status = props.status;
-  // const setStatus = props.setStatus;
-
-  // const statusType = utils.statusType;
-  const [isLoading, setIsLoading] = useState(true);
-
-  const cache = props.cache;
-  const currentMovieBasics = props.currentMovieBasics;
+  const isLoading = props.isLoading;
   const currentMovieData = props.currentMovieData;
-  const setCurrentMovieData = props.setCurrentMovieData;
-  const setCurrentMovieKey = props.setCurrentMovieKey;
-
-  const id = props.currentMovieBasics.id;
-  const title = props.currentMovieBasics.title;
-  const date = props.currentMovieBasics.date;
-
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-
-  useEffect(() => {
-    if (currentMovieData) {
-      setIsLoading(false);
-    }
-  }, [currentMovieData]);
-
-  const handleCurrentMovie = (currentMovieBasics) => {
-    const callback = (data, key) => {
-      setCurrentMovieData(data);
-      setCurrentMovieKey(key);
-      setIsLoading(false);
-    };
-    getMovies(currentMovieBasics.id, callback, 'movie', cache);
-  };
-
-  useEffect(() => {
-    console.log('handleCurrent');
-    handleCurrentMovie(currentMovieBasics);
-  }, []);
+  const setIsPlaying = props.setIsPlaying;
+  // const setStatus = props.setStatus;
+  // const statusType = utils.statusType;
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -109,21 +74,22 @@ const ContentDisplay = (props) => {
   //   }
   // }
 
-  const playButton =
+  const playButton = (
     // status === statusType.FOUND ? (
-      <div
-        className="circle-around-play"
-        onClick={() => {
-          // console.log('okoko');
-          props.setIsPlaying(true);
-        }}>
-        <div className="button-play"></div>
-      </div>
-    // ) : (
-    //   <div className="circle-around-dont-play">
-    //     <div className="button-play"></div>
-    //   </div>
-    // );
+    <div
+      className="circle-around-play"
+      onClick={() => {
+        // console.log('okoko');
+        setIsPlaying(true);
+      }}>
+      <div className="button-play"></div>
+    </div>
+  );
+  // ) : (
+  //   <div className="circle-around-dont-play">
+  //     <div className="button-play"></div>
+  //   </div>
+  // );
 
   const contentDispay = !isLoading ? (
     <div style={backgroundImageStyle} className="main-content-display-container">
@@ -164,7 +130,7 @@ const ContentDisplay = (props) => {
                     </span>
                     <span className="data-wrapper-title-facts-status">
                       <div className="circle-status-container">
-{/*                        <div className={'circle-status ' + circleStatusClass}></div>*/}
+                        {/*                        <div className={'circle-status ' + circleStatusClass}></div>*/}
                       </div>
                     </span>
                   </div>
