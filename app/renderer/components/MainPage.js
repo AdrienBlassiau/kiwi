@@ -36,8 +36,7 @@ const MainPage = () => {
 
   // [grid] : movie data we can see on main site grid, fetch state information
   const [moviesData, setMoviesData] = useState([]);
-  const [gridType, setGridType] = useState('popular');
-  const [gridInfos, setGridInfos] = useState('');
+  const [gridInfos, setGridInfos] = useState({type:'movie',style:'popular',query:''});
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [numberPerLine, setNumberPerline] = useState(1);
@@ -45,7 +44,7 @@ const MainPage = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [scroll, setScroll] = useState(null);
 
-  // [Movie] : movie data before streaming
+  // [Movies and Tv Shows] : movie and TV shows data before streaming
   const [currentMovieData, setCurrentMovieData] = useState(null);
   const [currentMovieKey, setCurrentMovieKey] = useState('');
   const [currentMovieBasics, setCurrentMovieBasics] = useState(null);
@@ -61,10 +60,11 @@ const MainPage = () => {
   // [scroll ref] : reference for scrolling
   const myRef = useRef(null);
 
-  const configureGrid = (type, info) => {
+  const configureGrid = (infos) => {
+    console.log("Entrée dans configureGrid:",infos)
+    console.log("Previous data:",moviesData)
     setMoviesData([]);
-    setGridType(type);
-    setGridInfos(info);
+    setGridInfos(infos);
     setPage(1);
     setHasMore(true);
   };
@@ -78,7 +78,7 @@ const MainPage = () => {
       setHasMore(data.length - 1 > 0);
     };
 
-    getMovies([page, gridInfos], callback, gridType, cache);
+    getMovies({page:page, ...gridInfos}, callback,  cache);
     setPage(page + 1);
   };
 
@@ -110,7 +110,6 @@ const MainPage = () => {
     },
     grid: {
       moviesData,
-      gridType,
       gridInfos,
       page,
       hasMore,
@@ -149,7 +148,6 @@ const MainPage = () => {
     },
     grid: {
       setMoviesData,
-      setGridType,
       setGridInfos,
       setPage,
       setHasMore,
@@ -212,6 +210,7 @@ const MainPage = () => {
     currentMovieData,
     setCurrentMovieData,
     setCurrentMovieKey,
+    gridInfos,
     setIsLoading,
     currentMovieBasics,
     showModal,

@@ -15,14 +15,25 @@ const SearchBar = (props) => {
 
   const { active, value, label } = props.getters.search;
   const { setActive, setValue, setLabel } = props.setters.search;
-  const { moviesData, gridType, gridInfos, page, hasMore } = props.getters.grid;
+  const {  moviesData,
+      gridInfos,
+      page,
+      hasMore,
+      numberPerLine,
+      itemsToAdd,
+      isFetching,
+      scroll,
+      getMoviesGrid } = props.getters.grid;
   const {
     setMoviesData,
-    setGridType,
-    setGridInfos,
-    setPage,
-    setHasMore,
-    configureGrid,
+      setGridInfos,
+      setPage,
+      setHasMore,
+      configureGrid,
+      setNumberPerline,
+      setItemsToAdd,
+      setIsFetching,
+      setScroll,
   } = props.setters.grid;
 
   const changeValue = (event) => {
@@ -31,7 +42,8 @@ const SearchBar = (props) => {
   };
 
   const closeSearch = () => {
-    configureGrid('popular', '');
+    const infos = {...gridInfos,style:'popular',query:''}
+    configureGrid(infos);
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -44,7 +56,8 @@ const SearchBar = (props) => {
     if (event.which === 13) {
       const query = encodeURI(value);
       if (gridInfos != query) {
-        configureGrid('search', query);
+        const infos = {...gridInfos,style:'search',query:query}
+        configureGrid(infos);
       }
     }
   };
@@ -75,7 +88,7 @@ const SearchBar = (props) => {
             />
           </div>
         </div>
-        {gridType === 'search' ? (
+        {gridInfos.style === 'search' ? (
           <div className={'close-icon-master ' + (active ? 'active-color' : '')}>
             <CloseIcon
               onClick={closeSearch}

@@ -9,19 +9,24 @@ const ContentCard = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
+  const [hovered,setHovered] = useState(false)
+
   const movie = props.movie;
   const callQueue = props.callQueue;
   const setCallQueue = props.setCallQueue;
   const setCurrentMovieBasics = props.setCurrentMovieBasics;
   const setShowModal = props.setShowModal;
+  const gridInfos = props.gridInfos
+
+  const type = gridInfos.type
+  const id = movie.id;
+  const title = movie.title;
+  const date = type==="movie" ? movie.release_date.split('-')[0] : movie.first_air_date.split('-')[0];
 
   const handleOpenModal = () => {
-    console.log(movie);
-    const id = movie.id;
-    const title = movie.title;
-    const date = movie.release_date.split('-')[0];
     setCurrentMovieBasics({ id, title, date });
     setShowModal(true);
+
     callQueue.push({ id, title, date });
     setCallQueue(callQueue);
   };
@@ -34,7 +39,15 @@ const ContentCard = (props) => {
 
   return (
     <div>
-      <div className="card-main-style" onClick={handleOpenModal}>
+      <div
+      className="card-main-style"
+      onClick={handleOpenModal}
+      onMouseEnter={() => {console.log("on");setHovered(true)}}
+      onMouseLeave={() => {console.log("off");setHovered(false)}}>
+        {hovered ?
+          <div className="movie-title-infos">
+            <div className="movie-title-relative">{title} ({date})</div>
+          </div>: null}
         <div className="image-container">
           <div className="wrapper">
             <div className="image-link" title={movie.title}>

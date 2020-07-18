@@ -13,21 +13,26 @@ const fetchType = {
 };
 
 const popularUrl = (data) => {
-  const [pageNumber, more] = data;
+  const type = data.type
+  const page = data.page;
 
+  console.log(type)
   return (
-    ' https://api.themoviedb.org/3/movie/popular?api_key=' +
+    ' https://api.themoviedb.org/3/'+type+'/popular?api_key=' +
     API_KEY +
     '&language=' +
     LANGUAGE +
     '&page=' +
-    pageNumber
+    page
   );
 };
 
-const movieUrl = (movieId) => {
+const movieUrl = (data) => {
+  const type = data.type;
+  const movieId = data.movieId
+
   return (
-    ' https://api.themoviedb.org/3/movie/' +
+    ' https://api.themoviedb.org/3/'+type+'/' +
     movieId +
     '?api_key=' +
     API_KEY +
@@ -36,17 +41,19 @@ const movieUrl = (movieId) => {
 };
 
 const searchUrl = (data) => {
-  const [pageNumber, query] = data;
+  const query = data.query;
+  const type = data.type;
+  const page = data.page
 
   return (
-    ' https://api.themoviedb.org/3/search/movie?api_key=' +
+    ' https://api.themoviedb.org/3/search/'+type+'?api_key=' +
     API_KEY +
     '&query=' +
     query +
     '&language=' +
     LANGUAGE +
     '&page=' +
-    pageNumber +
+    page +
     '&include_adult=' +
     ADULT
   );
@@ -54,18 +61,18 @@ const searchUrl = (data) => {
 
 const jokesUrl = 'https://api-light.com/api/get/random';
 
-const getMovies = (data, callback, type, cache) => {
+const getMovies = (data, callback, cache) => {
   let url = '';
   let key = '';
-
+  let style = data.style
   console.log('On entre dans get movies');
-  if (type === fetchType.POPULAR) {
+  if (style === fetchType.POPULAR) {
     url = popularUrl(data);
     key = url;
-  } else if (type === fetchType.MOVIE) {
+  } else if (style === fetchType.MOVIE) {
     url = movieUrl(data);
     key = url;
-  } else if (type === fetchType.SEARCH) {
+  } else if (style === fetchType.SEARCH) {
     url = searchUrl(data);
     key = url;
   } else {
@@ -85,11 +92,11 @@ const getMovies = (data, callback, type, cache) => {
       .get(url)
       .then((response) => {
         let data = null;
-        if (type === fetchType.POPULAR) {
+        if (style === fetchType.POPULAR) {
           data = response.data.results;
-        } else if (type === fetchType.MOVIE) {
+        } else if (style === fetchType.MOVIE) {
           data = response.data;
-        } else if (type === fetchType.SEARCH) {
+        } else if (style === fetchType.SEARCH) {
           data = response.data.results;
         } else {
           data = response.data;
@@ -97,7 +104,7 @@ const getMovies = (data, callback, type, cache) => {
 
         let dataToAdd = {
           data: data,
-          type: type,
+          style: style,
         };
         console.log('key :', key);
         cache.setCacheData((prevState) => ({

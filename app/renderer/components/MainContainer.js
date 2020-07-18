@@ -16,7 +16,6 @@ const MainContainer = (props) => {
   const { cacheData } = props.getters.cache;
   const {
     moviesData,
-    gridType,
     gridInfos,
     page,
     hasMore,
@@ -41,7 +40,6 @@ const MainContainer = (props) => {
   const { setCacheData } = props.setters.cache;
   const {
     setMoviesData,
-    setGridType,
     setGridInfos,
     setPage,
     setHasMore,
@@ -90,6 +88,8 @@ const MainContainer = (props) => {
         itemsToAdd={itemsToAdd}
         callQueue={callQueue}
         setCallQueue={setCallQueue}
+        configureGrid={configureGrid}
+        gridInfos={gridInfos}
       />
       {showModal ? (
         <Modal onClose={onCloseModal} show={showModal}>

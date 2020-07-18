@@ -704,6 +704,7 @@ a:link:active, a:visited:active {
 }
 
 .card-main-style {
+	position: relative;
 	width: 150px;
 	min-width: 150px;
 	// width: 75px;
@@ -727,6 +728,36 @@ a:link:active, a:visited:active {
 	filter: brightness(70%);
 }
 
+.movie-title-infos{
+	position: absolute;
+	font-size: 10px;
+	top: -15px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    text-align: center;
+    background-color: var(--medium-letter-color);
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.movie-title-relative{
+	position: relative;
+}
+
+.movie-title-relative:after {
+    content:'';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    width: 0;
+    height: 0;
+    border-top: solid 10px var(--medium-letter-color);
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+}
 
 .image-container {
 	border-radius: 4px;
@@ -1425,6 +1456,14 @@ video::-webkit-media-text-track-display {
     justify-content: center;
 }
 
+.select{
+	opacity: 1;
+}
+
+.not-select{
+	opacity: 0.5;
+}
+
 .change-card-display-container{
 	display: flex;
     align-items: center;
@@ -1441,6 +1480,7 @@ video::-webkit-media-text-track-display {
 .content-type-container{
 	margin-right: 10px;
 	font-weight: 500 !important;
+	cursor: pointer;
 }
 
 .content-style-container{

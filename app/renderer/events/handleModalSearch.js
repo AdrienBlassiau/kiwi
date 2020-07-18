@@ -5,11 +5,13 @@ const handler = (
   currentMovieData,
   setCurrentMovieData,
   setCurrentMovieKey,
+  gridInfos,
   setIsLoading,
   currentMovieBasics,
   showModal,
   cache,
 ) => {
+
   useEffect(() => {
     if (currentMovieData) {
       setIsLoading(false);
@@ -22,7 +24,7 @@ const handler = (
       setCurrentMovieKey(key);
       setIsLoading(false);
     };
-    getMovies(currentMovieBasics.id, callback, 'movie', cache);
+    getMovies({...gridInfos,movieId:currentMovieBasics.id,style:'movie'}, callback, cache);
   };
 
   useEffect(() => {

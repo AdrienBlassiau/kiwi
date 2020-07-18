@@ -23,6 +23,8 @@ const CardManager = (props) => {
   const itemsToAdd = props.itemsToAdd;
   const callQueue = props.callQueue;
   const setCallQueue = props.setCallQueue;
+  const configureGrid = props.configureGrid;
+  const gridInfos = props.gridInfos
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -36,6 +38,19 @@ const CardManager = (props) => {
   //   </div>
   // ));
 
+  const changeType = (type) => {
+    configureGrid({...gridInfos,type:type,style:'popular'})
+  }
+
+  const isMovie = () => {
+    console.log(gridInfos.type)
+    return gridInfos.type === 'movie'
+  }
+
+  const isTV = () => {
+    return gridInfos.type === 'tv'
+  }
+
   const content = moviesData ? (
     <React.Fragment>
       {moviesData.map((movie, index) => (
@@ -46,6 +61,7 @@ const CardManager = (props) => {
           setCallQueue={setCallQueue}
           setCurrentMovieBasics={setCurrentMovieBasics}
           setShowModal={setShowModal}
+          gridInfos={gridInfos}
         />
       ))}
 {/*      {isFetching ? null : moreItems}*/}
@@ -75,8 +91,16 @@ const CardManager = (props) => {
   const selection =
   <div className="selection-movies-container">
     <div className="change-content-type-container">
-      <div className="content-type-container">Movies</div>
-      <div className="content-type-container">TV Shows</div>
+      <div
+        className={"content-type-container "+(isMovie()?'select':'not-select')}
+        onClick={() => changeType('movie')}>
+          Movies
+      </div>
+      <div
+        className={"content-type-container "+(isTV()?'select':'not-select')}
+        onClick={() => changeType('tv')}>
+          TV Shows
+      </div>
     </div>
     <div className="change-content-card-container">
       <div className="change-content-filter-and-style-container">
@@ -97,8 +121,8 @@ const CardManager = (props) => {
         </div>
       </div>
       <div className="change-card-display-container">
-        <AppsIcon fontSize="medium"/>
-        <ViewComfyIcon fontSize="medium"/>
+        <AppsIcon />
+        <ViewComfyIcon />
       </div>
     </div>
   </div>
