@@ -16,22 +16,27 @@ const PlayerContainer = (props) => {
 
   useEffect(() => {
     let newUrlList = [];
-    if (hasStreamData) {
-      for (const item in streamData) {
-        const currentItem = streamData[item];
-        if (currentItem && currentItem.hasOwnProperty('resolve')) {
-          console.log('>>>>>>>>>>>>>>>>><< RES:', currentItem.resolve);
-          const resolved = currentItem.resolve;
-          if (currentItem.resolve.length > 0) {
-            console.log('>>>>>>>>>>>>>>>>><< DATA:', resolved);
-            console.log('NEW URL LIST:', newUrlList);
-            newUrlList = newUrlList.concat(resolved);
+    const cacheDataMovie = props.cache.cacheData[id];
+    if(cacheDataMovie){
+      const hasStreamData = cacheDataMovie.hasOwnProperty('streamData');
+      if (hasStreamData) {
+        for (const item in streamData) {
+          const currentItem = streamData[item];
+          if (currentItem && currentItem.hasOwnProperty('resolve')) {
+            console.log('>>>>>>>>>>>>>>>>><< RES:', currentItem.resolve);
+            const resolved = currentItem.resolve;
+            if (currentItem.resolve.length > 0) {
+              console.log('>>>>>>>>>>>>>>>>><< DATA:', resolved);
+              console.log('NEW URL LIST:', newUrlList);
+              newUrlList = newUrlList.concat(resolved);
+            }
           }
         }
       }
     }
     console.log(newUrlList);
     setUrlList(newUrlList);
+
   }, [props.cache]);
 
   console.log('On entre, voici les datas: ', currentMovieData);

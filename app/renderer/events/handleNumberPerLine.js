@@ -4,7 +4,7 @@ const handler = (moviesData, setItemsToAdd) => {
   const handleNumberPerLine = () => {
     // console.log('INNER');
     // console.log(window.innerWidth);
-    const number = Math.floor((window.innerWidth - 20) / 170);
+    const number = Math.floor((window.innerWidth - 20) / 160);
     const lastLineItems = moviesData.length % number;
     // console.log('length:', moviesData.length);
     // console.log('numberperline:', number);

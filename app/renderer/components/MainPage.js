@@ -186,9 +186,9 @@ const MainPage = () => {
   /////////////////////////////////////////////////////////////////////////////
 
   // [FILL LINE]: Compute the number of card remaining to fill the empty space
-  handleNumberPerLine.handler(moviesData, setItemsToAdd);
+  // handleNumberPerLine.handler(moviesData, setItemsToAdd);
 
-  // [FIRST LOADING EVENT]: 2 useEffect to load 2*20 data on first page.
+  // [FIRST LOADING EVENT]: load enough data to fill the page.
   handleFirstLoad.handler(moviesData, getMoviesGrid, gridInfos, page);
 
   // [SCROLL MORE LOADING EVENT]: Load as data as we can per 20,
