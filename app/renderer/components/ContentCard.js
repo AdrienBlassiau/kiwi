@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 // import Style from '../css/ContentCardCss.js';
 import PercentageCircle from './PercentageCircle';
 
+import AutorenewRoundedIcon from '@material-ui/icons/AutorenewRounded';
+import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+
+import FavoriteRoundedIcon from '@material-ui/icons/FavoriteRounded';
+import VisibilityRoundedIcon from '@material-ui/icons/VisibilityRounded';
+
 const ContentCard = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -17,19 +23,35 @@ const ContentCard = (props) => {
   const setCurrentMovieBasics = props.setCurrentMovieBasics;
   const setShowModal = props.setShowModal;
   const gridInfos = props.gridInfos
+  const snack = props.snack
 
   const type = gridInfos.type
   const id = movie.id;
   const title = movie.title;
-  const date = type==="movie" ? movie.release_date.split('-')[0] : movie.first_air_date.split('-')[0];
+  const date = type==="movie" ? (movie.hasOwnProperty('release_date') ? movie.release_date.split('-')[0] : "") : movie.first_air_date.split('-')[0];
+
+  useEffect(() => {
+    console.log("CHANGMENT CALL QUEUE")
+  }, [callQueue]);
 
   const handleOpenModal = () => {
+    console.log("OPEN MODAL")
+    setHovered(false)
     setCurrentMovieBasics({ id, title, date });
     setShowModal(true);
 
-    callQueue.push({ id, title, date });
-    setCallQueue(callQueue);
+    let newCallQueue = callQueue.concat([{ id, title, date }]);
+    setCallQueue(newCallQueue);
   };
+
+  const handlePreload = (e) => {
+    e.stopPropagation();
+    let newCallQueue = callQueue.concat([{ id, title, date }]);
+    setCallQueue(newCallQueue);
+
+    let newSnackQueue = snack.snackQueue.concat([{ text:title+" added to the queue"}]);
+    snack.setSnackQueue(newSnackQueue)
+  }
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -42,15 +64,33 @@ const ContentCard = (props) => {
       <div
       className="card-main-style"
       onClick={handleOpenModal}
-      onMouseEnter={() => {console.log("on");setHovered(true)}}
-      onMouseLeave={() => {console.log("off");setHovered(false)}}>
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}>
         {hovered ?
-          <div className="movie-title-infos">
-            <div className="movie-title-relative">{title} ({date})</div>
-          </div>: null}
+          <React.Fragment>
+            <div className="movie-title-infos">
+              <div className="movie-title-relative">{title} ({date})</div>
+            </div>
+            <div className="card-action-container">
+              <div className="card-action-box">
+                  <div className="card-action">
+                    <FavoriteRoundedIcon />
+                  </div>
+                  <div className="card-action">
+                    <VisibilityRoundedIcon />
+                  </div>
+                  <div className="card-action" onClick={handlePreload}>
+                    <AutorenewRoundedIcon />
+                  </div>
+                  <div className="card-action">
+                    <GetAppRoundedIcon />
+                  </div>
+              </div>
+            </div>
+          </React.Fragment>: null}
         <div className="image-container">
           <div className="wrapper">
-            <div className="image-link" title={movie.title}>
+            <div className="image-link">
               <img
                 className="image"
                 alt=""

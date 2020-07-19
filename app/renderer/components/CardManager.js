@@ -3,11 +3,6 @@ import ContentLoader from 'react-content-loader';
 import ContentCard from './ContentCard';
 import ReactDOM from 'react-dom';
 
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import ViewComfyIcon from '@material-ui/icons/ViewComfy';
-import AppsIcon from '@material-ui/icons/Apps';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-
 const CardManager = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -24,7 +19,8 @@ const CardManager = (props) => {
   const callQueue = props.callQueue;
   const setCallQueue = props.setCallQueue;
   const configureGrid = props.configureGrid;
-  const gridInfos = props.gridInfos
+  const gridInfos = props.gridInfos;
+  const snack = props.snack;
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -38,19 +34,6 @@ const CardManager = (props) => {
   //   </div>
   // ));
 
-  const changeType = (type) => {
-    configureGrid({...gridInfos,type:type,style:'popular'})
-  }
-
-  const isMovie = () => {
-    console.log(gridInfos.type)
-    return gridInfos.type === 'movie'
-  }
-
-  const isTV = () => {
-    return gridInfos.type === 'tv'
-  }
-
   const content = moviesData ? (
     <React.Fragment>
       {moviesData.map((movie, index) => (
@@ -62,6 +45,7 @@ const CardManager = (props) => {
           setCurrentMovieBasics={setCurrentMovieBasics}
           setShowModal={setShowModal}
           gridInfos={gridInfos}
+          snack={snack}
         />
       ))}
 {/*      {isFetching ? null : moreItems}*/}
@@ -88,48 +72,9 @@ const CardManager = (props) => {
     </div>
   ));
 
-  const selection =
-  <div className="selection-movies-container">
-    <div className="change-content-type-container">
-      <div
-        className={"content-type-container "+(isMovie()?'select':'not-select')}
-        onClick={() => changeType('movie')}>
-          Movies
-      </div>
-      <div
-        className={"content-type-container "+(isTV()?'select':'not-select')}
-        onClick={() => changeType('tv')}>
-          TV Shows
-      </div>
-    </div>
-    <div className="change-content-card-container">
-      <div className="change-content-filter-and-style-container">
-        <div className="content-style-container">
-          <div>DECADE</div>
-          <div><KeyboardArrowDownIcon /></div>
-        </div>
-        <div className="content-style-container">
-          <div>GENRE</div>
-          <div><KeyboardArrowDownIcon /></div>
-        </div>
-        <div className="content-filter-container">
-          <div className="sort-content-container">Sort By</div>
-          <div className="content-style-container">
-            <div>GENRE</div>
-            <div><KeyboardArrowDownIcon /></div>
-          </div>
-        </div>
-      </div>
-      <div className="change-card-display-container">
-        <AppsIcon />
-        <ViewComfyIcon />
-      </div>
-    </div>
-  </div>
 
   return (
     <div className="popular-movies-list">
-      {selection}
       {content}
       {hasMore && isFetching && loader}
     </div>

@@ -43,6 +43,7 @@ const SearchBar = (props) => {
 
   const closeSearch = () => {
     const infos = {...gridInfos,style:'popular',query:''}
+    setValue("");
     configureGrid(infos);
   };
 
@@ -70,14 +71,16 @@ const SearchBar = (props) => {
 
   return (
     <div className="main-search-container">
-      <div className="custmom-search-bar">
-        <div className={'search-icon-master ' + (active ? 'active-color' : '')}>
-          <SearchIcon style={{ color: active ? 'var(--dark-color)' : 'white' }} />
+      <div className="custom-search-bar">
+        {/*<div className={'search-icon-master ' + (active ? 'active-color' : '')}>*/}
+        <div className={'search-icon-master '}>
+          {/*<SearchIcon style={{ color: active ? 'var(--dark-color)' : 'white' }} />*/}
+          <SearchIcon style={{ color:'var(--grey-letter-color)' }} />
         </div>
         <div className="search-data-master">
           <div className={'field ' + (active ? 'active' : '')}>
             <input
-              id={1}
+              id={"input-id"}
               type="text"
               value={value}
               placeholder={label}
@@ -92,7 +95,7 @@ const SearchBar = (props) => {
           <div className={'close-icon-master ' + (active ? 'active-color' : '')}>
             <CloseIcon
               onClick={closeSearch}
-              style={{ color: active ? 'var(--dark-color)' : 'white' }}
+              style={{ color: 'var(--grey-letter-color)'}}
             />
           </div>
         ) : (

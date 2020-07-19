@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Crop169RoundedIcon from '@material-ui/icons/Crop169Rounded';
 import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 
 /////////////////////////////////////////////////////////////////////////////
@@ -60,7 +61,7 @@ const MainTopBar = () => {
             <RemoveIcon />
           </div>
           <div onClick={handleMaximize} className="custom-icon-bar opacity-c">
-            <Crop169RoundedIcon />
+            <AddIcon />
           </div>
           <div onClick={handleClose} className="custom-icon-bar opacity-c">
             <CloseRoundedIcon />

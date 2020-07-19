@@ -21,8 +21,15 @@ function developBuild() {
     .pipe(dest('build'));
 }
 
+function developBuildImages() {
+  return src('app/**/*.png').pipe(dest('build'));
+}
+
+
 build.displayName = 'build-scripts';
 developBuild.displayName = 'dev-build-scripts';
+developBuildImages.displayName = 'dev-build-images';
 
 exports.build = build;
 exports.developBuild = developBuild;
+exports.developBuildImages = developBuildImages;

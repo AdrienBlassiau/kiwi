@@ -19,6 +19,7 @@ const PlayerContainer = (props) => {
     const cacheDataMovie = props.cache.cacheData[id];
     if(cacheDataMovie){
       const hasStreamData = cacheDataMovie.hasOwnProperty('streamData');
+      const streamData = cacheDataMovie.streamData;
       if (hasStreamData) {
         for (const item in streamData) {
           const currentItem = streamData[item];
@@ -44,14 +45,15 @@ const PlayerContainer = (props) => {
   const cacheDataMovie = props.cache.cacheData[id];
   // const streamData = props.cache.cacheData[id].streamData;
   console.log('On va envoyer :', cacheDataMovie);
-  const hasStreamData = cacheDataMovie.hasOwnProperty('streamData');
-  const streamData = cacheDataMovie.streamData;
-  const urlData = hasStreamData
-    ? Object.entries(streamData).map((item) => {
-        console.log('>>>>>>>>>>>>>>>>><< ITEM:', item);
-      })
-    : null;
-  console.log('URL LIST', urlList);
+  // const streamData = cacheDataMovie.streamData;
+  // const hasStreamData = cacheDataMovie.hasOwnProperty('streamData');
+  // const streamData = cacheDataMovie.streamData;
+  // const urlData = hasStreamData
+  //   ? Object.entries(streamData).map((item) => {
+  //       console.log('>>>>>>>>>>>>>>>>><< ITEM:', item);
+  //     })
+  //   : null;
+  // console.log('URL LIST', urlList);
 
   const urlShow = urlList.map((item, key) => {
     return <div key={key}>{item.url}</div>;
@@ -71,7 +73,7 @@ const PlayerContainer = (props) => {
 
   const videoPlayer = (
     <VideoPlayer
-      movieUrl="http://streamtape.com/get_video?id=zKykazbJpxFYr1L&expires=1595067661&ip=FOSOD0xEDOONFt&token=BNScMF5ctvBU"
+      movieUrl="http://streamtape.com/get_video?id=LLYRgdqmJdC6Km&expires=1595190302&ip=FOSOD0xEDOONFt&token=M2zX_F3Flw_U"
       setIsLoading={setIsLoading}
     />
   );

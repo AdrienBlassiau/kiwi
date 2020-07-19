@@ -25,6 +25,8 @@ const StreamBar = (props) => {
     setIsPlaying,
   } = props.setters.movie;
 
+  const {setMode} = props.setters.mode;
+
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////  COMPONENTS  ///////////////////////////////
@@ -35,7 +37,7 @@ const StreamBar = (props) => {
     <div className="main-stream-bar-container">
       <div className="main-stream-infos">
         <div className="main-stream-right-infos">
-          <div className="custom-chevron-left-icon" onClick={() => setIsPlaying(false)}>
+          <div className="custom-chevron-left-icon" onClick={() => setMode('search')}>
             <ChevronLeftIcon style={{ width: '50px', height: '50px' }} />
           </div>
           <div>You're watching: {currentMovieData.title}</div>

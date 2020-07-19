@@ -26,6 +26,7 @@ watchHtml.displayName = 'watch-html';
 exports.start = series(
   assets.copyHtml,
   scripts.developBuild,
+  scripts.developBuildImages,
   hotreload.start,
   electron.start,
   parallel(watchMainScripts, watchRendererScripts, watchHtml),

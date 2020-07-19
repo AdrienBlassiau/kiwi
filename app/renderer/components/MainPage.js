@@ -3,11 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import newDriver from '../scrapper/driver.js';
 import { getMovies } from '../controllers';
 
+import SnackBarManager from './SnackBarManager';
 import MainContainer from './MainContainer';
 import MainTopBar from './MainTopBar';
 import BottomBar from './BottomBar';
-import SearchBar from './SearchBar';
 import StreamBar from './StreamBar';
+import DecoBar from './DecoBar';
 
 import Style from '../css/AppCss.js';
 import * as utils from '../utils';
@@ -28,6 +29,9 @@ const MainPage = () => {
   // [Cache] : cache system, it's a dict with request as key and duration,
   // type and adress as content
   const [cacheData, setCacheData] = useState([]);
+
+  // [mode] : tab bar openened mode
+  const [mode, setMode] = useState('search');
 
   // [Search] : searchBar states
   const [active, setActive] = useState(false);
@@ -56,6 +60,9 @@ const MainPage = () => {
   // [Call Queue] : the call stack
   const [callQueue, setCallQueue] = useState([]);
   const [occupied, setOccupied] = useState(null);
+
+  // [SnackBar] : the snackbar manager
+  const [snackQueue, setSnackQueue] = useState([]);
 
   // [scroll ref] : reference for scrolling
   const myRef = useRef(null);
@@ -103,6 +110,9 @@ const MainPage = () => {
     cache: {
       cacheData,
     },
+    mode: {
+      mode,
+    },
     search: {
       active,
       value,
@@ -135,11 +145,17 @@ const MainPage = () => {
     scroll: {
       myRef,
     },
+    snack: {
+      snackQueue,
+    }
   };
 
   const setters = {
     cache: {
       setCacheData,
+    },
+    mode: {
+      setMode,
     },
     search: {
       setActive,
@@ -172,6 +188,9 @@ const MainPage = () => {
       setCallQueue,
       setOccupied,
     },
+    snack: {
+      setSnackQueue,
+    }
   };
 
   const cache = { cacheData, setCacheData };
@@ -217,6 +236,7 @@ const MainPage = () => {
     cache,
   );
 
+
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////  COMPONENTS  ///////////////////////////////
@@ -227,11 +247,12 @@ const MainPage = () => {
     <div>
       <Style />
       <div className="master-component">
+        <SnackBarManager getters={getters} setters={setters} />
         <MainTopBar getters={getters} setters={setters} />
-        {isPlaying ? (
-          <StreamBar getters={getters} setters={setters} cache={cache} />
+        {mode==='stream' ? (
+            <StreamBar getters={getters} setters={setters} cache={cache} />
         ) : (
-          <SearchBar getters={getters} setters={setters} cache={cache} />
+            <DecoBar getters={getters} setters={setters} cache={cache} />
         )}
         <MainContainer getters={getters} setters={setters} />
         <BottomBar getters={getters} setters={setters} cache={cache} />

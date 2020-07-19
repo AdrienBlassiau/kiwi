@@ -19,7 +19,7 @@ const ContentDisplay = (props) => {
   const status = props.status;
   const isLoading = props.isLoading;
   const currentMovieData = props.currentMovieData;
-  const setIsPlaying = props.setIsPlaying;
+  const setMode = props.setMode;
   // const setStatus = props.setStatus;
   // const statusType = utils.statusType;
 
@@ -80,7 +80,7 @@ const ContentDisplay = (props) => {
       className="circle-around-play"
       onClick={() => {
         // console.log('okoko');
-        setIsPlaying(true);
+        setMode('stream');
       }}>
       <div className="button-play"></div>
     </div>
