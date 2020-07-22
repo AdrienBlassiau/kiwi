@@ -6,8 +6,9 @@ import PercentageCircle from './PercentageCircle';
 import { directSearchSite } from '../scrapper/index.js';
 import { getMovies } from '../controllers';
 import * as utils from '../utils';
-
 import run from '../scrapper/fetch.js';
+
+import logger from '../utils/logger.js';
 
 const ContentDisplay = (props) => {
   /////////////////////////////////////////////////////////////////////////////
@@ -15,7 +16,6 @@ const ContentDisplay = (props) => {
   ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
-
   const status = props.status;
   const isLoading = props.isLoading;
   const currentMovieData = props.currentMovieData;

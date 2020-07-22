@@ -11,13 +11,13 @@ const PlayerContainer = (props) => {
   const currentMovieData = props.currentMovieData;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [movieUrl, setMovieUrl] = useState(null);
   const [urlList, setUrlList] = useState([]);
 
   useEffect(() => {
     let newUrlList = [];
+    const id = currentMovieData.id;
     const cacheDataMovie = props.cache.cacheData[id];
-    if(cacheDataMovie){
+    if (cacheDataMovie) {
       const hasStreamData = cacheDataMovie.hasOwnProperty('streamData');
       const streamData = cacheDataMovie.streamData;
       if (hasStreamData) {
@@ -37,46 +37,45 @@ const PlayerContainer = (props) => {
     }
     console.log(newUrlList);
     setUrlList(newUrlList);
-
   }, [props.cache]);
 
-  console.log('On entre, voici les datas: ', currentMovieData);
-  const id = currentMovieData.id;
-  const cacheDataMovie = props.cache.cacheData[id];
-  // const streamData = props.cache.cacheData[id].streamData;
-  console.log('On va envoyer :', cacheDataMovie);
-  // const streamData = cacheDataMovie.streamData;
-  // const hasStreamData = cacheDataMovie.hasOwnProperty('streamData');
-  // const streamData = cacheDataMovie.streamData;
-  // const urlData = hasStreamData
-  //   ? Object.entries(streamData).map((item) => {
-  //       console.log('>>>>>>>>>>>>>>>>><< ITEM:', item);
-  //     })
-  //   : null;
-  // console.log('URL LIST', urlList);
-
   const urlShow = urlList.map((item, key) => {
-    return <div key={key}>{item.url}</div>;
+    return (
+      <div key={key}>
+        {item.type} {item.language} {item.quality}
+      </div>
+    );
   });
+
   // console.log('MOVIE URL', movieUrl ? movieUrl[0].url : 'NOT ok');
 
-  // const videoPlayer = !movieUrl ? (
-  //   <VideoLoader message={"Scrapping ..."}/>
-  // ) : (
-  //   <React.Fragment>
-  //     <div className={'custom-react-player-master ' + (isLoading ? 'player-none' : 'player-block')}>
-  //       <VideoPlayer movieUrl={movieUrl[0].url} setIsLoading={setIsLoading} isLoading={isLoading} />
-  //     </div>
-  //     {isLoading ? <VideoLoader message={"Loading the video ..."}/> : null}
-  //   </React.Fragment>
-  // );
+  console.log('URL LIST:', urlList);
+  const videoPlayer =
+    urlList.length === 0 ? (
+      <VideoLoader message={'Scrapping ...'} />
+    ) : (
+      <React.Fragment>
+        <div
+          className={'custom-react-player-master ' + (isLoading ? 'player-none' : 'player-block')}>
+          <VideoPlayer
+            movieUrl={urlList[0].url}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
+            serverList={urlList}
+          />
+        </div>
+        {isLoading ? <VideoLoader message={'Loading the video ...'} /> : null}
+      </React.Fragment>
+    );
 
-  const videoPlayer = (
-    <VideoPlayer
-      movieUrl="http://streamtape.com/get_video?id=LLYRgdqmJdC6Km&expires=1595190302&ip=FOSOD0xEDOONFt&token=M2zX_F3Flw_U"
-      setIsLoading={setIsLoading}
-    />
-  );
+  // const videoPlayer = (
+  //   <VideoPlayer
+  //     movieUrl="http://streamtape.com/get_video?id=dp6le28X6YCgd0&expires=1595508847&ip=FOSOD0xEDOONFt&token=pw_ug07kccxW"
+  //     setIsLoading={setIsLoading}
+  //     isLoading={isLoading}
+  //     serverList={urlList}
+  //   />
+  // );
 
   const overview = props.currentMovieData.overview;
 
@@ -85,7 +84,7 @@ const PlayerContainer = (props) => {
       <div className="video-player-container">{videoPlayer}</div>
       <div className="video-bottom-info">
         <div className="video-bottom-info-title">Summary: </div>
-        <div className="video-bottom-info-content">{urlShow}</div>
+        <div className="video-bottom-info-content">{overview}</div>
       </div>
     </div>
   );

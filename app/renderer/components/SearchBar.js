@@ -15,25 +15,27 @@ const SearchBar = (props) => {
 
   const { active, value, label } = props.getters.search;
   const { setActive, setValue, setLabel } = props.setters.search;
-  const {  moviesData,
-      gridInfos,
-      page,
-      hasMore,
-      numberPerLine,
-      itemsToAdd,
-      isFetching,
-      scroll,
-      getMoviesGrid } = props.getters.grid;
+  const {
+    moviesData,
+    gridInfos,
+    page,
+    hasMore,
+    numberPerLine,
+    itemsToAdd,
+    isFetching,
+    scroll,
+    getMoviesGrid,
+  } = props.getters.grid;
   const {
     setMoviesData,
-      setGridInfos,
-      setPage,
-      setHasMore,
-      configureGrid,
-      setNumberPerline,
-      setItemsToAdd,
-      setIsFetching,
-      setScroll,
+    setGridInfos,
+    setPage,
+    setHasMore,
+    configureGrid,
+    setNumberPerline,
+    setItemsToAdd,
+    setIsFetching,
+    setScroll,
   } = props.setters.grid;
 
   const changeValue = (event) => {
@@ -42,8 +44,8 @@ const SearchBar = (props) => {
   };
 
   const closeSearch = () => {
-    const infos = {...gridInfos,style:'popular',query:''}
-    setValue("");
+    const infos = { ...gridInfos, style: 'popular', query: '' };
+    setValue('');
     configureGrid(infos);
   };
 
@@ -57,7 +59,7 @@ const SearchBar = (props) => {
     if (event.which === 13) {
       const query = encodeURI(value);
       if (gridInfos != query) {
-        const infos = {...gridInfos,style:'search',query:query}
+        const infos = { ...gridInfos, style: 'search', query: query };
         configureGrid(infos);
       }
     }
@@ -75,12 +77,12 @@ const SearchBar = (props) => {
         {/*<div className={'search-icon-master ' + (active ? 'active-color' : '')}>*/}
         <div className={'search-icon-master '}>
           {/*<SearchIcon style={{ color: active ? 'var(--dark-color)' : 'white' }} />*/}
-          <SearchIcon style={{ color:'var(--grey-letter-color)' }} />
+          <SearchIcon style={{ color: 'var(--grey-letter-color)' }} />
         </div>
         <div className="search-data-master">
           <div className={'field ' + (active ? 'active' : '')}>
             <input
-              id={"input-id"}
+              id={'input-id'}
               type="text"
               value={value}
               placeholder={label}
@@ -93,10 +95,7 @@ const SearchBar = (props) => {
         </div>
         {gridInfos.style === 'search' ? (
           <div className={'close-icon-master ' + (active ? 'active-color' : '')}>
-            <CloseIcon
-              onClick={closeSearch}
-              style={{ color: 'var(--grey-letter-color)'}}
-            />
+            <CloseIcon onClick={closeSearch} style={{ color: 'var(--grey-letter-color)' }} />
           </div>
         ) : (
           <div></div>

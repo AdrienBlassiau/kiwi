@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import newDriver from '../scrapper/driver.js';
 import { getMovies } from '../controllers';
 
 import SnackBarManager from './SnackBarManager';
@@ -8,6 +7,7 @@ import MainContainer from './MainContainer';
 import MainTopBar from './MainTopBar';
 import BottomBar from './BottomBar';
 import StreamBar from './StreamBar';
+import SwitchContent from './SwitchContent';
 import DecoBar from './DecoBar';
 
 import Style from '../css/AppCss.js';
@@ -17,7 +17,9 @@ import * as handleNumberPerLine from '../events/handleNumberPerLine';
 import * as handleFirstLoad from '../events/handleFirstLoad';
 import * as handleStreamSearch from '../events/handleStreamSearch';
 import * as handleScrollLoad from '../events/handleScrollLoad';
-import * as handleModalSearch from '../events/handleModalSearch';
+import * as handleMoreInfos from '../events/handleMoreInfos';
+import * as handleOpenModal from '../events/handleOpenModal';
+import * as handleCloseModal from '../events/handleCloseModal';
 
 const MainPage = () => {
   /////////////////////////////////////////////////////////////////////////////
@@ -40,25 +42,27 @@ const MainPage = () => {
 
   // [grid] : movie data we can see on main site grid, fetch state information
   const [moviesData, setMoviesData] = useState([]);
-  const [gridInfos, setGridInfos] = useState({type:'movie',style:'popular',query:''});
+  const [gridInfos, setGridInfos] = useState({ type: 'movie', style: 'popular', query: '' });
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [numberPerLine, setNumberPerline] = useState(1);
-  const [itemsToAdd, setItemsToAdd] = useState(1);
   const [isFetching, setIsFetching] = useState(false);
   const [scroll, setScroll] = useState(null);
 
   // [Movies and Tv Shows] : movie and TV shows data before streaming
   const [currentMovieData, setCurrentMovieData] = useState(null);
   const [currentMovieKey, setCurrentMovieKey] = useState('');
-  const [currentMovieBasics, setCurrentMovieBasics] = useState(null);
+  const [currentMovieId, setCurrentMovieId] = useState(null);
   const [status, setStatus] = useState(utils.statusType.PENDING);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [moreInfos, setMoreInfos] = useState(false);
+  const [urlList, setUrlList] = useState([]);
 
   // [Call Queue] : the call stack
   const [callQueue, setCallQueue] = useState([]);
+  const [solvedQueue, setSolvedQueue] = useState([]);
   const [occupied, setOccupied] = useState(null);
 
   // [SnackBar] : the snackbar manager
@@ -68,8 +72,8 @@ const MainPage = () => {
   const myRef = useRef(null);
 
   const configureGrid = (infos) => {
-    console.log("Entrée dans configureGrid:",infos)
-    console.log("Previous data:",moviesData)
+    console.log('Entrée dans configureGrid:', infos);
+    console.log('Previous data:', moviesData);
     setMoviesData([]);
     setGridInfos(infos);
     setPage(1);
@@ -85,17 +89,17 @@ const MainPage = () => {
       setHasMore(data.length - 1 > 0);
     };
 
-    getMovies({page:page, ...gridInfos}, callback,  cache);
+    getMovies({ page: page, ...gridInfos }, callback, cache);
     setPage(page + 1);
   };
 
   const onCloseModal = () => {
     setCurrentMovieData(null);
     setCurrentMovieKey('');
-    setCurrentMovieBasics(null);
+    setCurrentMovieId(null);
     setStatus(utils.statusType.PENDING);
     setShowModal(false);
-    setIsLoading(true)
+    setIsLoading(true);
   };
 
   const setRequestStatus = (data) => {
@@ -124,22 +128,24 @@ const MainPage = () => {
       page,
       hasMore,
       numberPerLine,
-      itemsToAdd,
       isFetching,
       scroll,
       getMoviesGrid,
     },
     movie: {
-      currentMovieBasics,
+      currentMovieId,
       currentMovieKey,
       currentMovieData,
       status,
       showModal,
       isLoading,
       isPlaying,
+      moreInfos,
+      urlList,
     },
     queue: {
       callQueue,
+      solvedQueue,
       occupied,
     },
     scroll: {
@@ -147,7 +153,7 @@ const MainPage = () => {
     },
     snack: {
       snackQueue,
-    }
+    },
   };
 
   const setters = {
@@ -169,12 +175,11 @@ const MainPage = () => {
       setHasMore,
       configureGrid,
       setNumberPerline,
-      setItemsToAdd,
       setIsFetching,
       setScroll,
     },
     movie: {
-      setCurrentMovieBasics,
+      setCurrentMovieId,
       setCurrentMovieKey,
       setCurrentMovieData,
       setStatus,
@@ -183,18 +188,21 @@ const MainPage = () => {
       setIsLoading,
       setIsPlaying,
       onCloseModal,
+      setMoreInfos,
+      setUrlList,
     },
     queue: {
       setCallQueue,
+      setSolvedQueue,
       setOccupied,
     },
     snack: {
       setSnackQueue,
-    }
+    },
   };
 
   const cache = { cacheData, setCacheData };
-  const queue = { callQueue, occupied, setCallQueue, setOccupied };
+  const queue = { callQueue, solvedQueue, occupied, setCallQueue, setSolvedQueue, setOccupied };
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -222,20 +230,21 @@ const MainPage = () => {
   );
 
   // [STREAM SEARCH]: Stream search event
-  handleStreamSearch.handler(cache, currentMovieBasics, queue);
+  handleStreamSearch.handler(cache, currentMovieId, queue, gridInfos);
 
   // [MODAL CONTENT]: Get modal content data
-  handleModalSearch.handler(
+  handleMoreInfos.handler(
+    setCallQueue,
+    setSnackQueue,
     currentMovieData,
     setCurrentMovieData,
     setCurrentMovieKey,
     gridInfos,
     setIsLoading,
-    currentMovieBasics,
-    showModal,
+    currentMovieId,
+    moreInfos,
     cache,
   );
-
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -247,15 +256,16 @@ const MainPage = () => {
     <div>
       <Style />
       <div className="master-component">
-        <SnackBarManager getters={getters} setters={setters} />
-        <MainTopBar getters={getters} setters={setters} />
-        {mode==='stream' ? (
-            <StreamBar getters={getters} setters={setters} cache={cache} />
+        <SnackBarManager snackQueue={snackQueue} setSnackQueue={setSnackQueue} />
+        <MainTopBar />
+        {mode === 'stream' ? (
+          <StreamBar setMode={setMode} currentMovieData={currentMovieData} />
         ) : (
-            <DecoBar getters={getters} setters={setters} cache={cache} />
+          <DecoBar />
         )}
+        {mode === 'stream' ? null : <SwitchContent setMode={setMode} />}
         <MainContainer getters={getters} setters={setters} />
-        <BottomBar getters={getters} setters={setters} cache={cache} />
+        <BottomBar />
       </div>
     </div>
   );

@@ -13,12 +13,14 @@ const fetchType = {
 };
 
 const popularUrl = (data) => {
-  const type = data.type
+  const type = data.type;
   const page = data.page;
 
-  console.log(type)
+  console.log(type);
   return (
-    ' https://api.themoviedb.org/3/'+type+'/popular?api_key=' +
+    ' https://api.themoviedb.org/3/' +
+    type +
+    '/popular?api_key=' +
     API_KEY +
     '&language=' +
     LANGUAGE +
@@ -29,10 +31,12 @@ const popularUrl = (data) => {
 
 const movieUrl = (data) => {
   const type = data.type;
-  const movieId = data.movieId
+  const movieId = data.movieId;
 
   return (
-    ' https://api.themoviedb.org/3/'+type+'/' +
+    ' https://api.themoviedb.org/3/' +
+    type +
+    '/' +
     movieId +
     '?api_key=' +
     API_KEY +
@@ -43,10 +47,12 @@ const movieUrl = (data) => {
 const searchUrl = (data) => {
   const query = data.query;
   const type = data.type;
-  const page = data.page
+  const page = data.page;
 
   return (
-    ' https://api.themoviedb.org/3/search/'+type+'?api_key=' +
+    ' https://api.themoviedb.org/3/search/' +
+    type +
+    '?api_key=' +
     API_KEY +
     '&query=' +
     query +
@@ -64,8 +70,8 @@ const jokesUrl = 'https://api-light.com/api/get/random';
 const getMovies = (data, callback, cache) => {
   let url = '';
   let key = '';
-  let style = data.style
-  console.log('On entre dans get movies');
+  let style = data.style;
+  // console.log('On entre dans get movies');
   if (style === fetchType.POPULAR) {
     url = popularUrl(data);
     key = url;
@@ -80,14 +86,14 @@ const getMovies = (data, callback, cache) => {
     key = url;
   }
 
-  console.log(key);
+  // console.log(key);
 
   if (cache.cacheData[key] != undefined) {
-    console.log('Dans le chache !');
+    // console.log('Dans le chache !');
     let dataToRetrieve = cache.cacheData[key].data;
     callback(dataToRetrieve, key);
   } else {
-    console.log('Pas dans le chache ! : ', key);
+    // console.log('Pas dans le chache ! : ', key);
     axios
       .get(url)
       .then((response) => {
@@ -106,7 +112,7 @@ const getMovies = (data, callback, cache) => {
           data: data,
           style: style,
         };
-        console.log('key :', key);
+        // console.log('key :', key);
         cache.setCacheData((prevState) => ({
           ...prevState,
           [key]: dataToAdd,
@@ -139,4 +145,5 @@ const getJokes = (callback) => {
 module.exports = {
   getMovies,
   getJokes,
+  movieUrl,
 };

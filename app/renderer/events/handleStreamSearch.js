@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { directSearchSite, totalScrapper } from '../scrapper/index.js';
 import { safeQuit } from '../scrapper/driver';
+import logger from '../utils/logger.js';
 
-const handler = (cache, currentMovieBasics, queue) => {
-  const { callQueue, occupied, setCallQueue, setOccupied } = queue;
+const handler = (cache, currentMovieId, queue, gridInfos) => {
+  const { callQueue, solvedQueue, occupied, setCallQueue, setSolvedQueue, setOccupied } = queue;
   const [driverStack, setDriverStack] = useState([]);
   const [results, setResults] = useState(null);
   const [currentId, setCurrentId] = useState(null);
@@ -25,8 +26,12 @@ const handler = (cache, currentMovieBasics, queue) => {
         setResults(null);
         setCurrentId(null);
         setOccupied(null);
-        callQueue.shift();
+
+        let shifted = callQueue.shift();
         setCallQueue(callQueue);
+
+        let newSolvedQueue = solvedQueue.concat([shifted]);
+        setSolvedQueue(newSolvedQueue);
       } else {
         console.log(
           ">>>>>>>>>>>>>>>> TOUT N'EST PAS SOLVED DANS " +
@@ -56,7 +61,7 @@ const handler = (cache, currentMovieBasics, queue) => {
     }
   }, [results]);
 
-  const handleSearch = (id, title, date) => {
+  const handleSearch = (id, title, date, imdb_id) => {
     const callback = (res) => {
       const content = res[0];
       const driver = res[1];
@@ -66,9 +71,6 @@ const handler = (cache, currentMovieBasics, queue) => {
       const data = content.data;
       const type = content.type + Math.random();
 
-      // console.log("FIN D'UNE SEARCH:", data);
-      // console.log('ETAT DU CACHE', cache);
-      // console.log("L'id courante est :", id);
       if (data.resolve.length === 0) {
         setResults([{ [type]: null }, id]);
       } else {
@@ -81,6 +83,8 @@ const handler = (cache, currentMovieBasics, queue) => {
         title: title,
         is_movie: true,
         release_date: date,
+        tmdb_id: id,
+        imdb_id: imdb_id,
       },
       0,
       0,
@@ -90,34 +94,43 @@ const handler = (cache, currentMovieBasics, queue) => {
   };
 
   useEffect(() => {
-    console.log('La callQueue a changé !', queue.callQueue);
-
     if (!occupied && callQueue.length > 0) {
+      logger.debug('(handleStreamSearch) queue has changed');
+      // logger.debug(JSON.stringify(queue));
+      console.log('callQueue:', callQueue);
+
       let currentData = callQueue[0];
-      console.log('CURRENT DATA:', currentData);
+
       setOccupied(currentData);
 
+      let type = gridInfos.type;
       let id = currentData.id;
+      let imdb_id = currentData.imdb_id;
       let title = currentData.title;
-      let date = currentData.date;
+      const date =
+        type === 'movie'
+          ? currentData.hasOwnProperty('release_date')
+            ? currentData.release_date.split('-')[0]
+            : ''
+          : currentData.first_air_date.split('-')[0];
 
       setCurrentId(id);
 
       if (!cache.cacheData[id]) {
-        console.log('Pas dans le cache 1');
+        console.log('[' + id + '] pas dans le cache');
         cache.cacheData[id] = {};
         cache.cacheData[id].finished = false;
         cache.cacheData[id].nbSolved = 0;
         cache.cacheData[id].streamData = {};
         setDriverStack(driverStack);
-        handleSearch(id, title, date);
+        handleSearch(id, title, date, imdb_id);
       }
       // else if(cache.cacheData[id] && !cache.cacheData.finished){
       // 	console.log("Pas dans le cache 2")
       // 	handleSearch(id, title, date);
       // }
       else {
-        console.log('Dans le cache');
+        console.log('[' + id + '] dans le cache');
         driverStack.forEach((item) => safeQuit(item));
         setDriverStack([]);
         setResults(null);

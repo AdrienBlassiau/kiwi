@@ -13,14 +13,9 @@ const CardManager = (props) => {
   const hasMore = props.hasMore;
   const isFetching = props.isFetching;
   const moviesData = props.moviesData;
-  const setCurrentMovieBasics = props.setCurrentMovieBasics;
+  const setCurrentMovieId = props.setCurrentMovieId;
   const setShowModal = props.setShowModal;
-  const itemsToAdd = props.itemsToAdd;
-  const callQueue = props.callQueue;
-  const setCallQueue = props.setCallQueue;
-  const configureGrid = props.configureGrid;
   const gridInfos = props.gridInfos;
-  const snack = props.snack;
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -28,27 +23,18 @@ const CardManager = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  // const moreItems = [...Array(itemsToAdd)].map((e, i) => (
-  //   <div className="card-loader-style" key={i}>
-  //     <div className="invisible-item"></div>
-  //   </div>
-  // ));
-
   const content = moviesData ? (
     <React.Fragment>
       {moviesData.map((movie, index) => (
         <ContentCard
           key={index}
           movie={movie}
-          callQueue={callQueue}
-          setCallQueue={setCallQueue}
-          setCurrentMovieBasics={setCurrentMovieBasics}
+          setCurrentMovieId={setCurrentMovieId}
           setShowModal={setShowModal}
           gridInfos={gridInfos}
-          snack={snack}
         />
       ))}
-{/*      {isFetching ? null : moreItems}*/}
+      {/*      {isFetching ? null : moreItems}*/}
     </React.Fragment>
   ) : (
     <div></div>
@@ -71,7 +57,6 @@ const CardManager = (props) => {
       <MyLoader />
     </div>
   ));
-
 
   return (
     <div className="popular-movies-list">

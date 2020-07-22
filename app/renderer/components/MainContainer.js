@@ -7,6 +7,7 @@ import ContentDisplay from './ContentDisplay';
 import Modal from './Modal';
 import SelectionBar from './SelectionBar';
 import LogoContainer from './LogoContainer';
+import DownLoadManager from './DownLoadManager';
 
 const MainContainer = (props) => {
   /////////////////////////////////////////////////////////////////////////////
@@ -29,15 +30,17 @@ const MainContainer = (props) => {
     getMoviesGrid,
   } = props.getters.grid;
   const {
-    currentMovieBasics,
+    currentMovieId,
     currentMovieKey,
     currentMovieData,
     status,
     showModal,
     isLoading,
     isPlaying,
+    moreInfos,
+    urlList,
   } = props.getters.movie;
-  const { callQueue, occupied } = props.getters.queue;
+  const { callQueue, solvedQueue, occupied } = props.getters.queue;
   const { myRef } = props.getters.scroll;
   const { snackQueue } = props.getters.snack;
 
@@ -55,7 +58,7 @@ const MainContainer = (props) => {
     setScroll,
   } = props.setters.grid;
   const {
-    setCurrentMovieBasics,
+    setCurrentMovieId,
     setCurrentMovieKey,
     setCurrentMovieData,
     setStatus,
@@ -64,12 +67,12 @@ const MainContainer = (props) => {
     setIsLoading,
     setIsPlaying,
     onCloseModal,
+    setMoreInfos,
+    setUrlList,
   } = props.setters.movie;
-  const {
-    setSnackQueue
-  } = props.setters.snack;
+  const { setSnackQueue } = props.setters.snack;
 
-  const { setCallQueue, setOccupied } = props.setters.queue;
+  const { setCallQueue, setSolvedQueue, setOccupied } = props.setters.queue;
 
   const snack = { snackQueue, setSnackQueue };
   const cache = { cacheData, setCacheData };
@@ -80,61 +83,84 @@ const MainContainer = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  let bar = null
-  let container = null
+  let bar = null;
+  let container = null;
 
-  if (mode=='stream'){
-    bar = null
-    container = <PlayerContainer
-      cache={cache}
-      currentMovieData={currentMovieData}
-      currentMovieKey={currentMovieKey}
-      setIsPlaying={setIsPlaying}
-    />
-  }
-  else if (mode=='search'){
-    bar = <React.Fragment>
-            <LogoContainer />
-            <SelectionBar gridInfos={gridInfos} configureGrid={configureGrid} getters={props.getters} setters={props.setters} cache={props.cache}/>
-          </React.Fragment>
+  if (mode == 'stream') {
+    bar = null;
+    container = (
+      <PlayerContainer
+        cache={cache}
+        currentMovieData={currentMovieData}
+        currentMovieKey={currentMovieKey}
+        setIsPlaying={setIsPlaying}
+        urlList={urlList}
+        setUrlList={setUrlList}
+      />
+    );
+  } else if (mode == 'search') {
+    bar = (
+      <SelectionBar
+        gridInfos={gridInfos}
+        configureGrid={configureGrid}
+        getters={props.getters}
+        setters={props.setters}
+        cache={props.cache}
+      />
+    );
 
-    container = <React.Fragment>
-      <CardManager
-        hasMore={hasMore}
-        isFetching={isFetching}
-        moviesData={moviesData}
-        setCurrentMovieBasics={setCurrentMovieBasics}
-        setShowModal={setShowModal}
-        itemsToAdd={itemsToAdd}
+    container = (
+      <React.Fragment>
+        <CardManager
+          hasMore={hasMore}
+          isFetching={isFetching}
+          moviesData={moviesData}
+          setCurrentMovieId={setCurrentMovieId}
+          setShowModal={setShowModal}
+          gridInfos={gridInfos}
+        />
+        {showModal ? (
+          <Modal onClose={onCloseModal} show={showModal}>
+            <ContentDisplay
+              status={status}
+              isLoading={isLoading}
+              currentMovieData={currentMovieData}
+              setStatus={setStatus}
+              setRequestStatus={setRequestStatus}
+              setMode={setMode}
+            />
+          </Modal>
+        ) : null}
+      </React.Fragment>
+    );
+  } else if (mode == 'load') {
+    bar = null;
+    container = (
+      <DownLoadManager
         callQueue={callQueue}
         setCallQueue={setCallQueue}
-        configureGrid={configureGrid}
-        gridInfos={gridInfos}
-        snack={snack}
+        solvedQueue={solvedQueue}
+        setSolvedQueue={setSolvedQueue}
+        cache={cache}
       />
-      {showModal ? (
-        <Modal onClose={onCloseModal} show={showModal}>
-          <ContentDisplay
-            status={status}
-            isLoading={isLoading}
-            currentMovieData={currentMovieData}
-            setStatus={setStatus}
-            setRequestStatus={setRequestStatus}
-            setMode={setMode}
-          />
-        </Modal>
-      ) : null}
-    </React.Fragment>
-  }
-  else{
-    bar = null
-    container = null
+    );
+  } else {
+    bar = null;
+    container = null;
   }
 
   return (
-    <div className="main-container-wrapper">
+    <div className="main-content-container">
       {bar}
-      <div ref={myRef} className={mode=='stream' ? 'main-container-reduced' : 'main-container'}>
+      <div
+        ref={myRef}
+        className={
+          mode === 'stream'
+            ? 'main-container-reduced'
+            : mode === 'search'
+            ? 'main-container'
+            : 'main-container-2'
+        }>
         {container}
       </div>
     </div>

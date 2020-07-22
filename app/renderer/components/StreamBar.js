@@ -10,22 +10,8 @@ const StreamBar = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  const {
-    currentMovieId,
-    currentMovieUrl,
-    currentMovieData,
-    showModal,
-    isPlaying,
-  } = props.getters.movie;
-  const {
-    setCurrentMovieId,
-    setCurrentMovieUrl,
-    setCurrentMovieData,
-    setShowModal,
-    setIsPlaying,
-  } = props.setters.movie;
-
-  const {setMode} = props.setters.mode;
+  const setMode = props.setMode;
+  const currentMovieData = props.currentMovieData;
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////

@@ -27,6 +27,7 @@ exports.start = series(
   assets.copyHtml,
   scripts.developBuild,
   scripts.developBuildImages,
+  scripts.developBuildSub,
   hotreload.start,
   electron.start,
   parallel(watchMainScripts, watchRendererScripts, watchHtml),

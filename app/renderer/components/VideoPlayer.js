@@ -20,6 +20,7 @@ import VolumeOffRoundedIcon from '@material-ui/icons/VolumeOffRounded';
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import PictureInPictureRoundedIcon from '@material-ui/icons/PictureInPictureRounded';
 import SubtitlesRoundedIcon from '@material-ui/icons/SubtitlesRounded';
+import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
 
 // Sliders components for soud and control
 import { Slider, Direction } from 'react-player-controls';
@@ -28,11 +29,17 @@ const VideoPlayer = (props) => {
   // [PROPS]: some props ...
   const setIsLoading = props.setIsLoading;
   const isLoading = props.isLoading;
+  const serverList = props.serverList;
   const movieUrl = props.movieUrl;
 
   // [URL]: about the url of th media
   // url: the url we want to read
-  const [url, setUrl] = useState(movieUrl);
+  const defaultServer = serverList.length === 0 ? null : serverList[0];
+  const defaultUrl = defaultServer ? defaultServer.url : '';
+  const [url, setUrl] = useState(defaultUrl);
+  const [selectedServer, setSelectedServer] = useState(0);
+  const [serverOpen, setServerOpen] = useState(false);
+  const selectedItem = serverList[selectedServer];
 
   // [FULLSCREENs]: about the fullscreen state
   // isFullScreen: if we are fullscreen or not
@@ -189,6 +196,14 @@ const VideoPlayer = (props) => {
     // console.log('onSeekCange:');
     setPlayed(parseFloat(changeValue));
     playerRef.current.seekTo(parseFloat(changeValue));
+  };
+
+  const handleChangeServer = (e, item, key) => {
+    // console.log('onChangeServer');
+    e.stopPropagation();
+    setSelectedServer(key);
+    setUrl(item.url);
+    setIsLoading(true);
   };
 
   const handleChangeSpeed = (e, item) => {
@@ -493,6 +508,23 @@ const VideoPlayer = (props) => {
     </Slider>
   );
 
+  const server = serverOpen ? (
+    <div
+      className="speed-tab"
+      onMouseEnter={() => setServerOpen(true)}
+      onMouseLeave={() => setServerOpen(false)}>
+      <div className="speed-title">Servers</div>
+      {serverList.map((item, key) => (
+        <div
+          key={key}
+          className={'speed-choice ' + (selectedServer === key ? 't-c-selected' : '')}
+          onClick={(e) => handleChangeServer(e, item, key)}>
+          {item.type} {item.language} {item.quality}
+        </div>
+      ))}
+    </div>
+  ) : null;
+
   const speed = rateOpen ? (
     <div
       className="speed-tab"
@@ -558,6 +590,13 @@ const VideoPlayer = (props) => {
 
       <div className="controls-bar-group">
         <div
+          className="custom-video-button tab-container t-c-selected"
+          onMouseEnter={() => setServerOpen(true)}
+          onMouseLeave={() => setServerOpen(false)}>
+          {server}
+          <DnsRoundedIcon />
+        </div>
+        <div
           className={
             'custom-video-button tab-container ' + (enablePlaybackRate ? 't-c-selected' : '')
           }
@@ -587,6 +626,18 @@ const VideoPlayer = (props) => {
       </div>
     </div>
   );
+
+  var fs = require('fs');
+  var files = fs.readdirSync(process.cwd() + '/build/renderer/subtitles/data/'+selectedItem.id);
+
+  const tracks = files.map(lang => {
+    return {
+      kind: 'captions',
+      src:
+        './subtitles/data/' + selectedItem.id + '/'+lang+'/' + selectedItem.type + '/' + 'subtitles.vtt',
+      srcLang: lang,
+    };
+  });
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -632,10 +683,7 @@ const VideoPlayer = (props) => {
             onKeyDown={handleKeyDown}
             config={{
               file: {
-                tracks: [
-                  { kind: 'captions', src: './components/subs/fr.vtt', srcLang: 'fr' },
-                  { kind: 'captions', src: './components/subs/ar.vtt', srcLang: 'ar' },
-                ],
+                tracks: tracks,
               },
             }}
           />

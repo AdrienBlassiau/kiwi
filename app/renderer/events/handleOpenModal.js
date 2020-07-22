@@ -11,7 +11,6 @@ const handler = (
   showModal,
   cache,
 ) => {
-
   useEffect(() => {
     if (currentMovieData) {
       setIsLoading(false);
@@ -24,13 +23,12 @@ const handler = (
       setCurrentMovieKey(key);
       setIsLoading(false);
     };
-    getMovies({...gridInfos,movieId:currentMovieBasics.id,style:'movie'}, callback, cache);
+    getMovies({ ...gridInfos, movieId: currentMovieBasics.id, style: 'movie' }, callback, cache);
   };
 
   useEffect(() => {
     if (showModal) {
-      console.log('handleCurrent');
-      handleCurrentMovie(currentMovieBasics);
+      console.log('OPEN MODAL');
     }
   }, [showModal]);
 };

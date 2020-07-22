@@ -14,15 +14,14 @@ const LogoContainer = (props) => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-
   return (
     <div>
       <div className="name-container">
-            <span className="logo-container-letter">K</span>iwi
-          </div>
-          <div className="logo-container">
-            <img  src="./images/logo_2.png" />
-          </div>
+        <span className="logo-container-letter">K</span>iwi
+      </div>
+      <div className="logo-container">
+        <img src="./images/logo_5.png" />
+      </div>
     </div>
   );
 };

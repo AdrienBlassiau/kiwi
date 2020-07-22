@@ -5,6 +5,7 @@ const baseUrl = 'https://fmovies.to';
 const { wait } = require('./utils');
 const timeout = 5000;
 const { newDriver, safeQuit } = require('./driver');
+const { searchSubtitles } = require('../subtitles/index.js');
 
 const fetchPage = async (url, n) => {
   const jar = request.jar();
@@ -23,7 +24,6 @@ const fetchPage = async (url, n) => {
 };
 
 const scrape = async (item) => {
-  console.log('On scrape');
   try {
     const title = encodeURI(item.title);
     const searchUrl = `${baseUrl}/search?keyword=${title}`;
@@ -46,12 +46,16 @@ const scrape = async (item) => {
         let matches = title.match(regExp);
         let movieTitle = matches[1].trim();
         let movieDate = matches[2];
+        let tmdbId = item.tmdb_id;
+        let imdbId = item.imdb_id;
 
         return {
           searchUrl,
           movieUrl,
           movieTitle,
           movieDate,
+          tmdbId,
+          imdbId,
         };
       })
       .get();
@@ -63,10 +67,8 @@ const scrape = async (item) => {
 };
 
 const searchSite = async (item, n) => {
-  console.log('searchSite :');
   try {
     const res = await scrape(item);
-    console.log(res);
     const selectedMovie = res.filter((element, index) => {
       let movieTitle = element.movieTitle;
       let movieDate = element.movieDate;
@@ -88,68 +90,59 @@ async function removeOverlay(driver) {
   const overlay_css = 'z-index: 2147483647;';
 
   try {
-    // await driver.manage().window().setRect(10,10);
     await driver.manage().window().maximize();
-    // await driver.switchTo().defaultContent();
-    // await driver.switchTo().defaultContent();
-    console.log('On clic');
-    // let body = await driver.findElement(By.tagName('body'))
-    // await body.click()
-    // console.log("On clic")
     await driver.wait(until.elementLocated(By.css("div[style*='" + overlay_css + "']")), timeout);
     const parentElement = await driver.findElement(By.css("div[style*='" + overlay_css + "']"));
-    console.log(await parentElement.getAttribute('style'));
     let a = await parentElement.findElement(By.tagName('a'));
-    console.log(await a.getAttribute('style'));
     await a.click();
     // await parentElement.click();
     // return removeOverlay(driver)
     // elementList = parentElement.find_elements_by_tag_name("li")
   } catch (err) {
-    console.log('PAS DE SELECTEUR');
+    // console.log('PAS DE SELECTEUR');
     // return "No more overlay"
   }
 }
 
 async function clickUntilOk(driver, selector, n, text) {
-  console.log('On switch');
+  // console.log('On switch');
   let url = await driver
     .findElement(By.css(selector))
     .click()
     .then(async () => {
-      console.log('REQUEST OK !');
+      // console.log('REQUEST OK !');
       await driver.wait(
         until.elementLocated(By.xpath("//iframe[@style='width: 100%; height: 100%;']")),
         timeout,
       );
-      console.log('ok 2');
+      // console.log('ok 2');
       await driver
         .switchTo()
         .frame(driver.findElement(By.xpath("//iframe[@style='width: 100%; height: 100%;']")));
-      console.log("On est sur l'IFRAME");
-      console.log('ok 3');
+      // console.log("On est sur l'IFRAME");
+      // console.log('ok 3');
       await driver.wait(until.elementLocated(By.id('videolink')), timeout);
-      console.log('ok 4');
+      // console.log('ok 4');
       let res = await driver.findElement(By.id('videolink')).getAttribute('innerText');
       await driver.switchTo().defaultContent();
-      console.log("On est plus sur l'IFRAME");
+      // console.log("On est plus sur l'IFRAME");
       // console.log(await res.getAttribute("innerText"))
       return res;
     })
     .catch(async (err) => {
       await driver.switchTo().defaultContent();
-      console.log("On est plus sur l'IFRAME");
+      // console.log("On est plus sur l'IFRAME");
       await removeOverlay(driver);
-      console.log('N:', n);
+      // console.log('N:', n);
       if (n === 0) return '';
-      console.log('REQUEST NOK !');
+      // console.log('REQUEST NOK !');
       return clickUntilOk(driver, selector, n - 1, text);
     });
 
   return url;
 }
 
-async function processArray(resolvePromises, array, $, driver) {
+async function processArray(resolvePromises, array, $, driver, streamData) {
   for (const element of array) {
     // console.log($(element).attr('href'))
     // console.log($(element).attr('data-id'))
@@ -157,73 +150,90 @@ async function processArray(resolvePromises, array, $, driver) {
     const text = $(element).text();
     const data_id = $(element).attr('data-id');
     const selector = "a[data-id='" + data_id + "']";
-    console.log('STREAM : ', text);
+    // console.log('STREAM : ', text);
     // console.log(selector)
     // console.log(createXPathFromElement(element))
 
     if (text.includes('Stream')) {
-      console.log("C'EST DU STREAM");
+      // console.log("C'EST DU STREAM");
       let urlRes = await clickUntilOk(driver, selector, 5, text);
       if (urlRes === '') {
         await resolvePromises.push({});
       } else {
-        await resolvePromises.push({ url: 'http:' + urlRes, type: text, language: 'V.O.' });
+        let imdbId = streamData.imdbId;
+        let tmdbId = streamData.tmdbId;
+        let type = 'classic';
+        let quality = 'sd';
+
+        if (text.toLowerCase().includes('director')) {
+          type = 'special';
+        } else {
+          type = 'classic';
+        }
+        if (text.toLowerCase().includes('hd')) {
+          quality = 'hd';
+        } else {
+          quality = 'sd';
+        }
+
+        searchSubtitles(imdbId, tmdbId, type);
+        await resolvePromises.push({
+          url: 'http:' + urlRes,
+          type: type,
+          language: 'V.0.',
+          quality: quality,
+          id: tmdbId,
+        });
       }
-      console.log('On push:', urlRes);
+      // console.log('On push:', urlRes);
     }
   }
 
   return await resolvePromises;
 }
 
-async function run_aux(maxTries, url, driver) {
+async function run_aux(maxTries, streamData, driver) {
   let resolvePromises = [];
   try {
-    console.log('Preparing request ...');
-    await driver.get(url);
+    // console.log('Preparing request ...');
+    await driver.get(streamData.movieUrl);
     await driver.wait(until.elementLocated(By.className('episodes')), timeout);
     const pageContent = await driver.getPageSource();
     const $ = cheerio.load(pageContent);
-    console.log('Request done ...');
+    // console.log('Request done ...');
 
     const dataArray = $('.episodes').find('li > a').toArray();
     // await driver.manage().window().maximize();
-    resolvePromises = await processArray(resolvePromises, dataArray, $, driver);
+    resolvePromises = await processArray(resolvePromises, dataArray, $, driver, streamData);
 
     return resolvePromises;
   } catch (err) {
     // console.log(err)
-    console.log(maxTries);
+    // console.log(maxTries);
     if (maxTries <= 0) {
-      console.log('Retry');
+      // console.log('Retry');
       // console.error('Exception!\n', err.stack, '\n');
       return resolvePromises;
     }
-    return run_aux(maxTries - 1, url, driver);
+    return run_aux(maxTries - 1, streamData, driver);
   }
 }
 
-// async function searchStream(item) {
 async function searchStream(streamData) {
   console.log('DANS LE SEARCH STREAM', streamData);
-  console.log(JSON.stringify(streamData) !== JSON.stringify({}));
   if (JSON.stringify(streamData) !== JSON.stringify({})) {
-    const driver = newDriver();
-    console.log(driver);
-    const url = streamData.movieUrl;
-    const res = await run_aux(5, url, driver);
+    const driver = await newDriver();
 
-    console.log('streamdata:', streamData);
-    console.log('res:', res);
+    const res = await run_aux(5, streamData, driver);
+
     const finalStreamData = { ...streamData, resolve: res };
-    console.log('finalStreamData:', finalStreamData);
-    // safeQuit(driver)
-    // driver.quit()
     const content = { data: finalStreamData, type: 'fmovies' };
+
     return Promise.all([content, driver]);
   } else {
     const finalStreamData = { ...streamData, resolve: [] };
     const content = { data: finalStreamData, type: 'fmovies' };
+
     return Promise.all([content, null]);
   }
 }
