@@ -37,15 +37,15 @@ const Modal = (props) => {
 
 const ModalMasterBlock = styled.div`
   display: ${({ show }) => (show && 'block') || 'none'};
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 `;
 
 const ModalHandler = styled.div`
@@ -55,10 +55,10 @@ const ModalHandler = styled.div`
 `;
 
 const ModalMaster = styled.div`
-  background-color: #fefefe;
+  background-color: var(--main-color-3);
   margin: auto;
   width: 80%;
-  color: black;
+  color: var(--main-color-1);
 `;
 
 const ModalRelativeMaster = styled.div``;

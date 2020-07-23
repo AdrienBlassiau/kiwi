@@ -42,8 +42,8 @@ const StreamBar = (props) => {
 const MainStreamBarContainer = styled.div`
   display: flex;
   width: 100%;
-  background-color: var(--dark-white-color);
-  color: white;
+  background-color: var(--main-color-1);
+  color: var(--main-color-3);
   padding: 0;
   line-height: 30px;
   justify-content: left;
@@ -85,7 +85,7 @@ const MainStreamRightInfos = styled.div`
 
 const CustomChevronLeftIcon = styled.div`
   font-size: 20px;
-  color: white;
+  color: var(--main-color-3);
   cursor: pointer;
   line-height: 0;
 `;

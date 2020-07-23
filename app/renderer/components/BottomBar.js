@@ -27,8 +27,8 @@ const BottomBar = (props) => {
 const MainBottomContainer = styled.div`
   display: flex;
   width: 100%;
-  background-color: var(--dark-white-color);
-  color: white;
+  background-color: var(--main-color-1-1);
+  color: var(--main-color-3);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -57,7 +57,7 @@ const MainBottomContainerData = styled.div`
 `;
 
 const MainBottomContainerSiteName = styled.div`
-  color: white;
+  color: var(--main-color-3);
 `;
 
 export default BottomBar;

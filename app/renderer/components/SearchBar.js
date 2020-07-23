@@ -73,7 +73,7 @@ const SearchBar = (props) => {
     <MainSearchContainer>
       <CustomSearchBar>
         <SearchIconMaster>
-          <SearchIcon style={{ color: 'var(--grey-letter-color)' }} />
+          <SearchIcon style={{ color: 'var(--main-color-4)' }} />
         </SearchIconMaster>
         <SearchDataMaster>
           <ImputField active={active}>
@@ -91,7 +91,7 @@ const SearchBar = (props) => {
         </SearchDataMaster>
         {gridInfos.style === 'search' ? (
           <CloseIconMaster>
-            <CloseIcon onClick={closeSearch} style={{ color: 'var(--grey-letter-color)' }} />
+            <CloseIcon onClick={closeSearch} style={{ color: 'var(--main-color-4)' }} />
           </CloseIconMaster>
         ) : (
           <div></div>
@@ -119,9 +119,9 @@ const ImputField = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
-    color: var(--main-text-color);
+    color: var(--main-color-3);
     input {
-        color: var(--main-text-color);
+        color: var(--main-color-3);
         width: 100%;
         height: 100%;
         position: relative;
@@ -143,7 +143,7 @@ const ImputField = styled.div`
 const MainSearchContainer = styled.div`
   display: flex;
   width: 100%;
-  color: white;
+  color: var(--main-color-3);
   padding: 0;
   line-height: 30px;
   justify-content: left;
@@ -189,7 +189,7 @@ const SearchDataMaster = styled.div`
   height: 100%;
   width: 100%;
   border-radius: 0 5px 5px 0;
-  color: var(--main-text-color);
+  color: var(--main-color-3);
 `;
 
 export default SearchBar;

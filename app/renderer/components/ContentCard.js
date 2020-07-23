@@ -105,6 +105,19 @@ const ContentCard = (props) => {
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
+const ImageContainer = styled.div`
+  border-radius: 4px;
+  width: 100%;
+  min-height: calc(150px * 1.5);
+  height: calc(150px * 1.5);
+  // min-height: calc(75px * 1.5);
+  // height: calc(75px * 1.5);
+  overflow: hidden;
+  -webkit-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+  -moz-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+`;
+
 const CardMainStyle = styled.div`
   position: relative;
   width: 150px;
@@ -121,10 +134,10 @@ const CardMainStyle = styled.div`
 
   &:hover {
     border-radius: 5px;
-    background-color: var(--dark-white-color);
+    background-color: var(--main-color-4);
   }
 
-  &:hover .image {
+  &:hover ${ImageContainer.selector} {
     filter: brightness(70%);
   }
 `;
@@ -137,7 +150,7 @@ const MovieTitleInfos = styled.div`
   transform: translate(-50%, -50%);
   width: max-content;
   text-align: center;
-  background-color: var(--medium-letter-color);
+  background-color: var(--main-color-4);
   color: white;
   padding: 5px;
   border-radius: 4px;
@@ -154,7 +167,7 @@ const MovieTitleRelative = styled.div`
     margin-left: -10px;
     width: 0;
     height: 0;
-    border-top: solid 10px var(--medium-letter-color);
+    border-top: solid 10px var(--main-color-4);
     border-left: solid 10px transparent;
     border-right: solid 10px transparent;
   }
@@ -174,7 +187,7 @@ const CardActionBox = styled.div`
   align-items: center;
   width: 140px;
   height: 40px;
-  background-color: var(--dark-letter-color);
+  background-color: var(--main-color-1);
   border-radius: 4px;
   opacity: 0.9;
 `;
@@ -182,19 +195,7 @@ const CardActionBox = styled.div`
 const CardAction = styled.div`
   margin: 0 5px;
   line-height: 0;
-`;
-
-const ImageContainer = styled.div`
-  border-radius: 4px;
-  width: 100%;
-  min-height: calc(150px * 1.5);
-  height: calc(150px * 1.5);
-  // min-height: calc(75px * 1.5);
-  // height: calc(75px * 1.5);
-  overflow: hidden;
-  -webkit-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
-  -moz-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
-  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+  color: var(--main-color-3);
 `;
 
 const ImageContainerWrapper = styled.div`

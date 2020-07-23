@@ -6,12 +6,21 @@ const Style = createGlobalStyle`
 	--gutter: 1.8rem;
 
 	--main-color-1: #14181c;
+	--main-color-1-1: rgba(20, 24, 28, 0.1);
+	--main-color-1-5: rgba(20, 24, 28, 0.5);
+	// --main-color-2: #21D07A;
+	--main-color-2: #83A697;
+	--main-color-3: #FFFFFF;
+	--main-color-4: #343742;
+
+	--good-color: rgba(33, 208, 122, 1);
+	--medium-color: rgba(210, 213, 49, 1);
+	--bad-color: rgba(219, 35, 96, 1);
 
 	--main-text-color: #FFFFFF;
 
 	--dark-letter-color: #14181c;
 	--grey-letter-color: #9ab;
-	--medium-letter-color: #456;
 	// --green-kiwi-color: #abb033;
 	--green-kiwi-color: #d9c786;
 	--golden-kiwi-color: #d9c786;
@@ -22,9 +31,7 @@ const Style = createGlobalStyle`
 	--black-color: #000000;
 	--classic-color: #FFFFFF;
 	--dark-blue-color: #032541;
-	--good-color: rgba(33, 208, 122, 1);
-	--medium-color: rgba(210, 213, 49, 1);
-	--bad-color: rgba(219, 35, 96, 1);
+
 	--good-t-color: rgba(33, 208, 122, 0.5);
 	--medium-t-color: rgba(210, 213, 49, 0.5);
 	--bad-t-color: rgba(219, 35, 96, 0.5);
@@ -49,21 +56,20 @@ const Style = createGlobalStyle`
 	--imageBorderRadius: 8px;
 }
 
+* {
+    outline: 0 !important;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 
 // ::-webkit-scrollbar-track {
 //   background: #f1f1f1;
 // }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--green-kiwi-color);
-}
-
-* {
-    outline: 0 !important;
+  background: var(--main-color-2);
 }
 
 a:link, a:visited {
@@ -78,21 +84,20 @@ a:link:active, a:visited:active {
 
 body {
 	font-family: 'Source Sans Pro';
-	background-color: var(--dark-letter-color);
+	background-color: var(--main-color-1);
 	margin: 0;
-	color: var(--main-text-color);
+	color: var(--main-color-3);
 	font-size: 18px;
 	/*padding-top: 40px;*/
 }
 
-
 .custom-load-bar{
 	width: 100%;
-	background-color: var(--green-kiwi-color);
+	background-color: var(--main-color-2);
 }
 
 #input-id::placeholder{
-	color:var(--main-text-color);
+	color:var(--main-color-3);
 }
 
 video:focus{
@@ -108,7 +113,7 @@ video:focus{
 }
 
 .MuiLinearProgress-barColorPrimary {
-    background-color: var(--green-kiwi-color) !important;
+    background-color: var(--main-color-2) !important;
 }
 
 `;

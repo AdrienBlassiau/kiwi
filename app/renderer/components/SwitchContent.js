@@ -40,20 +40,16 @@ const SwitchContent = (props) => {
   return (
     <MainChoiceContainer>
       <ChoiceBarContainer>
-        <ChoiceTestContainer selectedTab={selectedTab==1}
-          onClick={() => handleModeChange(1)}>
+        <ChoiceTestContainer selectedTab={selectedTab == 1} onClick={() => handleModeChange(1)}>
           SEARCH
         </ChoiceTestContainer>
-        <ChoiceTestContainer selectedTab={selectedTab==2}
-          onClick={() => handleModeChange(2)}>
+        <ChoiceTestContainer selectedTab={selectedTab == 2} onClick={() => handleModeChange(2)}>
           WATCHLIST
         </ChoiceTestContainer>
-        <ChoiceTestContainer selectedTab={selectedTab==3}
-          onClick={() => handleModeChange(3)}>
+        <ChoiceTestContainer selectedTab={selectedTab == 3} onClick={() => handleModeChange(3)}>
           LIBRARY
         </ChoiceTestContainer>
-        <ChoiceTestContainer selectedTab={selectedTab==4}
-          onClick={() => handleModeChange(4)}>
+        <ChoiceTestContainer selectedTab={selectedTab == 4} onClick={() => handleModeChange(4)}>
           LOAD & DOWNLOAD
         </ChoiceTestContainer>
       </ChoiceBarContainer>
@@ -67,7 +63,6 @@ const SwitchContent = (props) => {
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-
 const MainChoiceContainer = styled.div`
   width: 100%;
   overflow: visible;
@@ -76,7 +71,7 @@ const MainChoiceContainer = styled.div`
   height: 50px;
   display: flex;
   z-index: 99998;
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 `;
 
 const ChoiceBarContainer = styled.div`
@@ -91,10 +86,10 @@ const ChoiceTestContainer = styled.div`
   text-align: center;
   line-height: 30px;
   margin: 0 10px;
-  border-bottom: ${({ selectedTab }) => (selectedTab && '2px solid var(--green-kiwi-color)') || '2px solid transparent;'};
-  opacity: ${({ selectedTab }) => (selectedTab && '1') || '0.5'};
+  border-bottom: ${({ selectedTab }) =>
+    (selectedTab && '2px solid var(--main-color-2)') || '2px solid transparent;'};
+  color: ${({ selectedTab }) => (selectedTab && 'var(--main-color-3);') || 'var(--main-color-4);'};
   cursor: pointer;
 `;
-
 
 export default SwitchContent;

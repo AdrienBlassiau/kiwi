@@ -48,8 +48,8 @@ const CardManager = (props) => {
       width={150}
       height={225}
       viewBox="0 0 150 225"
-      backgroundColor="#f3f3f3"
-      foregroundColor="#ecebeb">
+      backgroundColor="var(--main-color-3)"
+      foregroundColor="var(--main-color-3)">
       <rect x="0" y="0" rx="0" ry="0" width="150" height="225" />
     </ContentLoader>
   );

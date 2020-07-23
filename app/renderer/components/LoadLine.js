@@ -146,7 +146,7 @@ const LoadGroup = styled.div`
 
 const CustomLoadBar = styled.div`
   width: 100%;
-  background-color: var(--green-kiwi-color);
+  background-color: var(--main-color-2);
 `;
 
 const CardMainStyleMin = styled.div`

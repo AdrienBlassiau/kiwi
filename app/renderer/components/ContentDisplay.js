@@ -245,7 +245,7 @@ const MainContentDisplayWrapperContainer = styled.div`
 `;
 
 const MainContentDisplayWrapper = styled.section`
-  color: white;
+  color: var(--main-color-3);
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -270,7 +270,7 @@ const MainContentDisplayWrapperTitleText = styled.div`
 `;
 
 const MainContentDisplayWrapperTitleTextContent = styled.span`
-  color: white;
+  color: var(--main-color-3);
   font-weight: 700;
 `;
 
@@ -278,12 +278,12 @@ const MainContentDisplayWrapperTitleTextDate = styled.span`
   opacity: 0.8;
   font-weight: 400;
   font-size: 2.2rem;
-  color: white;
+  color: var(--main-color-3);
 `;
 
 const MainContentDisplayWrapperTitleFacts = styled.div`
   display: flex;
-  color: white;
+  color: var(--main-color-3);
 `;
 
 const MainContentDisplayWrapperTitleFactsCertif = styled.span`
@@ -300,7 +300,7 @@ const MainContentDisplayWrapperTitleFactsCertif = styled.span`
 `;
 
 const MainContentDisplayWrapperTitleFactsRelease = styled.span`
-  color: white;
+  color: var(--main-color-3);
   position: relative;
   top: 0;
   left: 0;
@@ -322,14 +322,14 @@ const MainContentDisplayWrapperTitleFactsRelease = styled.span`
 `;
 
 const MainContentDisplayWrapperTitleFactsGenre = styled.span`
-  color: white;
+  color: var(--main-color-3);
   padding-left: 20px;
   position: relative;
   top: 0;
   left: 0;
 
   &:before {
-    color: white;
+    color: var(--main-color-3);
     font-size: 1.1em;
     line-height: 1;
     content: '•';
@@ -345,14 +345,14 @@ const MainContentDisplayWrapperTitleFactsGenre = styled.span`
 `;
 
 const MainContentDisplayWrapperTitleFactsRuntime = styled.span`
-  color: white;
+  color: var(--main-color-3);
   padding-left: 20px;
   position: relative;
   top: 0;
   left: 0;
 
   &:before {
-    color: white;
+    color: var(--main-color-3);
     font-size: 1.1em;
     line-height: 1;
     content: '•';
@@ -368,7 +368,7 @@ const MainContentDisplayWrapperTitleFactsRuntime = styled.span`
 `;
 
 const MainContentDisplayWrapperTitleFactsStatus = styled.span`
-  color: white;
+  color: var(--main-color-3);
   padding-left: 20px;
   position: relative;
   top: 0;
@@ -416,7 +416,7 @@ const DataWrapperChartText = styled.div`
 
 const DataWrapperResume = styled.div`
   width: 100%;
-  color: white;
+  color: var(--main-color-3);
 `;
 
 const DataWrapperTagLine = styled.div`
@@ -433,7 +433,7 @@ const DataWrapperTagLine = styled.div`
 const DataWrapperOverviewTitle = styled.div`
   margin-top: 10px;
   padding: 0;
-  color: white;
+  color: var(--main-color-3);
   box-sizing: border-box;
   width: 100%;
   margin: 0 0 8px 0;
@@ -443,7 +443,7 @@ const DataWrapperOverviewTitle = styled.div`
 `;
 
 const DataWrapperOverviewText = styled.div`
-  color: white;
+  color: var(--main-color-3);
 `;
 
 const DataWrapperOverviewCredits = styled.div`
@@ -466,7 +466,7 @@ const MainContentDisplayPlay = styled.div`
   width: 30px;
   height: 30px;
   border-width: 20px 0px 20px 30px;
-  border-color: transparent transparent transparent white;
+  border-color: transparent transparent transparent var(--main-color-3);
 `;
 
 const MainContentDisplayPlayCircle = styled.div`

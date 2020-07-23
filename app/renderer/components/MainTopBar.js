@@ -78,8 +78,8 @@ const MainTopBarContainer = styled.div`
   width: 100%;
   height: 50px;
   -webkit-app-region: drag;
-  background-color: rgba(0, 0, 0, 0.1);
-  color: white;
+  background-color: var(--main-color-1-1);
+  color: var(--main-color-3);
   height: 30px;
   padding: 0;
   height: 30px;

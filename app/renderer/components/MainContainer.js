@@ -179,12 +179,12 @@ const MainContainerStyle = styled.div`
   bottom: 0px;
   right: 0px;
   left: 0px;
-  padding-bottom: 30px;
+  margin-bottom: 30px;
   position: absolute;
 
   top: ${({ mode }) => (mode === 'search' && '450px') || (mode === 'stream' && '100px') || '350px'};
   overflow: ${({ mode }) =>
-    (mode === 'search' && 'scroll') || (mode === 'stream' && 'auto') || 'scroll'};
+    (mode === 'search' && 'auto') || (mode === 'stream' && 'auto') || 'auto'};
 `;
 
 const MainContainerMidReducedStyle = styled.div`

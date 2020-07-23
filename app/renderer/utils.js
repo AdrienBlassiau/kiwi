@@ -1,4 +1,6 @@
 import React from 'react';
+import styled, { css } from 'styled-components';
+
 import { usePalette } from 'react-palette';
 
 const statusType = {
@@ -87,12 +89,12 @@ const getCredits = (movie) => {
   const credits = movie.credits.crew.map((item, key) => {
     const content =
       key < movie.credits.crew.length - 1 && key < 6 ? (
-        <div key={key} className="profile">
-          <div className="profile-name">
+        <Profile key={key}>
+          <ProfileName>
             <div>{item.name}</div>
-          </div>
-          <div className="character">{item.job}</div>
-        </div>
+          </ProfileName>
+          <Character>{item.job}</Character>
+        </Profile>
       ) : null;
     return content;
   });
@@ -142,3 +144,37 @@ module.exports = {
   getCredits,
   getBackgroundData,
 };
+
+const Profile = styled.div`
+  background-color: transparent;
+  height: auto;
+  margin-bottom: 0;
+  margin-top: 10px;
+  width: 33%;
+  flex-basis: 33%;
+  text-align: left;
+  margin-right: 0;
+  box-sizing: border-box;
+  padding-right: 20px;
+  min-width: 140px;
+  box-sizing: border-box;
+  list-style-type: none;
+  list-style-position: inside;
+`;
+
+const ProfileName = styled.div`
+  font-weight: bold;
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Character = styled.div`
+  padding: 0;
+  font-size: 0.9em;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;

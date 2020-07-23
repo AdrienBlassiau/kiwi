@@ -25,9 +25,6 @@ const DecoBar = (props) => {
 /////////////////////////////////////////////////////////////////////////////
 
 const MainDecoContainer = styled.div`
-  // background: rgb(184,53,106);
-  // background: linear-gradient(150deg, rgba(240,161,0,1) 0%, rgba(184,53,106,1) 25%, rgba(91,43,137,1) 50%, rgba(46,85,206,1) 75%, rgba(68,188,103,1) 100%);
-  // background: linear-gradient(150deg, rgba(240,161,0,0.85) 0%, rgba(184,53,106,0.85) 25%, rgba(91,43,137,0.85) 50%, rgba(46,85,206,0.85) 75%, rgba(68,188,103,0.85) 100%), url(../img/bg.jpg);
   background: linear-gradient(
       150deg,
       rgba(240, 161, 0, 0.85) 0%,

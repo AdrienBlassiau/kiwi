@@ -53,7 +53,7 @@ const SnackBarStyle = styled.div`
   display: none;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--green-kiwi-color);
+  background-color: var(--main-color-4);
   width: 500px;
   height: 40px;
   margin-bottom: 10px;

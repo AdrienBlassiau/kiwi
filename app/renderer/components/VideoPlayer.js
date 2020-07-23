@@ -427,7 +427,7 @@ const VideoPlayer = (props) => {
       position: 'absolute',
       width: '16px',
       height: '16px',
-      background: 'var(--good-color)',
+      background: 'var(--main-color-2)',
       borderRadius: '100%',
       transform: 'scale(1)',
       transition: 'transform 0.2s ease 0s',
@@ -470,7 +470,7 @@ const VideoPlayer = (props) => {
       <SliderBar
         direction={Direction.HORIZONTAL}
         value={played}
-        style={{ background: 'var(--good-color)', zIndex: 9 }}
+        style={{ background: 'var(--main-color-2)', zIndex: 9 }}
       />
       <SliderBar
         direction={Direction.HORIZONTAL}
@@ -485,7 +485,7 @@ const VideoPlayer = (props) => {
       <SliderHandle
         direction={Direction.HORIZONTAL}
         value={played}
-        style={{ background: 'var(--good-color)', zIndex: 9 }}
+        style={{ background: 'var(--main-color-2)', zIndex: 9 }}
       />
     </Slider>
   );
@@ -499,12 +499,12 @@ const VideoPlayer = (props) => {
       <SliderBar
         direction={Direction.HORIZONTAL}
         value={volume}
-        style={{ background: 'var(--good-color)', zIndex: 9 }}
+        style={{ background: 'var(--main-color-2)', zIndex: 9 }}
       />
       <SliderHandle
         direction={Direction.HORIZONTAL}
         value={volume}
-        style={{ background: 'var(--good-color)', zIndex: 9 }}
+        style={{ background: 'var(--main-color-2)', zIndex: 9 }}
       />
     </Slider>
   );
@@ -563,11 +563,6 @@ const VideoPlayer = (props) => {
   const controls = (
     <VideoPlayerControlsWrapper customControls={customControls}>
       <VideoPlayerProgressBar>{progress}</VideoPlayerProgressBar>
-      <VideoPlayerTextTrack
-        dangerouslySetInnerHTML={{
-          __html: enableSubtitles ? currentSubtitles : '',
-        }}></VideoPlayerTextTrack>
-
       <VideoPlayerBarGroup>
         <VideoPlayerPlayButton onClick={handlePlayPause}>
           {playing ? <StopRoundedIcon /> : <PlayArrowRoundedIcon />}
@@ -653,6 +648,10 @@ const VideoPlayer = (props) => {
     <VideoPlayerMaster isLoading={isLoading}>
       <VideoPlayerContainer>
         <VideoPlayerContainerFull ref={fullscreenRef}>
+          <VideoPlayerTextTrack
+        dangerouslySetInnerHTML={{
+          __html: enableSubtitles ? currentSubtitles : '',
+        }}></VideoPlayerTextTrack>
           {controls}
           <ReactPlayer
             tabIndex="0"
@@ -711,7 +710,7 @@ const VideoPlayerServerChoice = styled.div`
   ${(props) =>
     props.number === props.selectedServer &&
     css`
-      background-color: var(--good-color);
+      background-color: var(--main-color-2);
       border-radius: 3px;
     `};
 `;
@@ -729,7 +728,7 @@ const VideoPlayerServerTab = styled.div`
   position: absolute;
   width: 100px;
   max-height: 200px;
-  background-color: var(--dark-white-color);
+  background-color: var(--main-color-4);
   z-index: 20;
   bottom: 40px;
   right: 10px;
@@ -745,7 +744,7 @@ const VideoPlayerSpeedChoice = styled.div`
   ${(props) =>
     props.playbackRate === props.item &&
     css`
-      background-color: var(--good-color);
+      background-color: var(--main-color-2);
       border-radius: 3px;
     `};
 `;
@@ -763,7 +762,7 @@ const VideoPlayerSpeedTab = styled.div`
   position: absolute;
   width: 100px;
   max-height: 200px;
-  background-color: var(--dark-white-color);
+  background-color: var(--main-color-4);
   z-index: 20;
   bottom: 40px;
   right: 10px;
@@ -779,7 +778,7 @@ const VideoPlayerSubtitlesChoice = styled.div`
   ${(props) =>
     props.selectedSubtitles === props.number &&
     css`
-      background-color: var(--good-color);
+      background-color: var(--main-color-2);
       border-radius: 3px;
     `};
 `;
@@ -797,7 +796,7 @@ const VideoPlayerSubtitlesTab = styled.div`
   position: absolute;
   width: 100px;
   max-height: 200px;
-  background-color: var(--dark-white-color);
+  background-color: var(--main-color-4);
   z-index: 20;
   bottom: 40px;
   right: 10px;
@@ -824,7 +823,7 @@ const VideoPlayerPIPButton = styled.div`
   ${({ pip }) =>
     pip &&
     css`
-      background-color: var(--good-color);
+      background-color: var(--main-color-2);
       border-radius: 3px;
     `};
 `;
@@ -840,7 +839,7 @@ const VideoPlayerSubtitlesButton = styled.div`
   ${({ enableSubtitles }) =>
     enableSubtitles &&
     css`
-      background-color: var(--good-color);
+      background-color: var(--main-color-2);
       border-radius: 3px;
     `};
 `;
@@ -856,7 +855,7 @@ const VideoPlayerSpeedButton = styled.div`
   ${({ enablePlaybackRate }) =>
     enablePlaybackRate &&
     css`
-      background-color: var(--good-color);
+      background-color: var(--main-color-2);
       border-radius: 3px;
     `};
 `;
@@ -870,7 +869,7 @@ const VideoPlayerServerButton = styled.div`
   position: relative;
   cursor: pointer;
   padding: 10px;
-  background-color: var(--good-color);
+  background-color: var(--main-color-2);
   border-radius: 3px;
 `;
 
@@ -924,13 +923,15 @@ const VideoPlayerTextTrack = styled.div`
   flex: 1;
   min-width: 0;
   position: absolute;
-  bottom: 60px;
+  bottom:80px;
   width: 100%;
   margin-left: 0 !important;
   margin-right: 0 !important;
   left: 0 !important;
-  color: white;
+  color: var(--main-color-3);
   background-color: rgba(1, 1, 1, 0.5);
+  text-align: center;
+  z-index: 10;
 `;
 
 const VideoPlayerProgressBar = styled.div`
@@ -951,10 +952,10 @@ const VideoPlayerProgressBar = styled.div`
 
 const VideoPlayerControlsWrapper = styled.div`
   display: ${({ customControls }) => (customControls && 'flex !important') || 'none !important'};
-  background-color: var(--dark-white-t-color);
+  background-color: var(--main-color-1-5);
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
-  color: #fff;
+  color: var(--main-color-3);
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 4px;

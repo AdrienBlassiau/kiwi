@@ -84,14 +84,14 @@ const ContentTypeContainerTV = styled.div`
   margin-right: 10px;
   font-weight: 500 !important;
   cursor: pointer;
-  opacity: ${({ type }) => (type === 'tv' && '1') || '0.5'};
+  color: ${({ type }) => (type === 'tv' && 'var(--main-color-3)') || 'var(--main-color-4)'};
 `;
 
 const ContentTypeContainerMovie = styled.div`
   margin-right: 10px;
   font-weight: 500 !important;
   cursor: pointer;
-  opacity: ${({ type }) => (type === 'movie' && '1') || '0.5'};
+  color: ${({ type }) => (type === 'movie' && 'var(--main-color-3)') || 'var(--main-color-4)'};
 `;
 
 const ChangeContentCardContainer = styled.div`
@@ -116,7 +116,7 @@ const SelectionMoviesContainer = styled.div`
   align-items: center;
   height: 30px;
   margin-bottom: 5px;
-  border-bottom: 1px solid var(--medium-letter-color);
+  border-bottom: 1px solid var(--main-color-4);
   font-weight: 100;
 `;
 
