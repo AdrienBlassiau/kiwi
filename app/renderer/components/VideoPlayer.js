@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import styled, { css } from 'styled-components';
 import { findDOMNode } from 'react-dom';
 import ReactPlayer from 'react-player';
 
@@ -560,13 +561,12 @@ const VideoPlayer = (props) => {
   ) : null;
 
   const controls = (
-    <div className={'plyr-controls-wrapper ' + (customControls ? '' : 'player-none')}>
-      <div className="custom-video-button progress-bar">{progress}</div>
-      <div
-        className="custom-video-button track-text"
-        dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentSubtitles : '' }}></div>
+    <VideoPlayerControlsWrapper customControls={customControls} >
+      <VideoPlayerProgressBar>{progress}</VideoPlayerProgressBar>
+      <VideoPlayerTextTrack dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentSubtitles : '' }}>
+        </VideoPlayerTextTrack>
 
-      <div className="controls-bar-group">
+      <VideoPlayerBarGroup >
         <div className="custom-video-button" onClick={handlePlayPause}>
           {playing ? <StopRoundedIcon /> : <PlayArrowRoundedIcon />}
         </div>
@@ -576,7 +576,7 @@ const VideoPlayer = (props) => {
           </div>
           <div>{sound}</div>
         </div>
-      </div>
+      </VideoPlayerBarGroup>
 
       <div className="custom-video-button">
         <div className="video-time">
@@ -588,7 +588,7 @@ const VideoPlayer = (props) => {
         </div>
       </div>
 
-      <div className="controls-bar-group">
+      <VideoPlayerBarGroup>
         <div
           className="custom-video-button tab-container t-c-selected"
           onMouseEnter={() => setServerOpen(true)}
@@ -619,12 +619,12 @@ const VideoPlayer = (props) => {
           onClick={() => setPip(!pip)}>
           <PictureInPictureRoundedIcon />
         </div>
-      </div>
+      </VideoPlayerBarGroup>
 
       <div className="custom-video-button" onClick={handleClickFullscreen}>
         {fullScreenIcon}
       </div>
-    </div>
+    </VideoPlayerControlsWrapper>
   );
 
   var fs = require('fs');
@@ -653,9 +653,9 @@ const VideoPlayer = (props) => {
   /////////////////////////////////////////////////////////////////////////////
 
   return (
-    <div className={'master-component ' + (isLoading ? 'player-none' : 'player-block')}>
-      <div className="plyr-container">
-        <div className="plyr-container-full" ref={fullscreenRef}>
+    <VideoPlayerMaster isLoading={isLoading}>
+      <VideoPlayerContainer>
+        <VideoPlayerContainerFull ref={fullscreenRef}>
           {controls}
           <ReactPlayer
             tabIndex="0"
@@ -694,10 +694,116 @@ const VideoPlayer = (props) => {
               },
             }}
           />
-        </div>
-      </div>
-    </div>
+        </VideoPlayerContainerFull>
+      </VideoPlayerContainer>
+    </VideoPlayerMaster>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const VideoPlayerBarGroup = styled.div`
+  display: flex;
+`;
+
+const VideoPlayerTextTrack = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    left: 0 !important;
+    color: white;
+    background-color: rgba(1,1,1,0.5);
+`;
+
+const VideoPlayerProgressBar = styled.div`
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    position: absolute;
+    bottom: 80px;
+    width: 100%;
+    margin: 0 10px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    left: 0 !important;
+`;
+
+const VideoPlayerControlsWrapper = styled.div`
+    display: ${({ customControls }) => (customControls && 'flex !important') || 'none !important'};
+      background-color: var(--dark-white-t-color);
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    position: relative;
+    transition: opacity .4s ease-in-out,transform .4s ease-in-out;
+    z-index: 3;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    box-sizing: inherit;
+    min-width: 800px;
+`;
+
+const VideoPlayerMaster = styled.div`
+  display: ${({ isLoading }) => (isLoading && 'none !important') || 'block !important'};
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0px;
+`;
+
+const VideoPlayerContainer = styled.div`
+  width: 100% !important;
+  height: 100% !important;
+`;
+
+const VideoPlayerContainerFull = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  background: #000;
+  overflow: hidden;
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: auto;
+  -webkit-font-smoothing: subpixel-antialiased;
+  align-items: center;
+  direction: ltr;
+  display: flex;
+  font-family: Avenir, 'Avenir Next', 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  height: 100%;
+  line-height: 1.7;
+  max-width: 100%;
+  min-width: 200px;
+  position: relative;
+  text-shadow: none;
+  transition: box-shadow 0.3s ease;
+  z-index: 0;
+`;
 
 export default VideoPlayer;

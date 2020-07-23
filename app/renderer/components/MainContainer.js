@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
+
 import ReactDOM from 'react-dom';
 
 import CardManager from './CardManager';
@@ -150,21 +152,61 @@ const MainContainer = (props) => {
   }
 
   return (
-    <div className="main-content-container">
+    <MainContainerMaster>
       {bar}
-      <div
-        ref={myRef}
-        className={
-          mode === 'stream'
-            ? 'main-container-reduced'
-            : mode === 'search'
-            ? 'main-container'
-            : 'main-container-2'
-        }>
+      <MainContainerStyle mode={mode} ref={myRef}>
         {container}
-      </div>
-    </div>
+      </MainContainerStyle>
+    </MainContainerMaster>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const MainContainerMaster = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+`;
+
+const MainContainerStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  padding-bottom: 30px;
+  position: absolute;
+
+  top: ${({ mode }) => (mode === 'search' && '450px') || (mode === 'stream' && '100px') || '350px'};
+  overflow: ${({ mode }) =>
+    (mode === 'search' && 'scroll') || (mode === 'stream' && 'auto') || 'scroll'};
+`;
+
+const MainContainerMidReducedStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  top: 350px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  position: absolute;
+  overflow: scroll;
+  padding-bottom: 30px;
+`;
+
+const MainContainerReducedStyle = styled.div`
+  top: 100px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  position: absolute;
+  overflow: auto;
+`;
 
 export default MainContainer;

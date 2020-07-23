@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Moment from 'react-moment';
-import axios from 'axios';
-import { usePalette } from 'react-palette';
-import { directSearchStream } from '../scrapper/index.js';
-import VideoPlayer from './VideoPlayer';
+import styled, { css } from 'styled-components';
+
 import VideoLoader from './VideoLoader';
+import VideoPlayer from './VideoPlayer';
 
 const PlayerContainer = (props) => {
   const { cacheData, setCacheData } = props.cache;
@@ -24,18 +22,14 @@ const PlayerContainer = (props) => {
         for (const item in streamData) {
           const currentItem = streamData[item];
           if (currentItem && currentItem.hasOwnProperty('resolve')) {
-            console.log('>>>>>>>>>>>>>>>>><< RES:', currentItem.resolve);
             const resolved = currentItem.resolve;
             if (currentItem.resolve.length > 0) {
-              console.log('>>>>>>>>>>>>>>>>><< DATA:', resolved);
-              console.log('NEW URL LIST:', newUrlList);
               newUrlList = newUrlList.concat(resolved);
             }
           }
         }
       }
     }
-    console.log(newUrlList);
     setUrlList(newUrlList);
   }, [props.cache]);
 
@@ -47,30 +41,26 @@ const PlayerContainer = (props) => {
     );
   });
 
-  // console.log('MOVIE URL', movieUrl ? movieUrl[0].url : 'NOT ok');
-
-  console.log('URL LIST:', urlList);
   const videoPlayer =
     urlList.length === 0 ? (
       <VideoLoader message={'Scrapping ...'} />
     ) : (
       <React.Fragment>
-        <div
-          className={'custom-react-player-master ' + (isLoading ? 'player-none' : 'player-block')}>
+        <CustomReactPlayerMaster isLoading={isLoading}>
           <VideoPlayer
             movieUrl={urlList[0].url}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
             serverList={urlList}
           />
-        </div>
+        </CustomReactPlayerMaster>
         {isLoading ? <VideoLoader message={'Loading the video ...'} /> : null}
       </React.Fragment>
     );
 
   // const videoPlayer = (
   //   <VideoPlayer
-  //     movieUrl="http://streamtape.com/get_video?id=dp6le28X6YCgd0&expires=1595508847&ip=FOSOD0xEDOONFt&token=pw_ug07kccxW"
+  //     movieUrl="https://s0.vudeo.net/2vp3s7gwzyvjdohilnbbroevyyanpqojgirh3dbrkielwfwlrntzmjgglzua/v.mp4"
   //     setIsLoading={setIsLoading}
   //     isLoading={isLoading}
   //     serverList={urlList}
@@ -80,14 +70,59 @@ const PlayerContainer = (props) => {
   const overview = props.currentMovieData.overview;
 
   return (
-    <div className="video-player-and-infos-container">
-      <div className="video-player-container">{videoPlayer}</div>
-      <div className="video-bottom-info">
-        <div className="video-bottom-info-title">Summary: </div>
-        <div className="video-bottom-info-content">{overview}</div>
-      </div>
-    </div>
+    <VideoPlayerAndInfosContainer>
+      <VideoPlayerContainer>{videoPlayer}</VideoPlayerContainer>
+      <VideoBottomInfos>
+        <VideoBottomInfosTitle>Summary: </VideoBottomInfosTitle>
+        <VideoBottomInfosContent>{overview}</VideoBottomInfosContent>
+      </VideoBottomInfos>
+    </VideoPlayerAndInfosContainer>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const CustomReactPlayerMaster = styled.div`
+  display: ${({ isLoading }) => (isLoading && 'none !important') || 'block !important'};
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const VideoPlayerAndInfosContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
+
+const VideoPlayerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: black;
+`;
+
+const VideoBottomInfos = styled.div`
+  height: 130px;
+  margin: 30px 40px 60px 40px;
+  align-self: flex-start;
+`;
+
+const VideoBottomInfosTitle = styled.div`
+  font-size: 30px;
+  margin-bottom: 10px;
+`;
+
+const VideoBottomInfosContent = styled.div``;
 
 export default PlayerContainer;
