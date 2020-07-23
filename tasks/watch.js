@@ -28,6 +28,7 @@ exports.start = series(
   scripts.developBuild,
   scripts.developBuildImages,
   scripts.developBuildSub,
+  scripts.developBuildCSS,
   hotreload.start,
   electron.start,
   parallel(watchMainScripts, watchRendererScripts, watchHtml),

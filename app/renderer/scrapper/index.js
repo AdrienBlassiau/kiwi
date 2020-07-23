@@ -1,9 +1,10 @@
 const fmovies = require('./fmovies');
+const dpstream = require('./dpstream');
 
 const tvScrapers = [];
 const movieScrapers = [
   { fun: fmovies, name: 'fmovies' },
-  { fun: fmovies, name: 'fmovies' },
+  { fun: dpstream, name: 'dpstream' },
 ];
 const totalScrapper = movieScrapers.length;
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+
 import CloseIcon from '@material-ui/icons/Close';
 import SnackBar from './SnackBar';
 
@@ -16,7 +18,24 @@ const SnackBarManager = (props) => {
   const snackBarList = snackQueue.map((item, key) => {
     return <SnackBar key={key} item={item} index={key} snack={snack} />;
   });
-  return <div className="snack-bar-container">{snackBarList}</div>;
+  return <SnackBarContainer>{snackBarList}</SnackBarContainer>;
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const SnackBarContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 10;
+  top: 50px;
+  left: 128px;
+  width: 1600px;
+`;
 
 export default SnackBarManager;

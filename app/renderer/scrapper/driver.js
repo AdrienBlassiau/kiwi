@@ -2,7 +2,7 @@
 const selenium = require('selenium-webdriver');
 const command = require('selenium-webdriver/lib/command');
 const chrome = require('selenium-webdriver/chrome');
-import logger from '../utils/logger.js';
+// import logger from '../utils/logger.js';
 
 const newDriver = () => {
   const chromeOptions = new chrome.Options().addArguments(
@@ -48,12 +48,12 @@ const newDriver = () => {
   //     .defineCommand('SEND_COMMAND', 'POST', `/session/${session.getId()}/chromium/send_command`);
   //   return driver.execute(cmd);
   // });
-  logger.info('DRIVER created');
+  // logger.info('DRIVER created');
   return driver;
 };
 
 const safeQuit = (driver) => {
-  logger.info('DRIVER killed');
+  // logger.info('DRIVER killed');
   if (driver) {
     driver.quit();
   }

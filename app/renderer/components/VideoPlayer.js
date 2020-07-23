@@ -628,13 +628,20 @@ const VideoPlayer = (props) => {
   );
 
   var fs = require('fs');
-  var files = fs.readdirSync(process.cwd() + '/build/renderer/subtitles/data/'+selectedItem.id);
+  var files = fs.readdirSync(process.cwd() + '/build/renderer/subtitles/data/' + selectedItem.id);
 
-  const tracks = files.map(lang => {
+  const tracks = files.map((lang) => {
     return {
       kind: 'captions',
       src:
-        './subtitles/data/' + selectedItem.id + '/'+lang+'/' + selectedItem.type + '/' + 'subtitles.vtt',
+        './subtitles/data/' +
+        selectedItem.id +
+        '/' +
+        lang +
+        '/' +
+        selectedItem.type +
+        '/' +
+        'subtitles.vtt',
       srcLang: lang,
     };
   });

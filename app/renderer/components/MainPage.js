@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 
 import { getMovies } from '../controllers';
 
@@ -255,7 +256,7 @@ const MainPage = () => {
   return (
     <div>
       <Style />
-      <div className="master-component">
+      <MasterComponent>
         <SnackBarManager snackQueue={snackQueue} setSnackQueue={setSnackQueue} />
         <MainTopBar />
         {mode === 'stream' ? (
@@ -266,9 +267,22 @@ const MainPage = () => {
         {mode === 'stream' ? null : <SwitchContent setMode={setMode} />}
         <MainContainer getters={getters} setters={setters} />
         <BottomBar />
-      </div>
+      </MasterComponent>
     </div>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const MasterComponent = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0px;
+`;
 
 export default MainPage;

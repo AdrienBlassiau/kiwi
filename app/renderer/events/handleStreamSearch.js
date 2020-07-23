@@ -61,7 +61,7 @@ const handler = (cache, currentMovieId, queue, gridInfos) => {
     }
   }, [results]);
 
-  const handleSearch = (id, title, date, imdb_id) => {
+  const handleSearch = (id, title, date, imdb_id, translations) => {
     const callback = (res) => {
       const content = res[0];
       const driver = res[1];
@@ -69,7 +69,7 @@ const handler = (cache, currentMovieId, queue, gridInfos) => {
       setDriverStack(driverStack);
 
       const data = content.data;
-      const type = content.type + Math.random();
+      const type = content.type;
 
       if (data.resolve.length === 0) {
         setResults([{ [type]: null }, id]);
@@ -85,6 +85,7 @@ const handler = (cache, currentMovieId, queue, gridInfos) => {
         release_date: date,
         tmdb_id: id,
         imdb_id: imdb_id,
+        translations: translations,
       },
       0,
       0,
@@ -107,6 +108,7 @@ const handler = (cache, currentMovieId, queue, gridInfos) => {
       let id = currentData.id;
       let imdb_id = currentData.imdb_id;
       let title = currentData.title;
+      let translations = currentData.translations;
       const date =
         type === 'movie'
           ? currentData.hasOwnProperty('release_date')
@@ -123,7 +125,7 @@ const handler = (cache, currentMovieId, queue, gridInfos) => {
         cache.cacheData[id].nbSolved = 0;
         cache.cacheData[id].streamData = {};
         setDriverStack(driverStack);
-        handleSearch(id, title, date, imdb_id);
+        handleSearch(id, title, date, imdb_id, translations);
       }
       // else if(cache.cacheData[id] && !cache.cacheData.finished){
       // 	console.log("Pas dans le cache 2")

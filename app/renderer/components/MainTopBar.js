@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styled, { css } from 'styled-components';
 
 import Crop169RoundedIcon from '@material-ui/icons/Crop169Rounded';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -46,30 +47,106 @@ const handleClose = () => {
 
 const MainTopBar = () => {
   return (
-    <div className="main-top-bar-container">
-      <div className="main-top-bar">
-        <div className="tob-bar-features">
-          <div className="">Kiwi</div>
-          <div className="custom-feature-list">
-            <div className="custom-feature">App</div>
-            <div className="custom-feature">Theme</div>
-            <div className="custom-feature">Help</div>
-          </div>
-        </div>
-        <div className="tob-bar-action">
-          <div onClick={handleMinimize} className="custom-icon-bar opacity-c">
+    <MainTopBarContainer>
+      <MainTopBarStyle>
+        <MainTopBarFeatures>
+          <div>Kiwi</div>
+          <CustomFeaturesList>
+            <CustomFeatures>App</CustomFeatures>
+            <CustomFeatures>Theme</CustomFeatures>
+            <CustomFeatures>Help</CustomFeatures>
+          </CustomFeaturesList>
+        </MainTopBarFeatures>
+        <TopBarAction>
+          <CustomIconBars onClick={handleMinimize}>
             <RemoveIcon />
-          </div>
-          <div onClick={handleMaximize} className="custom-icon-bar opacity-c">
+          </CustomIconBars>
+          <CustomIconBars onClick={handleMaximize}>
             <AddIcon />
-          </div>
-          <div onClick={handleClose} className="custom-icon-bar opacity-c">
+          </CustomIconBars>
+          <CustomIconBars onClick={handleClose}>
             <CloseRoundedIcon />
-          </div>
-        </div>
-      </div>
-    </div>
+          </CustomIconBars>
+        </TopBarAction>
+      </MainTopBarStyle>
+    </MainTopBarContainer>
   );
 };
+
+const MainTopBarContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 50px;
+  -webkit-app-region: drag;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+  height: 30px;
+  padding: 0;
+  height: 30px;
+  line-height: 30px;
+  justify-content: left;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 13px;
+  padding: 0 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  zoom: 1;
+  line-height: 22px;
+  height: 30px;
+  display: flex;
+  z-index: 99999;
+`;
+
+const MainTopBarStyle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const MainTopBarFeatures = styled.div`
+  display: flex;
+`;
+
+const CustomFeatures = styled.div`
+  padding: 0 10px;
+`;
+
+const CustomFeaturesList = styled.div`
+  display: flex;
+  opacity: 0.5;
+  margin: 0 20px;
+`;
+
+const TopBarAction = styled.div`
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: space-between;
+`;
+
+const CustomIconBars = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bolder !important ;
+  cursor: pointer;
+  margin: 0 5px;
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
 
 export default MainTopBar;

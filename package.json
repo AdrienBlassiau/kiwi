@@ -19,6 +19,7 @@
     "chromedriver": "^83.0.1",
     "connected-react-router": "^6.8.0",
     "dateformat": "^3.0.3",
+    "fast-levenshtein": "^3.0.0",
     "filereader": "^0.10.3",
     "history": "^4.10.1",
     "jsmediatags": "^3.9.3",
