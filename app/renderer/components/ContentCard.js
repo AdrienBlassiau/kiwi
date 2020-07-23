@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import Style from '../css/ContentCardCss.js';
-import PercentageCircle from './PercentageCircle';
+import styled, { css } from 'styled-components';
 
 import AutorenewRoundedIcon from '@material-ui/icons/AutorenewRounded';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
@@ -56,50 +55,170 @@ const ContentCard = (props) => {
   /////////////////////////////////////////////////////////////////////////////
 
   return (
-    <div>
-      <div
-        className="card-main-style"
-        onClick={handleOpenModal}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}>
-        {hovered ? (
-          <React.Fragment>
-            <div className="movie-title-infos">
-              <div className="movie-title-relative">
-                {title} ({date})
-              </div>
-            </div>
-            <div className="card-action-container">
-              <div className="card-action-box">
-                <div className="card-action">
-                  <FavoriteRoundedIcon />
-                </div>
-                <div className="card-action">
-                  <VisibilityRoundedIcon />
-                </div>
-                <div className="card-action" onClick={handlePreload}>
-                  <AutorenewRoundedIcon />
-                </div>
-                <div className="card-action">
-                  <GetAppRoundedIcon />
-                </div>
-              </div>
-            </div>
-          </React.Fragment>
-        ) : null}
-        <div className="image-container">
-          <div className="wrapper">
-            <div className="image-link">
-              <img
-                className="image"
-                alt=""
-                src={'https://image.tmdb.org/t/p/w220_and_h330_face/' + movie.poster_path}></img>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <CardMainStyle
+      onClick={handleOpenModal}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}>
+      {hovered ? (
+        <React.Fragment>
+          <MovieTitleInfos>
+            <MovieTitleRelative>
+              {title} ({date})
+            </MovieTitleRelative>
+          </MovieTitleInfos>
+          <CardActionContainer>
+            <CardActionBox>
+              <CardAction>
+                <FavoriteRoundedIcon />
+              </CardAction>
+              <CardAction>
+                <VisibilityRoundedIcon />
+              </CardAction>
+              <CardAction onClick={handlePreload}>
+                <AutorenewRoundedIcon />
+              </CardAction>
+              <CardAction>
+                <GetAppRoundedIcon />
+              </CardAction>
+            </CardActionBox>
+          </CardActionContainer>
+        </React.Fragment>
+      ) : null}
+      <ImageContainer>
+        <ImageContainerWrapper>
+          <ImageContainerLink>
+            <ImageContainerImage
+              alt=""
+              src={
+                'https://image.tmdb.org/t/p/w220_and_h330_face/' + movie.poster_path
+              }></ImageContainerImage>
+          </ImageContainerLink>
+        </ImageContainerWrapper>
+      </ImageContainer>
+    </CardMainStyle>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const CardMainStyle = styled.div`
+  position: relative;
+  width: 150px;
+  min-width: 150px;
+  // width: 75px;
+  // min-width: 75px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin-top: 0;
+  overflow: visible;
+  padding: 5px;
+  cursor: pointer;
+
+  &:hover {
+    border-radius: 5px;
+    background-color: var(--dark-white-color);
+  }
+
+  &:hover .image {
+    filter: brightness(70%);
+  }
+`;
+
+const MovieTitleInfos = styled.div`
+  position: absolute;
+  font-size: 10px;
+  top: -15px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  text-align: center;
+  background-color: var(--medium-letter-color);
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+`;
+
+const MovieTitleRelative = styled.div`
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    width: 0;
+    height: 0;
+    border-top: solid 10px var(--medium-letter-color);
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+  }
+`;
+
+const CardActionContainer = styled.div`
+  position: absolute;
+  z-index: 4;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const CardActionBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 140px;
+  height: 40px;
+  background-color: var(--dark-letter-color);
+  border-radius: 4px;
+  opacity: 0.9;
+`;
+
+const CardAction = styled.div`
+  margin: 0 5px;
+  line-height: 0;
+`;
+
+const ImageContainer = styled.div`
+  border-radius: 4px;
+  width: 100%;
+  min-height: calc(150px * 1.5);
+  height: calc(150px * 1.5);
+  // min-height: calc(75px * 1.5);
+  // height: calc(75px * 1.5);
+  overflow: hidden;
+  -webkit-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+  -moz-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.25);
+`;
+
+const ImageContainerWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+`;
+
+const ImageContainerLink = styled.div`
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+`;
+
+const ImageContainerImage = styled.img`
+  width: 100%;
+  height: 100%;
+  min-width: 1px;
+  min-height: 1px;
+  outline: none;
+  box-sizing: border-box;
+  border: 0;
+`;
 
 export default ContentCard;

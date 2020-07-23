@@ -18,9 +18,7 @@ const SnackBar = (props) => {
   const [isActive, setIsActive] = useState(false);
 
   const handleRemoveSnackBar = (index) => {
-    console.log('BEFoRE SANCK:', snackQueue);
     snackQueue.splice(index, 1);
-    console.log('AFTER SANCK:', snackQueue);
     const newSnackQueue = snackQueue.slice(0);
     setSnackQueue(newSnackQueue);
   };

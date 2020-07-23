@@ -3,12 +3,11 @@ import styled, { css } from 'styled-components';
 
 import ReactDOM from 'react-dom';
 
-import CardManager from './CardManager';
 import PlayerContainer from './PlayerContainer';
-import ContentDisplay from './ContentDisplay';
-import Modal from './Modal';
 import SelectionBar from './SelectionBar';
-import LogoContainer from './LogoContainer';
+import CardManager from './CardManager';
+import Modal from './Modal';
+import ContentDisplay from './ContentDisplay';
 import DownLoadManager from './DownLoadManager';
 
 const MainContainer = (props) => {

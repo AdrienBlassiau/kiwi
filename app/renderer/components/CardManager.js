@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
+
 import ContentLoader from 'react-content-loader';
 import ContentCard from './ContentCard';
 import ReactDOM from 'react-dom';
@@ -53,17 +55,43 @@ const CardManager = (props) => {
   );
 
   const loader = [...Array(20)].map((e, i) => (
-    <div className="card-loader-style" key={i}>
+    <CardLoaderStyle key={i}>
       <MyLoader />
-    </div>
+    </CardLoaderStyle>
   ));
 
   return (
-    <div className="popular-movies-list">
+    <PopularMoviesList>
       {content}
       {hasMore && isFetching && loader}
-    </div>
+    </PopularMoviesList>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const CardLoaderStyle = styled.div`
+  width: 150px;
+  min-width: 150px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin-top: 0;
+  overflow: visible;
+  padding: 5px;
+  cursor: pointer;
+`;
+
+const PopularMoviesList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 30px 10px;
+  width: 1600px;
+  height: fit-content;
+`;
 
 export default CardManager;

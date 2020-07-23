@@ -510,120 +510,117 @@ const VideoPlayer = (props) => {
   );
 
   const server = serverOpen ? (
-    <div
-      className="speed-tab"
+    <VideoPlayerServerTab
       onMouseEnter={() => setServerOpen(true)}
       onMouseLeave={() => setServerOpen(false)}>
-      <div className="speed-title">Servers</div>
+      <VideoPlayerServerTitle>Servers</VideoPlayerServerTitle>
       {serverList.map((item, key) => (
-        <div
+        <VideoPlayerServerChoice
           key={key}
-          className={'speed-choice ' + (selectedServer === key ? 't-c-selected' : '')}
+          selectedServer={selectedServer}
+          number={key}
           onClick={(e) => handleChangeServer(e, item, key)}>
           {item.type} {item.language} {item.quality}
-        </div>
+        </VideoPlayerServerChoice>
       ))}
-    </div>
+    </VideoPlayerServerTab>
   ) : null;
 
   const speed = rateOpen ? (
-    <div
-      className="speed-tab"
+    <VideoPlayerSpeedTab
       onMouseEnter={() => setRateOpen(true)}
       onMouseLeave={() => setRateOpen(false)}>
-      <div className="speed-title">Speed</div>
+      <VideoPlayerSpeedTitle>Speed</VideoPlayerSpeedTitle>
       {rateSelection.map((item, key) => (
-        <div
+        <VideoPlayerSpeedChoice
           key={key}
-          className={'speed-choice ' + (playbackRate === item ? 't-c-selected' : '')}
+          playbackRate={playbackRate}
+          item={item}
           onClick={(e) => handleChangeSpeed(e, item)}>
           {item == 1.0 ? 'Normal' : 'x ' + item}
-        </div>
+        </VideoPlayerSpeedChoice>
       ))}
-    </div>
+    </VideoPlayerSpeedTab>
   ) : null;
 
   const subtitles = subtitlesOpen ? (
-    <div
-      className="speed-tab"
+    <VideoPlayerSubtitlesTab
       onMouseEnter={() => setSubtitlesOpen(true)}
       onMouseLeave={() => setSubtitlesOpen(false)}>
-      <div className="speed-title">Subtitles</div>
+      <VideoPlayerSubtitlesTitle>Subtitles</VideoPlayerSubtitlesTitle>
       {subtitlesSelection.map((item, key) => (
-        <div
+        <VideoPlayerSubtitlesChoice
           key={key}
-          className={'captions-choice ' + (selectedSubtitles === key ? 't-c-selected' : '')}
+          selectedSubtitles={selectedSubtitles}
+          number={key}
           onClick={(e) => handleChangeSubtitles(e, key)}>
           {item}
-        </div>
+        </VideoPlayerSubtitlesChoice>
       ))}
-    </div>
+    </VideoPlayerSubtitlesTab>
   ) : null;
 
   const controls = (
-    <VideoPlayerControlsWrapper customControls={customControls} >
+    <VideoPlayerControlsWrapper customControls={customControls}>
       <VideoPlayerProgressBar>{progress}</VideoPlayerProgressBar>
-      <VideoPlayerTextTrack dangerouslySetInnerHTML={{ __html: enableSubtitles ? currentSubtitles : '' }}>
-        </VideoPlayerTextTrack>
-
-      <VideoPlayerBarGroup >
-        <div className="custom-video-button" onClick={handlePlayPause}>
-          {playing ? <StopRoundedIcon /> : <PlayArrowRoundedIcon />}
-        </div>
-        <div className="custom-video-button custom-sound">
-          <div className="custom-sound-icon" onClick={handleToggleMuted}>
-            {soundIcon}
-          </div>
-          <div>{sound}</div>
-        </div>
-      </VideoPlayerBarGroup>
-
-      <div className="custom-video-button">
-        <div className="video-time">
-          <Duration seconds={duration * played} />
-        </div>
-        <div>/</div>
-        <div className="video-time">
-          <Duration seconds={duration} />
-        </div>
-      </div>
+      <VideoPlayerTextTrack
+        dangerouslySetInnerHTML={{
+          __html: enableSubtitles ? currentSubtitles : '',
+        }}></VideoPlayerTextTrack>
 
       <VideoPlayerBarGroup>
-        <div
-          className="custom-video-button tab-container t-c-selected"
+        <VideoPlayerPlayButton onClick={handlePlayPause}>
+          {playing ? <StopRoundedIcon /> : <PlayArrowRoundedIcon />}
+        </VideoPlayerPlayButton>
+        <VideoPlayerSoundButton>
+          <VideoPlayerSoundIconButton onClick={handleToggleMuted}>
+            {soundIcon}
+          </VideoPlayerSoundIconButton>
+          <div>{sound}</div>
+        </VideoPlayerSoundButton>
+      </VideoPlayerBarGroup>
+
+      <VideoPlayerTimeButton>
+        <VideoPlayerTimeText>
+          <Duration seconds={duration * played} />
+        </VideoPlayerTimeText>
+        <div>/</div>
+        <VideoPlayerTimeText>
+          <Duration seconds={duration} />
+        </VideoPlayerTimeText>
+      </VideoPlayerTimeButton>
+
+      <VideoPlayerBarGroup>
+        <VideoPlayerServerButton
           onMouseEnter={() => setServerOpen(true)}
           onMouseLeave={() => setServerOpen(false)}>
           {server}
           <DnsRoundedIcon />
-        </div>
-        <div
-          className={
-            'custom-video-button tab-container ' + (enablePlaybackRate ? 't-c-selected' : '')
-          }
+        </VideoPlayerServerButton>
+        <VideoPlayerSpeedButton
+          enablePlaybackRate={enablePlaybackRate}
           onClick={() => setEnablePlaybackRate(!enablePlaybackRate)}
           onMouseEnter={() => setRateOpen(true)}
           onMouseLeave={() => setRateOpen(false)}>
           {speed}
           <SpeedRoundedIcon />
-        </div>
-        <div
-          className={'custom-video-button tab-container ' + (enableSubtitles ? 't-c-selected' : '')}
+        </VideoPlayerSpeedButton>
+        <VideoPlayerSubtitlesButton
+          enableSubtitles={enableSubtitles}
           onClick={() => setEnableSubtitles(!enableSubtitles)}
           onMouseEnter={() => setSubtitlesOpen(true)}
           onMouseLeave={() => setSubtitlesOpen(false)}>
           {subtitles}
           <SubtitlesRoundedIcon />
-        </div>
-        <div
-          className={'custom-video-button tab-container ' + (pip ? 't-c-selected' : '')}
-          onClick={() => setPip(!pip)}>
+        </VideoPlayerSubtitlesButton>
+        <VideoPlayerPIPButton pip={pip} onClick={() => setPip(!pip)}>
           <PictureInPictureRoundedIcon />
-        </div>
+        </VideoPlayerPIPButton>
       </VideoPlayerBarGroup>
 
-      <div className="custom-video-button" onClick={handleClickFullscreen}>
+      <VideoPlayerFullscreenButton onClick={handleClickFullscreen}>
         {fullScreenIcon}
-      </div>
+      </VideoPlayerFullscreenButton>
     </VideoPlayerControlsWrapper>
   );
 
@@ -706,65 +703,270 @@ const VideoPlayer = (props) => {
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
+const VideoPlayerServerChoice = styled.div`
+  margin-left: 10px;
+  padding: 2px;
+  width: 70px;
+  text-align: left;
+  ${(props) =>
+    props.number === props.selectedServer &&
+    css`
+      background-color: var(--good-color);
+      border-radius: 3px;
+    `};
+`;
+
+const VideoPlayerServerTitle = styled.div`
+  font-weight: bold;
+  margin-left: 10px;
+`;
+
+const VideoPlayerServerTab = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  position: absolute;
+  width: 100px;
+  max-height: 200px;
+  background-color: var(--dark-white-color);
+  z-index: 20;
+  bottom: 40px;
+  right: 10px;
+  padding: 10px 0;
+  overflow-y: scroll;
+`;
+
+const VideoPlayerSpeedChoice = styled.div`
+  margin-left: 10px;
+  padding: 2px;
+  width: 70px;
+  text-align: left;
+  ${(props) =>
+    props.playbackRate === props.item &&
+    css`
+      background-color: var(--good-color);
+      border-radius: 3px;
+    `};
+`;
+
+const VideoPlayerSpeedTitle = styled.div`
+  font-weight: bold;
+  margin-left: 10px;
+`;
+
+const VideoPlayerSpeedTab = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  position: absolute;
+  width: 100px;
+  max-height: 200px;
+  background-color: var(--dark-white-color);
+  z-index: 20;
+  bottom: 40px;
+  right: 10px;
+  padding: 10px 0;
+  overflow-y: scroll;
+`;
+
+const VideoPlayerSubtitlesChoice = styled.div`
+  margin-left: 10px;
+  padding: 2px;
+  width: 70px;
+  text-align: left;
+  ${(props) =>
+    props.selectedSubtitles === props.number &&
+    css`
+      background-color: var(--good-color);
+      border-radius: 3px;
+    `};
+`;
+
+const VideoPlayerSubtitlesTitle = styled.div`
+  font-weight: bold;
+  margin-left: 10px;
+`;
+
+const VideoPlayerSubtitlesTab = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  position: absolute;
+  width: 100px;
+  max-height: 200px;
+  background-color: var(--dark-white-color);
+  z-index: 20;
+  bottom: 40px;
+  right: 10px;
+  padding: 10px 0;
+  overflow-y: scroll;
+`;
+
+const VideoPlayerFullscreenButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+`;
+
+const VideoPlayerPIPButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  position: relative;
+  padding: 10px;
+  ${({ pip }) =>
+    pip &&
+    css`
+      background-color: var(--good-color);
+      border-radius: 3px;
+    `};
+`;
+
+const VideoPlayerSubtitlesButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  position: relative;
+  padding: 10px;
+  ${({ enableSubtitles }) =>
+    enableSubtitles &&
+    css`
+      background-color: var(--good-color);
+      border-radius: 3px;
+    `};
+`;
+
+const VideoPlayerSpeedButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  position: relative;
+  padding: 10px;
+  ${({ enablePlaybackRate }) =>
+    enablePlaybackRate &&
+    css`
+      background-color: var(--good-color);
+      border-radius: 3px;
+    `};
+`;
+
+const VideoPlayerServerButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  background-color: var(--good-color);
+  border-radius: 3px;
+`;
+
+const VideoPlayerTimeText = styled.div`
+  width: 80px;
+  margin: 10px 0;
+`;
+
+const VideoPlayerTimeButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+`;
+
+const VideoPlayerSoundIconButton = styled.div`
+  cursor: pointer;
+`;
+
+const VideoPlayerSoundButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  line-height: 0;
+`;
+
+const VideoPlayerPlayButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+`;
+
 const VideoPlayerBarGroup = styled.div`
   display: flex;
 `;
 
 const VideoPlayerTextTrack = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin: 0 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    min-width: 0;
-    position: absolute;
-    bottom: 60px;
-    width: 100%;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    left: 0 !important;
-    color: white;
-    background-color: rgba(1,1,1,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  position: absolute;
+  bottom: 60px;
+  width: 100%;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  left: 0 !important;
+  color: white;
+  background-color: rgba(1, 1, 1, 0.5);
 `;
 
 const VideoPlayerProgressBar = styled.div`
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    justify-content: center;
-    flex: 1;
-    min-width: 0;
-    position: absolute;
-    bottom: 80px;
-    width: 100%;
-    margin: 0 10px;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    left: 0 !important;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  position: absolute;
+  bottom: 80px;
+  width: 100%;
+  margin: 0 10px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  left: 0 !important;
 `;
 
 const VideoPlayerControlsWrapper = styled.div`
-    display: ${({ customControls }) => (customControls && 'flex !important') || 'none !important'};
-      background-color: var(--dark-white-t-color);
-    border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit;
-    color: #fff;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    position: relative;
-    transition: opacity .4s ease-in-out,transform .4s ease-in-out;
-    z-index: 3;
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    box-sizing: inherit;
-    min-width: 800px;
+  display: ${({ customControls }) => (customControls && 'flex !important') || 'none !important'};
+  background-color: var(--dark-white-t-color);
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  position: relative;
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  z-index: 3;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  box-sizing: inherit;
+  min-width: 800px;
 `;
 
 const VideoPlayerMaster = styled.div`

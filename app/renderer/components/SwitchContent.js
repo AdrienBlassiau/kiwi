@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
 
 const SwitchContent = (props) => {
   /////////////////////////////////////////////////////////////////////////////
@@ -37,31 +38,63 @@ const SwitchContent = (props) => {
   /////////////////////////////////////////////////////////////////////////////
 
   return (
-    <div className="main-choice-container">
-      <div className="choice-bar-container">
-        <div
-          className={'choice-test-container ' + (selectedTab == 1 ? 'choice-selected' : '')}
+    <MainChoiceContainer>
+      <ChoiceBarContainer>
+        <ChoiceTestContainer selectedTab={selectedTab==1}
           onClick={() => handleModeChange(1)}>
           SEARCH
-        </div>
-        <div
-          className={'choice-test-container ' + (selectedTab == 2 ? 'choice-selected' : '')}
+        </ChoiceTestContainer>
+        <ChoiceTestContainer selectedTab={selectedTab==2}
           onClick={() => handleModeChange(2)}>
           WATCHLIST
-        </div>
-        <div
-          className={'choice-test-container ' + (selectedTab == 3 ? 'choice-selected' : '')}
+        </ChoiceTestContainer>
+        <ChoiceTestContainer selectedTab={selectedTab==3}
           onClick={() => handleModeChange(3)}>
           LIBRARY
-        </div>
-        <div
-          className={'choice-test-container ' + (selectedTab == 4 ? 'choice-selected' : '')}
+        </ChoiceTestContainer>
+        <ChoiceTestContainer selectedTab={selectedTab==4}
           onClick={() => handleModeChange(4)}>
           LOAD & DOWNLOAD
-        </div>
-      </div>
-    </div>
+        </ChoiceTestContainer>
+      </ChoiceBarContainer>
+    </MainChoiceContainer>
   );
 };
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+
+const MainChoiceContainer = styled.div`
+  width: 100%;
+  overflow: visible;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  display: flex;
+  z-index: 99998;
+    margin-bottom: 20px;
+`;
+
+const ChoiceBarContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const ChoiceTestContainer = styled.div`
+  flex-grow: 1;
+  text-align: center;
+  line-height: 30px;
+  margin: 0 10px;
+  border-bottom: ${({ selectedTab }) => (selectedTab && '2px solid var(--green-kiwi-color)') || '2px solid transparent;'};
+  opacity: ${({ selectedTab }) => (selectedTab && '1') || '0.5'};
+  cursor: pointer;
+`;
+
 
 export default SwitchContent;

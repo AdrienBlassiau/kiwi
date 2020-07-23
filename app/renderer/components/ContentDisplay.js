@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
+
 import { usePalette } from 'react-palette';
-import Moment from 'react-moment';
-import axios from 'axios';
 import PercentageCircle from './PercentageCircle';
-import { directSearchSite } from '../scrapper/index.js';
-import { getMovies } from '../controllers';
+
 import * as utils from '../utils';
-import run from '../scrapper/fetch.js';
 
 import logger from '../utils/logger.js';
 
@@ -76,14 +74,13 @@ const ContentDisplay = (props) => {
 
   const playButton = (
     // status === statusType.FOUND ? (
-    <div
-      className="circle-around-play"
+    <MainContentDisplayPlayCircle
       onClick={() => {
         // console.log('okoko');
         setMode('stream');
       }}>
-      <div className="button-play"></div>
-    </div>
+      <MainContentDisplayPlay></MainContentDisplayPlay>
+    </MainContentDisplayPlayCircle>
   );
   // ) : (
   //   <div className="circle-around-dont-play">
@@ -92,52 +89,57 @@ const ContentDisplay = (props) => {
   // );
 
   const contentDispay = !isLoading ? (
-    <div style={backgroundImageStyle} className="main-content-display-container">
-      <div style={backgroundImageColor} className="main-content-display-back">
-        <div className="main-content-single-column">
-          <section className="main-content-data-container">
-            <div className="poster-wrapper">
-              <div className="poster-more-display">
-                <div className="main-content-poster">
-                  <img
-                    className="main-content-poster-content"
+    <MainContentDisplayContainer style={backgroundImageStyle}>
+      <MainContentDisplayBack style={backgroundImageColor}>
+        <MainContentDisplaySingleColumn>
+          <MainContentDisplayDataContainer>
+            <MainContentDisplayPosterWrapper>
+              <MainContentDisplayPoster>
+                <MainContentDisplayPoster>
+                  <MainContentDisplayPosterContent
                     src={poster}
-                    alt={currentMovieData.title}></img>
-                </div>
-              </div>
-            </div>
-            <div className="data-wrapper-container">
-              <section className="data-wrapper">
-                <div className="data-wrapper-title">
-                  <div className="data-wrapper-title-text">
-                    <span className="data-wrapper-title-text-content">
+                    alt={currentMovieData.title}></MainContentDisplayPosterContent>
+                </MainContentDisplayPoster>
+              </MainContentDisplayPoster>
+            </MainContentDisplayPosterWrapper>
+            <MainContentDisplayWrapperContainer>
+              <MainContentDisplayWrapper>
+                <MainContentDisplayWrapperTitle>
+                  <MainContentDisplayWrapperTitleText>
+                    <MainContentDisplayWrapperTitleTextContent>
                       {currentMovieData.title}
-                    </span>{' '}
-                    <span className="data-wrapper-title-text-date">({year})</span>
-                  </div>
-                  <div className="data-wrapper-title-facts">
+                    </MainContentDisplayWrapperTitleTextContent>{' '}
+                    <MainContentDisplayWrapperTitleTextDate>
+                      ({year})
+                    </MainContentDisplayWrapperTitleTextDate>
+                  </MainContentDisplayWrapperTitleText>
+                  <MainContentDisplayWrapperTitleFacts>
                     {certif !== '' ? (
-                      <span className="data-wrapper-title-facts-certif">{certif}</span>
+                      <MainContentDisplayWrapperTitleFactsCertif>
+                        {certif}
+                      </MainContentDisplayWrapperTitleFactsCertif>
                     ) : (
                       <span></span>
                     )}
-                    <span className="data-wrapper-title-facts-relea">
+                    <MainContentDisplayWrapperTitleFactsRelease>
                       {currentMovieData.release_date} ({country})
-                    </span>
-                    <span className="data-wrapper-title-facts-genre">{genres}</span>
-                    <span className="data-wrapper-title-facts-runtime">
+                    </MainContentDisplayWrapperTitleFactsRelease>
+                    <MainContentDisplayWrapperTitleFactsGenre>
+                      {genres}
+                    </MainContentDisplayWrapperTitleFactsGenre>
+                    <MainContentDisplayWrapperTitleFactsRuntime>
                       {hours}h{minutes}m
-                    </span>
-                    <span className="data-wrapper-title-facts-status">
-                      <div className="circle-status-container">
+                    </MainContentDisplayWrapperTitleFactsRuntime>
+                    <MainContentDisplayWrapperTitleFactsStatus>
+                      <CircleStatusContainer>
                         {/*                        <div className={'circle-status ' + circleStatusClass}></div>*/}
-                      </div>
-                    </span>
-                  </div>
-                </div>
-                <div className="data-wrapper-infos-play">
-                  <div className="data-wrapper-infos">
-                    <div className="chart-block">
+                      </CircleStatusContainer>
+                    </MainContentDisplayWrapperTitleFactsStatus>
+                  </MainContentDisplayWrapperTitleFacts>
+                </MainContentDisplayWrapperTitle>
+                <DataWrapperInfosPlay>
+                  <DataWrapperInfos>
+                    <DataWrapperChartBlock>
                       <PercentageCircle
                         percentage={currentMovieData.vote_average}
                         width={50}
@@ -146,33 +148,343 @@ const ContentDisplay = (props) => {
                         fontSize1={25}
                         fontSize2={10}
                       />
-                    </div>
-                    <div className="chart-text">
+                    </DataWrapperChartBlock>
+                    <DataWrapperChartText>
                       User <br />
                       Score
-                    </div>
-                  </div>
+                    </DataWrapperChartText>
+                  </DataWrapperInfos>
                   <div>{playButton}</div>
-                </div>
-                <div className="data-wrapper-resume">
-                  <div className="tag-line-master">{tagline}</div>
-                  <div className="overview-text">Overview</div>
-                  <div className="overview-section-text">
+                </DataWrapperInfosPlay>
+                <DataWrapperResume>
+                  <DataWrapperTagLine>{tagline}</DataWrapperTagLine>
+                  <DataWrapperOverviewTitle>Overview</DataWrapperOverviewTitle>
+                  <DataWrapperOverviewText>
                     <div>{overview}</div>
-                  </div>
-                  <div className="people-no-image">{credits}</div>
-                </div>
-              </section>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
+                  </DataWrapperOverviewText>
+                  <DataWrapperOverviewCredits>{credits}</DataWrapperOverviewCredits>
+                </DataWrapperResume>
+              </MainContentDisplayWrapper>
+            </MainContentDisplayWrapperContainer>
+          </MainContentDisplayDataContainer>
+        </MainContentDisplaySingleColumn>
+      </MainContentDisplayBack>
+    </MainContentDisplayContainer>
   ) : (
     <div></div>
   );
 
   return <div>{contentDispay}</div>;
 };
+
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const MainContentDisplayContainer = styled.div`
+  background-position: right -200px top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+`;
+
+const MainContentDisplayBack = styled.div`
+  width: 100%;
+`;
+
+const MainContentDisplaySingleColumn = styled.div`
+  background: transparent;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 40px;
+  padding-right: 40px;
+  max-width: 1300px;
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  z-index: 0;
+  box-sizing: border-box;
+`;
+
+const MainContentDisplayDataContainer = styled.section`
+  display: flex;
+  flex-wrap: nowrap;
+`;
+
+const MainContentDisplayPosterWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  height: auto;
+  border-width: 0px;
+  min-width: 300px;
+  width: 300px;
+  overflow: hidden;
+  border-radius: var(--imageBorderRadius);
+`;
+
+const MainContentDisplayPoster = styled.div`
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+`;
+
+const MainContentDisplayPosterContent = styled.img`
+  display: block;
+  width: 100%;
+  min-width: 100%;
+  border-width: 0px;
+  outline: none;
+`;
+
+const MainContentDisplayWrapperContainer = styled.div`
+  display: flex;
+`;
+
+const MainContentDisplayWrapper = styled.section`
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: center;
+  box-sizing: border-box;
+  padding-left: 40px;
+`;
+
+const MainContentDisplayWrapperTitle = styled.div`
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const MainContentDisplayWrapperTitleText = styled.div`
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 2.2rem;
+  font-weight: 600;
+`;
+
+const MainContentDisplayWrapperTitleTextContent = styled.span`
+  color: white;
+  font-weight: 700;
+`;
+
+const MainContentDisplayWrapperTitleTextDate = styled.span`
+  opacity: 0.8;
+  font-weight: 400;
+  font-size: 2.2rem;
+  color: white;
+`;
+
+const MainContentDisplayWrapperTitleFacts = styled.div`
+  display: flex;
+  color: white;
+`;
+
+const MainContentDisplayWrapperTitleFactsCertif = styled.span`
+  border: 1px solid rgba(100%, 100%, 100%, 0.6);
+  color: rgba(100%, 100%, 100%, 0.6);
+  display: inline-flex;
+  white-space: nowrap;
+  align-items: center;
+  align-content: center;
+  padding: 0.06em 4px 0.15em 4px !important;
+  line-height: 1;
+  border-radius: 2px;
+  margin-right: 7px;
+`;
+
+const MainContentDisplayWrapperTitleFactsRelease = styled.span`
+  color: white;
+  position: relative;
+  top: 0;
+  left: 0;
+  padding-left: 0;
+
+  &:before {
+    content: '';
+    font-size: 1.1em;
+    line-height: 1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 7px;
+    display: inline-flex;
+    align-content: center;
+    align-items: center;
+  }
+`;
+
+const MainContentDisplayWrapperTitleFactsGenre = styled.span`
+  color: white;
+  padding-left: 20px;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  &:before {
+    color: white;
+    font-size: 1.1em;
+    line-height: 1;
+    content: '•';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 7px;
+    display: inline-flex;
+    align-content: center;
+    align-items: center;
+  }
+`;
+
+const MainContentDisplayWrapperTitleFactsRuntime = styled.span`
+  color: white;
+  padding-left: 20px;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  &:before {
+    color: white;
+    font-size: 1.1em;
+    line-height: 1;
+    content: '•';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 7px;
+    display: inline-flex;
+    align-content: center;
+    align-items: center;
+  }
+`;
+
+const MainContentDisplayWrapperTitleFactsStatus = styled.span`
+  color: white;
+  padding-left: 20px;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+`;
+
+const CircleStatusContainer = styled.div`
+  display: flex;
+`;
+
+const DataWrapperInfos = styled.div`
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  list-style-type: none;
+`;
+
+const DataWrapperInfosPlay = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+`;
+
+const DataWrapperChartBlock = styled.div`
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 68px;
+`;
+
+const DataWrapperChartText = styled.div`
+  font-weight: 700;
+  margin-left: 6px;
+  white-space: pre-line;
+`;
+
+const DataWrapperResume = styled.div`
+  width: 100%;
+  color: white;
+`;
+
+const DataWrapperTagLine = styled.div`
+  margin-bottom: 0;
+  font-size: 1.1em;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.7;
+  width: 100%;
+  margin: 0 0 8px 0;
+  margin-bottom: 8px;
+`;
+
+const DataWrapperOverviewTitle = styled.div`
+  margin-top: 10px;
+  padding: 0;
+  color: white;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 8px 0;
+  margin-top: 0px;
+  font-weight: 600;
+  font-size: 1.3em;
+`;
+
+const DataWrapperOverviewText = styled.div`
+  color: white;
+`;
+
+const DataWrapperOverviewCredits = styled.div`
+  margin-top: 20px !important;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  list-style-type: none;
+  list-style-position: inside;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+`;
+
+const MainContentDisplayPlay = styled.div`
+  border-style: solid;
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  border-width: 20px 0px 20px 30px;
+  border-color: transparent transparent transparent white;
+`;
+
+const MainContentDisplayPlayCircle = styled.div`
+  background-color: var(--dark-blue-color);
+  border-radius: 50%;
+  height: 70px;
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-shadow: 5px 2px 10px -4px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 5px 2px 10px -4px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 2px 10px -4px rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
 
 export default ContentDisplay;

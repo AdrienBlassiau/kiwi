@@ -1,26 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
 
-export default class Modal extends React.Component {
-  render() {
-    const show = this.props.show;
-    const displayClass = show ? 'modal-display-block' : 'modal-display-none';
-    return (
-      <div className={'modal-master-block ' + displayClass}>
-        <div className="modal-handler" onClick={this.props.onClose}>
-          <div
-            className="modal-master"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}>
-            <div className="modal-relative-master">
-              <span onClick={this.props.onClose} className="close">
-                &times;
-              </span>
-              {this.props.children}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+const Modal = (props) => {
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  const show = props.show;
+  const onClose = props.onClose;
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////  COMPONENTS  ///////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  return (
+    <ModalMasterBlock show={show}>
+      <ModalHandler onClick={onClose}>
+        <ModalMaster
+          onClick={(e) => {
+            e.stopPropagation();
+          }}>
+          <ModalRelativeMaster>{props.children}</ModalRelativeMaster>
+        </ModalMaster>
+      </ModalHandler>
+    </ModalMasterBlock>
+  );
+};
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////  STYLES  /////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+const ModalMasterBlock = styled.div`
+  display: ${({ show }) => (show && 'block') || 'none'};
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+`;
+
+const ModalHandler = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+`;
+
+const ModalMaster = styled.div`
+  background-color: #fefefe;
+  margin: auto;
+  width: 80%;
+  color: black;
+`;
+
+const ModalRelativeMaster = styled.div``;
+
+export default Modal;
