@@ -371,14 +371,17 @@ const VideoPlayer = (props) => {
     setSubtitlesSelection(subtitlesSelection);
     setVttTab(vttTab);
     setOriginalVttTab(originalVttTab);
-    console.log('vttTab', vttTab);
-    console.log('originalVttTab', originalVttTab);
+    // console.log('vttTab', vttTab);
+    // console.log('originalVttTab', originalVttTab);
+  };
 
-    setInterval(() => {
+  useEffect(() => {
+    const interval = setInterval(() => {
       let currentTime = document.getElementsByTagName('video')[0].currentTime;
       setCurrentTime(Math.round(currentTime * 10));
     }, 200);
-  };
+    return () => clearInterval(interval);
+  }, [duration]);
 
   useEffect(() => {
     if (keydown == '37') {
