@@ -34,7 +34,10 @@ const getGenre = (movie) => {
 };
 
 const getTranslation = (movie, lang) => {
-  const content = movie.translations.translations.filter((data) => data.iso_3166_1 === lang)[0];
+  let content = movie.translations.translations.filter((data) => data.iso_3166_1 === lang)[0];
+  content = content
+    ? content
+    : movie.translations.translations.filter((data) => data.iso_3166_1 === 'US')[0];
   return [content.data.overview, content.data.tagline];
 };
 

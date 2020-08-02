@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { findDOMNode } from 'react-dom';
 import ReactPlayer from 'react-player';
+import { getFolderPath, getFilePath, shiftVTT, makeVTTab } from '../subtitles/index.js';
+
+import Shifter from './Shifter';
+import Modal from './Modal';
 
 // fullscreen manager
 import screenfull from 'screenfull';
@@ -22,6 +26,10 @@ import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import PictureInPictureRoundedIcon from '@material-ui/icons/PictureInPictureRounded';
 import SubtitlesRoundedIcon from '@material-ui/icons/SubtitlesRounded';
 import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
+import HistoryRoundedIcon from '@material-ui/icons/HistoryRounded';
+
+import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 
 // Sliders components for soud and control
 import { Slider, Direction } from 'react-player-controls';
@@ -118,6 +126,13 @@ const VideoPlayer = (props) => {
   const [subtitlesOpen, setSubtitlesOpen] = useState(false);
   const [selectedSubtitles, setSelectedSubtitles] = useState(0);
   const [subtitlesSelection, setSubtitlesSelection] = useState([]);
+  const [subtitlesSelectionLang, setSubtitlesSelectionLang] = useState('en');
+  const [showShift, setShowShift] = useState(false);
+  const [timeOffSet, setTimeOffSet] = useState(0);
+  const [vttTab, setVttTab] = useState([]);
+  const [originalVttTab, setOriginalVttTab] = useState([]);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [subtitlesSize, setSubtitleSize] = useState(55);
 
   // [REF]: some references for special features
   // playerRef: the video player ref
@@ -130,6 +145,26 @@ const VideoPlayer = (props) => {
   /////////////////////////////  HANDLING EVENTS  /////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
+
+  const handleChangeSizeLess = (e) => {
+    e.stopPropagation();
+    setSubtitleSize(subtitlesSize - 5);
+  };
+
+  const handleChangeSizeMore = (e) => {
+    e.stopPropagation();
+    setSubtitleSize(subtitlesSize + 5);
+  };
+
+  const handleShift = (e) => {
+    e.stopPropagation();
+    console.log('We show shift');
+    setShowShift(true);
+  };
+
+  const onCloseShift = () => {
+    setShowShift(false);
+  };
 
   const setNewTimer = (createNew) => {
     clearTimeout(timer);
@@ -157,8 +192,6 @@ const VideoPlayer = (props) => {
   };
 
   const handlePlayPause = () => {
-    // console.log('onPlayPause');
-    handleChangeOnFullScreen();
     setPlaying(!playing);
   };
 
@@ -194,9 +227,10 @@ const VideoPlayer = (props) => {
   };
 
   const handleSeekChange = (changeValue) => {
-    // console.log('onSeekCange:');
+    console.log('onSeekChange:', changeValue * duration);
     setPlayed(parseFloat(changeValue));
     playerRef.current.seekTo(parseFloat(changeValue));
+    // handlePause();
   };
 
   const handleChangeServer = (e, item, key) => {
@@ -214,49 +248,12 @@ const VideoPlayer = (props) => {
     setPlaybackRate(item);
   };
 
-  const setSubtitlesOnProgress = () => {
-    var video = document.querySelector('video');
-
-    if (video) {
-      const tracks = video.textTracks;
-      const activeTrack = selectedSubtitles;
-      if (tracks) {
-        if (activeTrack >= 0 && activeTrack < tracks.length) {
-          for (var i = 0, L = tracks.length; i < L; i++) {
-            var track = video.textTracks[i];
-            if (i == activeTrack && enableSubtitles) {
-              track.oncuechange = function (e) {
-                var cue = this.activeCues[0];
-                if (cue) {
-                  setCurrentSubtitles(cue.text);
-                } else {
-                  setCurrentSubtitles('');
-                }
-              };
-            } else {
-              track.oncuechange = null;
-            }
-          }
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (enableSubtitles) {
-      setSubtitlesOnProgress();
-    }
-  }, [enableSubtitles]);
-
-  useEffect(() => {
-    setSubtitlesOnProgress();
-  }, [selectedSubtitles]);
-
   const handleChangeSubtitles = (e, item) => {
     // console.log('onChangeSubtitles');
     e.stopPropagation();
     setEnableSubtitles(true);
     const subtitlesLang = subtitlesSelection[item];
+    setSubtitlesSelectionLang(subtitlesLang);
     setSelectedSubtitles(item);
   };
 
@@ -295,20 +292,7 @@ const VideoPlayer = (props) => {
     // We remove the loading messages
     setIsLoading(false);
 
-    // We setup the subtitles
-    var video = document.querySelector('video');
-    const tracks = video.textTracks;
-    if (tracks) {
-      // console.log(tracks);
-      const subtitleSelectionList = [];
-      for (var i = 0, L = tracks.length; i < L; i++) {
-        subtitleSelectionList.push(tracks[i].language);
-        tracks[i].mode = 'hidden';
-      }
-      setSubtitlesSelection(subtitleSelectionList);
-    }
-    setSubtitlesOnProgress();
-    handlePlay();
+    // handlePlay();
   };
 
   const handleStart = (e) => {
@@ -318,6 +302,7 @@ const VideoPlayer = (props) => {
   const handlePlay = () => {
     // console.log('onPlay');
     handleChangeOnFullScreen();
+    // setNewSubtitlesInterval(true)
     setPlaying(true);
   };
 
@@ -334,6 +319,7 @@ const VideoPlayer = (props) => {
   const handlePause = () => {
     // console.log('onPause');
     handleChangeOnFullScreen();
+    // setNewSubtitlesInterval(false)
     setPlaying(false);
   };
 
@@ -342,7 +328,7 @@ const VideoPlayer = (props) => {
   };
 
   const handleSeek = (e) => {
-    // console.log('onSeek', e);
+    console.log('onSeek', e);
   };
 
   const handleEnded = () => {
@@ -351,12 +337,10 @@ const VideoPlayer = (props) => {
   };
 
   const handleError = (e) => {
-    // console.log('onError', e);
+    console.log('onError', e);
   };
 
   const handleProgress = (state) => {
-    // console.log('onProgress');
-
     if (!seeking) {
       setPlayed(state.played);
       setPlayedSeconds(state.playedSeconds);
@@ -365,9 +349,35 @@ const VideoPlayer = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (vttTab[subtitlesSelectionLang]) {
+      setCurrentSubtitles(vttTab[subtitlesSelectionLang][currentTime + timeOffSet]);
+    }
+  }, [currentTime]);
+
   const handleDuration = (duration) => {
-    // console.log('onDuration', duration);
+    var fs = require('fs');
     setDuration(duration);
+
+    // We setup the subtitles
+    var folderName = fs.readdirSync(getFolderPath(selectedItem.id));
+
+    folderName.map((lang) => {
+      subtitlesSelection.push(lang);
+      let tabRes = makeVTTab(selectedItem.id, lang, selectedItem.type, 1);
+      originalVttTab[lang] = tabRes[0];
+      vttTab[lang] = tabRes[1];
+    });
+    setSubtitlesSelection(subtitlesSelection);
+    setVttTab(vttTab);
+    setOriginalVttTab(originalVttTab);
+    console.log('vttTab', vttTab);
+    console.log('originalVttTab', originalVttTab);
+
+    setInterval(() => {
+      let currentTime = document.getElementsByTagName('video')[0].currentTime;
+      setCurrentTime(Math.round(currentTime * 10));
+    }, 200);
   };
 
   useEffect(() => {
@@ -531,15 +541,19 @@ const VideoPlayer = (props) => {
       onMouseEnter={() => setRateOpen(true)}
       onMouseLeave={() => setRateOpen(false)}>
       <VideoPlayerSpeedTitle>Speed</VideoPlayerSpeedTitle>
-      {rateSelection.map((item, key) => (
-        <VideoPlayerSpeedChoice
-          key={key}
-          playbackRate={playbackRate}
-          item={item}
-          onClick={(e) => handleChangeSpeed(e, item)}>
-          {item == 1.0 ? 'Normal' : 'x ' + item}
-        </VideoPlayerSpeedChoice>
-      ))}
+      <VideoPlayerSpeedChoiceMaster>
+        {rateSelection.map((item, key) => (
+          <VideoPlayerSpeedChoice
+            key={key}
+            playbackRate={playbackRate}
+            item={item}
+            onClick={(e) => handleChangeSpeed(e, item)}>
+            <VideoPlayerSpeedChoiceText>
+              {item == 1.0 ? 'Normal' : 'x ' + item}
+            </VideoPlayerSpeedChoiceText>
+          </VideoPlayerSpeedChoice>
+        ))}
+      </VideoPlayerSpeedChoiceMaster>
     </VideoPlayerSpeedTab>
   ) : null;
 
@@ -548,15 +562,34 @@ const VideoPlayer = (props) => {
       onMouseEnter={() => setSubtitlesOpen(true)}
       onMouseLeave={() => setSubtitlesOpen(false)}>
       <VideoPlayerSubtitlesTitle>Subtitles</VideoPlayerSubtitlesTitle>
-      {subtitlesSelection.map((item, key) => (
-        <VideoPlayerSubtitlesChoice
-          key={key}
-          selectedSubtitles={selectedSubtitles}
-          number={key}
-          onClick={(e) => handleChangeSubtitles(e, key)}>
-          {item}
-        </VideoPlayerSubtitlesChoice>
-      ))}
+
+      <VideoPlayerSubtitlesSize>
+        <VideoPlayerSubtitlesRemoveIcon onClick={handleChangeSizeLess}>
+          <RemoveRoundedIcon />
+        </VideoPlayerSubtitlesRemoveIcon>
+        <VideoPlayerSubtitlesShiftText>size</VideoPlayerSubtitlesShiftText>
+        <VideoPlayerSubtitlesAddIcon onClick={handleChangeSizeMore}>
+          <AddRoundedIcon />
+        </VideoPlayerSubtitlesAddIcon>
+      </VideoPlayerSubtitlesSize>
+
+      <VideoPlayerSubtitlesShift onClick={handleShift}>
+        <VideoPlayerSubtitlesShiftText>shift</VideoPlayerSubtitlesShiftText>
+        <VideoPlayerSubtitlesShiftIcon>
+          <HistoryRoundedIcon />
+        </VideoPlayerSubtitlesShiftIcon>
+      </VideoPlayerSubtitlesShift>
+      <VideoPlayerSubtitlesChoiceMaster>
+        {subtitlesSelection.map((item, key) => (
+          <VideoPlayerSubtitlesChoice
+            key={key}
+            selectedSubtitles={selectedSubtitles}
+            number={key}
+            onClick={(e) => handleChangeSubtitles(e, key)}>
+            <VideoPlayerSubtitlesChoiceText>{item}</VideoPlayerSubtitlesChoiceText>
+          </VideoPlayerSubtitlesChoice>
+        ))}
+      </VideoPlayerSubtitlesChoiceMaster>
     </VideoPlayerSubtitlesTab>
   ) : null;
 
@@ -577,11 +610,11 @@ const VideoPlayer = (props) => {
 
       <VideoPlayerTimeButton>
         <VideoPlayerTimeText>
-          <Duration seconds={duration * played} />
+          <Duration seconds={duration * played} showMs={false} />
         </VideoPlayerTimeText>
         <div>/</div>
         <VideoPlayerTimeText>
-          <Duration seconds={duration} />
+          <Duration seconds={duration} showMs={false} />
         </VideoPlayerTimeText>
       </VideoPlayerTimeButton>
 
@@ -619,24 +652,18 @@ const VideoPlayer = (props) => {
     </VideoPlayerControlsWrapper>
   );
 
-  var fs = require('fs');
-  var files = fs.readdirSync(process.cwd() + '/build/renderer/subtitles/data/' + selectedItem.id);
-
-  const tracks = files.map((lang) => {
-    return {
-      kind: 'captions',
-      src:
-        './subtitles/data/' +
-        selectedItem.id +
-        '/' +
-        lang +
-        '/' +
-        selectedItem.type +
-        '/' +
-        'subtitles.vtt',
-      srcLang: lang,
-    };
-  });
+  const shifter = showShift ? (
+    <Shifter
+      vttTab={vttTab}
+      originalVttTab={originalVttTab}
+      setVttTab={setVttTab}
+      lang={subtitlesSelectionLang}
+      currentTime={currentTime}
+      onCloseShift={onCloseShift}
+      setTimeOffSet={setTimeOffSet}
+      timeOffSet={timeOffSet}
+    />
+  ) : null;
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -646,12 +673,14 @@ const VideoPlayer = (props) => {
 
   return (
     <VideoPlayerMaster isLoading={isLoading}>
+      {shifter}
       <VideoPlayerContainer>
-        <VideoPlayerContainerFull ref={fullscreenRef}>
+        <VideoPlayerContainerFull customControls={customControls} ref={fullscreenRef}>
           <VideoPlayerTextTrack
-        dangerouslySetInnerHTML={{
-          __html: enableSubtitles ? currentSubtitles : '',
-        }}></VideoPlayerTextTrack>
+            style={{ fontSize: subtitlesSize }}
+            dangerouslySetInnerHTML={{
+              __html: enableSubtitles ? currentSubtitles : '',
+            }}></VideoPlayerTextTrack>
           {controls}
           <ReactPlayer
             tabIndex="0"
@@ -684,11 +713,6 @@ const VideoPlayer = (props) => {
             onProgress={handleProgress}
             onDuration={handleDuration}
             onKeyDown={handleKeyDown}
-            config={{
-              file: {
-                tracks: tracks,
-              },
-            }}
           />
         </VideoPlayerContainerFull>
       </VideoPlayerContainer>
@@ -715,6 +739,17 @@ const VideoPlayerServerChoice = styled.div`
     `};
 `;
 
+const VideoPlayerSpeedChoiceMaster = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 100px;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 10px;
+`;
+
 const VideoPlayerServerTitle = styled.div`
   font-weight: bold;
   margin-left: 10px;
@@ -736,9 +771,29 @@ const VideoPlayerServerTab = styled.div`
   overflow-y: scroll;
 `;
 
-const VideoPlayerSpeedChoice = styled.div`
+const VideoPlayerSpeedTitle = styled.div`
+  font-weight: bold;
   margin-left: 10px;
-  padding: 2px;
+`;
+
+const VideoPlayerSpeedTab = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  position: absolute;
+  width: 100px;
+  max-height: 200px;
+  background-color: var(--main-color-1);
+  z-index: 20;
+  bottom: 40px;
+  right: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  border-radius: 4px;
+`;
+
+const VideoPlayerSpeedChoice = styled.div`
   width: 70px;
   text-align: left;
   ${(props) =>
@@ -749,31 +804,45 @@ const VideoPlayerSpeedChoice = styled.div`
     `};
 `;
 
-const VideoPlayerSpeedTitle = styled.div`
-  font-weight: bold;
-  margin-left: 10px;
+const VideoPlayerSpeedChoiceText = styled.div`
+  margin: 0 10px;
 `;
 
-const VideoPlayerSpeedTab = styled.div`
+const VideoPlayerSubtitlesChoiceMaster = styled.div`
   display: flex;
+  flex-direction: column;
+  max-height: 100px;
+  overflow-y: auto;
+  align-items: flex-start;
   justify-content: flex-start;
+  width: 100%;
+  margin-top: 10px;
+`;
+
+const VideoPlayerSubtitlesTitle = styled.div`
+  font-weight: bold;
+  width: 100%;
+`;
+
+const VideoPlayerSubtitlesTab = styled.div`
+  display: flex;
+  justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   position: absolute;
   width: 100px;
   max-height: 200px;
-  background-color: var(--main-color-4);
+  background-color: var(--main-color-1);
   z-index: 20;
   bottom: 40px;
   right: 10px;
-  padding: 10px 0;
-  overflow-y: scroll;
+  padding: 10px;
+  overflow-y: auto;
+  border-radius: 4px;
 `;
 
 const VideoPlayerSubtitlesChoice = styled.div`
-  margin-left: 10px;
-  padding: 2px;
-  width: 70px;
+  width: 85px;
   text-align: left;
   ${(props) =>
     props.selectedSubtitles === props.number &&
@@ -783,25 +852,43 @@ const VideoPlayerSubtitlesChoice = styled.div`
     `};
 `;
 
-const VideoPlayerSubtitlesTitle = styled.div`
-  font-weight: bold;
+const VideoPlayerSubtitlesChoiceText = styled.div`
   margin-left: 10px;
 `;
 
-const VideoPlayerSubtitlesTab = styled.div`
+const VideoPlayerSubtitlesShift = styled.div`
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: column;
-  position: absolute;
-  width: 100px;
-  max-height: 200px;
-  background-color: var(--main-color-4);
-  z-index: 20;
-  bottom: 40px;
-  right: 10px;
-  padding: 10px 0;
-  overflow-y: scroll;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const VideoPlayerSubtitlesShiftText = styled.div`
+  width: 100%;
+`;
+
+const VideoPlayerSubtitlesShiftIcon = styled.div`
+  line-height: 0;
+  width: 100%;
+`;
+
+const VideoPlayerSubtitlesSize = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const VideoPlayerSubtitlesAddIcon = styled.div`
+  line-height: 0;
+  width: 100%;
+`;
+
+const VideoPlayerSubtitlesRemoveIcon = styled.div`
+  line-height: 0;
+  width: 100%;
 `;
 
 const VideoPlayerFullscreenButton = styled.div`
@@ -923,15 +1010,19 @@ const VideoPlayerTextTrack = styled.div`
   flex: 1;
   min-width: 0;
   position: absolute;
-  bottom:80px;
-  width: 100%;
+  bottom: 10px;
+  // width: 100%;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  left: 0 !important;
+  // left: 0 !important;
   color: var(--main-color-3);
-  background-color: rgba(1, 1, 1, 0.5);
+  // background-color: rgba(1, 1, 1, 0.5);
   text-align: center;
-  z-index: 10;
+  z-index: 1;
+  width: 1000px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const VideoPlayerProgressBar = styled.div`
@@ -1007,6 +1098,7 @@ const VideoPlayerContainerFull = styled.div`
   text-shadow: none;
   transition: box-shadow 0.3s ease;
   z-index: 0;
+  cursor: ${({ customControls }) => (customControls && 'auto') || 'none !important'};
 `;
 
 export default VideoPlayer;

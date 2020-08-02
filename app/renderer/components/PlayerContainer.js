@@ -5,11 +5,24 @@ import VideoLoader from './VideoLoader';
 import VideoPlayer from './VideoPlayer';
 
 const PlayerContainer = (props) => {
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////  DATA AND FUNCTIONS  ///////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
   const { cacheData, setCacheData } = props.cache;
   const currentMovieData = props.currentMovieData;
+  const overview = props.currentMovieData.overview;
 
   const [isLoading, setIsLoading] = useState(true);
   const [urlList, setUrlList] = useState([]);
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////  HANDLING EVENTS  /////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
     let newUrlList = [];
@@ -33,6 +46,12 @@ const PlayerContainer = (props) => {
     setUrlList(newUrlList);
   }, [props.cache]);
 
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////  COMPONENTS  ////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
   const urlShow = urlList.map((item, key) => {
     return (
       <div key={key}>
@@ -41,9 +60,11 @@ const PlayerContainer = (props) => {
     );
   });
 
+  // console.log("urlList",urlList)
+
   const videoPlayer =
     urlList.length === 0 ? (
-      <VideoLoader message={'Scrapping ...'} />
+      <VideoLoader message={'Scraping ...'} />
     ) : (
       <React.Fragment>
         <CustomReactPlayerMaster isLoading={isLoading}>
@@ -60,14 +81,27 @@ const PlayerContainer = (props) => {
 
   // const videoPlayer = (
   //   <VideoPlayer
-  //     movieUrl="https://s0.vudeo.net/2vp3s7gwzyvjdohilnbbroevyyanpqojgirh3dbrkielwfwlrntzmjgglzua/v.mp4"
+  //     movieUrl="http://streamtape.com/get_video?id=q8OyRKjG13Tz2PM&expires=1596361632&ip=FOSOD0xEDOONFt&token=VOMP5YL44KvO"
   //     setIsLoading={setIsLoading}
   //     isLoading={isLoading}
-  //     serverList={urlList}
+  //     serverList={[
+  //       {
+  //         id: 547016,
+  //         language: 'V.0.',
+  //         quality: 'hd',
+  //         type: 'classic',
+  //         url:
+  //           'http://streamtape.com/get_video?id=q8OyRKjG13Tz2PM&expires=1596361632&ip=FOSOD0xEDOONFt&token=VOMP5YL44KvO',
+  //       },
+  //     ]}
   //   />
   // );
 
-  const overview = props.currentMovieData.overview;
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////  COMPONENTS  ///////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 
   return (
     <VideoPlayerAndInfosContainer>
@@ -124,6 +158,8 @@ const VideoBottomInfosTitle = styled.div`
   margin-bottom: 10px;
 `;
 
-const VideoBottomInfosContent = styled.div``;
+const VideoBottomInfosContent = styled.div`
+  z-index: 1;
+`;
 
 export default PlayerContainer;

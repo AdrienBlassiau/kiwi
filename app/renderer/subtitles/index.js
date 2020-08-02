@@ -1,3 +1,4 @@
+const React = require('react');
 const webvtt = require('node-webvtt');
 const { newOS } = require('./OS');
 const request = require('request');
@@ -6,8 +7,58 @@ var srt2vtt = require('srt-to-vtt');
 var fs = require('fs');
 const zlib = require('zlib');
 const rp = require('request-promise');
+const vttshift = require('vtt-shift');
+var concat = require('concat-stream');
 
-const langList = ['en', 'fr', 'it'];
+const langList = ['fr', 'en', 'it'];
+
+const getFolderPath = (id) => {
+  return process.cwd() + '/build/renderer/subtitles/data/' + id;
+};
+
+const getFilePath = (id, lang, type) => {
+  return (
+    process.cwd() +
+    '/build/renderer/subtitles/data/' +
+    id +
+    '/' +
+    lang +
+    '/' +
+    type +
+    '/' +
+    'subtitles.vtt'
+  );
+};
+
+const shiftVTT = (filePath, offsetMs) => {
+  var input = fs.readFileSync(filePath, 'utf8');
+  var shift = vttshift({ offsetMs });
+  shift.write(input);
+  shift.end();
+  shift.pipe(fs.createWriteStream(filePath));
+};
+
+const getVTTData = (id, lang, type) => {
+  console.log('AVANT');
+  const filePath = getFilePath(id, lang, type);
+  var input = fs.readFileSync(filePath, 'utf8');
+  const result = webvtt.parse(input, { strict: false });
+  console.log('APRES');
+  return result;
+};
+
+// const VTTshifter = (id, lang, type) => {
+//   const result = getVTTData(id, lang, type).cues;
+//   console.log(result);
+//   const shiftTab = result.map((item, key) => {
+//     <div key={key}>
+//       <div>item.identifier</div>
+//       <div>item.start</div>
+//       <div>item.end</div>
+//       <div>item.text</div>
+//     </div>;
+//   });
+// };
 
 const createDir = (dirPath) => {
   fs.mkdir(process.cwd() + dirPath, { resursive: true }, (error) => {
@@ -200,9 +251,129 @@ async function searchSubtitles(imdbId, tmdbId, versionType) {
   // return Promise.all(res);
 }
 
+const makeVTTab = (id, lang, type, round) => {
+  let step = 1 / Math.pow(10, round);
+
+  // [1]: We get the subtitles data
+  let data = getVTTData(id, lang, type);
+  let vttTab = [];
+  let cues = data.cues;
+
+  // [2]: We discretises time by rounded it every step seconds
+  for (var i = 0; i < cues.length; i++) {
+    cues[i].fixedStart = +data.cues[i].start.toFixed(round);
+    cues[i].fixedEnd = +data.cues[i].end.toFixed(round);
+  }
+
+  // [3]: We get the last cues time
+  let last = cues[cues.length - 1].fixedEnd;
+
+  // [4]: We create the vttTab, with a content every step seconds
+  let n = 0;
+  let j = 0;
+  let c = 0;
+  let current = false;
+  let processed = false;
+
+  while (n <= last) {
+    processed = false;
+    if (j < cues.length) {
+      let value1 = n.toFixed(round);
+      let value2 = cues[j].fixedStart.toFixed(round);
+      let value3 = cues[j].fixedEnd.toFixed(round);
+
+      if (value1 - value2 >= 0 && value3 - value1 >= 0) {
+        current = true;
+        vttTab[c] = cues[j].text;
+        processed = true;
+      }
+    }
+    if (!processed) {
+      if (current) {
+        j += 1;
+        current = false;
+      }
+      vttTab[c] = '';
+    }
+    c += 1;
+    n += step;
+  }
+
+  return [cues, vttTab];
+};
+
+const rebuild = (vttTab) => {
+  let rebuildVtt = [];
+  let currentText = 'AZERTY';
+  let processed = false;
+  let id = 0;
+  for (var i = 0; i < vttTab.length; i++) {
+    let text = vttTab[i];
+    // console.log(text,i)
+    if (text !== currentText && processed) {
+      rebuildVtt[rebuildVtt.length - 1]['end'] = i / 10;
+      processed = false;
+    }
+    if (text !== currentText && !processed) {
+      currentText = text;
+      rebuildVtt.push({ start: i / 10, text: text, identifier: id });
+      processed = true;
+      id += 1;
+    }
+  }
+  rebuildVtt[rebuildVtt.length - 1]['end'] = (i - 1) / 10;
+  return rebuildVtt;
+};
+
+const rebuildV2 = (vttTab, first, offSet) => {
+  let rebuildVtt = [];
+  let currentText = 'AZERTY';
+  let processed = false;
+  let id = 0;
+  let trueFirst = Math.max(0, first);
+  let trueLast = Math.min(first + offSet, vttTab.length);
+  trueLast = Math.max(trueLast, offSet);
+
+  for (var i = trueFirst; i <= trueLast; i++) {
+    let text = vttTab[i];
+    // console.log(text,i)
+    if (text !== currentText && processed) {
+      rebuildVtt[rebuildVtt.length - 1]['end'] = i / 10;
+      processed = false;
+    }
+    if (text !== currentText && !processed) {
+      currentText = text;
+      rebuildVtt.push({ start: i / 10, text: text, identifier: id });
+      processed = true;
+      id += 1;
+    }
+  }
+  rebuildVtt[rebuildVtt.length - 1]['end'] = (i - 1) / 10;
+  return rebuildVtt;
+};
+
 module.exports = {
   searchSubtitles,
+  getFolderPath,
+  getFilePath,
+  shiftVTT,
+  getVTTData,
+  makeVTTab,
+  rebuild,
+  rebuildV2,
+  // VTTshifter,
 };
+
+// let vttTab = makeVTTab(106, 'en', 'classic',1)
+// for (var i = 0; i < vttTab[1].length; i++) {
+//   console.log(vttTab[1][i],i)
+// }
+
+// let vttTab = makeVTTab(106, 'en', 'classic',1)
+// let rebuildTab = rebuild(vttTab[1])
+// for (var i = 0; i < rebuildTab.length; i++) {
+//   console.log(rebuildTab[i])
+// }
 
 // searchSubtitles('tt11057594',714375,'classic')
 // searchSubtitles('en')

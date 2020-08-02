@@ -10,6 +10,9 @@ import BottomBar from './BottomBar';
 import StreamBar from './StreamBar';
 import SwitchContent from './SwitchContent';
 import DecoBar from './DecoBar';
+// import Shifter from './Shifter'; //TEMP
+// import Shifter2 from './Shifter2'; //TEMP
+// import { getFolderPath, getFilePath, shiftVTT, makeVTTab } from '../subtitles/index.js'; //TEMP
 
 import Style from '../css/AppCss.js';
 import * as utils from '../utils';
@@ -253,11 +256,33 @@ const MainPage = () => {
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
+  // const [vttTab, setVttTab] = useState([]);
+  // const [originalVttTab, setOriginalVttTab] = useState([]);
+  // const [currentTime, setCurrentTime] = useState(140);
+  // const [subtitlesSize, setSubtitleSize] = useState(55);
+  // var fs = require('fs');
+
+  // var subId = 385103;
+  // var folderName = fs.readdirSync(getFolderPath(subId));
+  // var selectedType = 'classic';
+  // folderName.map((lang) => {
+  //   let tabRes = makeVTTab(subId, lang, selectedType, 1);
+  //   originalVttTab[lang] = tabRes[0];
+  //   vttTab[lang] = tabRes[1];
+  // });
+
   return (
     <div>
       <Style />
       <MasterComponent>
         <SnackBarManager snackQueue={snackQueue} setSnackQueue={setSnackQueue} />
+        {/*        <Shifter2
+          vttTab={vttTab}
+          setVttTab={setVttTab}
+          lang="en"
+          currentTime={currentTime}
+          onCloseShift={() => console.log('Salut tout le monde')}
+        />*/}
         <MainTopBar />
         {mode === 'stream' ? (
           <StreamBar setMode={setMode} currentMovieData={currentMovieData} />

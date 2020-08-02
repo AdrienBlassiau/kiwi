@@ -34,7 +34,7 @@ const LogoContainer = (props) => {
                 cy="47.225"
                 r="17.133"
                 fill="var(--main-color-2)"
-                style={{ 'paint-order': 'normal' }}
+                style={{ paintOrder: 'normal' }}
               />
               <g
                 transform="matrix(2.7009 0 0 2.7009 -100.59 -274.79)"

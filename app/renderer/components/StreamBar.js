@@ -65,7 +65,7 @@ const MainStreamBarContainer = styled.div`
   line-height: 22px;
   height: 70px;
   display: flex;
-  z-index: 99999;
+  // z-index: 99999;
   -webkit-box-shadow: 0px 7px 10px -11px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 7px 10px -11px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 7px 10px -11px rgba(0, 0, 0, 0.75);

@@ -89,6 +89,7 @@ body {
 	color: var(--main-color-3);
 	font-size: 18px;
 	/*padding-top: 40px;*/
+	user-select: none;
 }
 
 .custom-load-bar{
