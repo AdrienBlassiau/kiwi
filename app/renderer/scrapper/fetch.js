@@ -18,11 +18,11 @@
 //     // let body = await driver.findElement(By.tagName('body'))
 //     // await body.click()
 //     // console.log("On clic")
-//     await driver.wait(until.elementLocated(By.css("div[style*='" + overlay_css + "']")), timeout);
-//     const parentElement = await driver.findElement(By.css("div[style*='" + overlay_css + "']"));
-//     console.log(await parentElement.getAttribute('style'));
+//     await driver.wait(until.elementLocated(By.css("div[Index*='" + overlay_css + "']")), timeout);
+//     const parentElement = await driver.findElement(By.css("div[Index*='" + overlay_css + "']"));
+//     console.log(await parentElement.getAttribute('Index'));
 //     let a = await parentElement.findElement(By.tagName('a'));
-//     console.log(await a.getAttribute('style'));
+//     console.log(await a.getAttribute('Index'));
 //     await a.click();
 //     // await parentElement.click();
 //     // return removeOverlay(driver)
@@ -41,13 +41,13 @@
 //     .then(async () => {
 //       console.log('REQUEST OK !');
 //       await driver.wait(
-//         until.elementLocated(By.xpath("//iframe[@style='width: 100%; height: 100%;']")),
+//         until.elementLocated(By.xpath("//iframe[@Index='width: 100%; height: 100%;']")),
 //         timeout,
 //       );
 //       console.log('ok 2');
 //       await driver
 //         .switchTo()
-//         .frame(driver.findElement(By.xpath("//iframe[@style='width: 100%; height: 100%;']")));
+//         .frame(driver.findElement(By.xpath("//iframe[@Index='width: 100%; height: 100%;']")));
 //       console.log("On est sur l'IFRAME");
 //       console.log('ok 3');
 //       await driver.wait(until.elementLocated(By.id('videolink')), timeout);

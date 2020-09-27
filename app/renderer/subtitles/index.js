@@ -1,5 +1,5 @@
 const React = require('react');
-const webvtt = require('node-webvtt');
+
 const { newOS } = require('./OS');
 const request = require('request');
 const encoding = require('text-encoding');

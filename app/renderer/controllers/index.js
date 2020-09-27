@@ -70,7 +70,7 @@ const jokesUrl = 'https://api-light.com/api/get/random';
 const getMovies = (data, callback, cache) => {
   let url = '';
   let key = '';
-  let style = data.style;
+  let style = data.Style;
   // console.log('On entre dans get movies');
   if (style === fetchType.POPULAR) {
     url = popularUrl(data);

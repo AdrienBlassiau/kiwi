@@ -20,6 +20,7 @@ function format(seconds, showMs) {
     }
     return `${mm}:${ss}:${ms}`;
   } else {
+    console.log("ok:"+`${hh}:${pad(mm)}:${ss}`)
     if (hh) {
       return `${hh}:${pad(mm)}:${ss}`;
     }

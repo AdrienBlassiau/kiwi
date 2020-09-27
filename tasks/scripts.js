@@ -1,13 +1,12 @@
 const { src, dest } = require('gulp');
 const babel = require('gulp-babel');
+const flowRemoveTypes = require('gulp-flow-remove-types');
 const sourcemaps = require('gulp-sourcemaps');
 const inject = require('gulp-inject-string');
-const plugins = require('gulp-load-plugins')();
-const cssImport = require('gulp-cssimport');
-const css = require('gulp-css');
 
 function build() {
   return src('app/**/*.js')
+    .pipe(flowRemoveTypes())
     .pipe(babel())
     .pipe(inject.replace('process.env.NODE_ENV', '"production"'))
     .pipe(dest('build'));
@@ -16,6 +15,7 @@ function build() {
 function developBuild() {
   return src('app/**/*.js')
     .pipe(sourcemaps.init())
+    .pipe(flowRemoveTypes())
     .pipe(babel())
     .pipe(sourcemaps.write())
     .pipe(dest('build'));

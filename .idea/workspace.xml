@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="339a5824-2d09-4638-893c-691a457a983a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kiwi.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Button/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/GenreCard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/LoadingStatusManager/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/MediaOptionsManager/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/Moviecard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/PeopleCard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/RatingBox/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/RatingManager/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/TopCard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Card/YearCard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/DropDown/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconAddLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconBackLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconBigChevronDown.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconBigHeart.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconCloseSearch.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconDownloadLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconDownloadMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconFilm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconGrid.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconHeartLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconHeartMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconList.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconListMedia.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconLoadingDataLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconLoadingLinkLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconLoadingLinkMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconLoadingMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconMicro.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconPIP.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconPauseLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconPauseMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconPlayBig.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconPlayLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconPlayMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconQueueLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconQueueMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconRecentlySearched.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconSeeMoreMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconSkipBackward.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconSkipForward.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconSliders.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconSound.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconSquare.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconStopLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconTV.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconWatchLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconWatchMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconWatchlistLittle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconWatchlistMedium.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/LinksSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/MediaProgressBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/NavigationSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/OptionsSection/CaptionSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/OptionsSection/SoundSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/OptionsSection/SpeedSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/OptionsSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/MainTitle/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/MovieMainPage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/MoviePage/MoviePageFirstSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/MoviePage/MoviePageSecondSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/MoviePage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/OverlayTitle/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesLine/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/LetterboxdBox/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/Menu/MenuLine/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/Menu/MenuSubLine/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/Menu/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/TitleBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/StickyTopBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/Style/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/SearchBar/CloseSearch/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/SearchBar/SearchZone/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/SearchBar/SuggestionBox/SuggestionLine/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/SearchBar/SuggestionBox/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/SearchBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Navbar/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/PageSection/SlickSlider/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/PageSection/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/SeeMoreBox/SeeMoreListManager/SeeMoreItem/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/SeeMoreBox/SeeMoreListManager/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/SeeMoreBox/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/TitleInfos/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/models/Application.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/models/Country.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/models/Language.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/models/Movie.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/models/theMovieDb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/models/types.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/store/auth/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/store/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/store/mainPage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/store/overlayPage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/store/search/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/utils/Duration.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/utils/captionsManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/utils/color.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/utils/colorText.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/utils/onClickManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assetsTransformer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/.eslintrc" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/.eslintrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/components/Duration.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/components/Duration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/components/MainPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/components/MainPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/components/MainTopBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/components/MainTopBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/components/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/components/SearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/components/SnackBarManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/components/SnackBarManager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/controllers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/controllers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/scrapper/fetch.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/scrapper/fetch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/scrapper/fmovies.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/scrapper/fmovies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/subtitles/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/subtitles/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/scripts.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="hiddenUrls">
+      <set>
+        <option value="https://github.com/AdrienBlassiau/kiwi" />
+      </set>
+    </option>
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path>$PROJECT_DIR$/node_modules/flow-bin</exe-path>
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="ProjectId" id="1hpT95sFXACuzU2YRU2g7czMv5t" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="editor.config.ad.shown" value="true" />
+    <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.18.3" />
+    <property name="javascript.nodejs.core.library.typings.version" value="12.12.62" />
+    <property name="js.buildTools.gulp.gulp_package_dir" value="$PROJECT_DIR$/node_modules/gulp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/renderer/js/utils" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/renderer/js/utils" />
+      <recent name="$PROJECT_DIR$/app/renderer/objects" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/renderer/js" />
+      <recent name="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay" />
+      <recent name="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain" />
+      <recent name="$PROJECT_DIR$/app/renderer/js/components/Main" />
+      <recent name="$PROJECT_DIR$/app/renderer/js/components/Main/LeftBar/TitleBar" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="js.build_tools.gulp">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <package-manager value="npm" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="339a5824-2d09-4638-893c-691a457a983a" name="Default Changelist" comment="" />
+      <created>1600525202957</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1600525202957</updated>
+      <workItem from="1600525205025" duration="228000" />
+      <workItem from="1600526225750" duration="93000" />
+      <workItem from="1600526348288" duration="378000" />
+      <workItem from="1600545105708" duration="1281000" />
+      <workItem from="1600546451761" duration="566000" />
+      <workItem from="1600547180841" duration="1612000" />
+      <workItem from="1600548867742" duration="640000" />
+      <workItem from="1600549587981" duration="2082000" />
+      <workItem from="1600552136064" duration="126000" />
+      <workItem from="1600552284932" duration="8000" />
+      <workItem from="1600601995979" duration="11775000" />
+      <workItem from="1600614598573" duration="6618000" />
+      <workItem from="1600621823946" duration="13114000" />
+      <workItem from="1600638105206" duration="3150000" />
+      <workItem from="1600641820720" duration="3180000" />
+      <workItem from="1600676840018" duration="10691000" />
+      <workItem from="1600689684561" duration="12515000" />
+      <workItem from="1600702879145" duration="236000" />
+      <workItem from="1600703177929" duration="934000" />
+      <workItem from="1600704133736" duration="1054000" />
+      <workItem from="1600706944626" duration="295000" />
+      <workItem from="1600707382631" duration="4729000" />
+      <workItem from="1600725238691" duration="1703000" />
+      <workItem from="1600879970175" duration="932000" />
+      <workItem from="1600964326321" duration="17987000" />
+      <workItem from="1601023419708" duration="14491000" />
+      <workItem from="1601042008087" duration="2012000" />
+      <workItem from="1601046862045" duration="15827000" />
+      <workItem from="1601067223079" duration="2299000" />
+      <workItem from="1601118429220" duration="27315000" />
+      <workItem from="1601207808666" duration="26613000" />
+      <workItem from="1601239870567" duration="9743000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="449" y="210" width="1084" height="710" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600880200035">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state x="449" y="210" width="1084" height="710" key="#com.intellij.execution.impl.EditConfigurationsDialog/63.27.1857.1053@63.27.1857.1053" timestamp="1600880200035" />
+    <state x="63" y="27" width="1847" height="1053" key="FileDocumentManager.FileCacheConflict" timestamp="1601225477129">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state x="63" y="27" width="1847" height="1053" key="FileDocumentManager.FileCacheConflict/63.27.1857.1053@63.27.1857.1053" timestamp="1601225477129" />
+    <state width="1897" height="165" key="GridCell.Tab.0.bottom" timestamp="1601239609202">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.0.bottom/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609202" />
+    <state width="1897" height="165" key="GridCell.Tab.0.center" timestamp="1601239609199">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.0.center/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609199" />
+    <state width="1897" height="165" key="GridCell.Tab.0.left" timestamp="1601239609187">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.0.left/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609187" />
+    <state width="1897" height="165" key="GridCell.Tab.0.right" timestamp="1601239609200">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.0.right/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609200" />
+    <state width="1897" height="165" key="GridCell.Tab.1.bottom" timestamp="1601239609207">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.1.bottom/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609206" />
+    <state width="1897" height="165" key="GridCell.Tab.1.center" timestamp="1601239609205">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.1.center/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609205" />
+    <state width="1897" height="165" key="GridCell.Tab.1.left" timestamp="1601239609204">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.1.left/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609204" />
+    <state width="1897" height="165" key="GridCell.Tab.1.right" timestamp="1601239609206">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.1.right/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609206" />
+    <state width="1897" height="165" key="GridCell.Tab.2.bottom" timestamp="1601239609209">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.2.bottom/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609209" />
+    <state width="1897" height="165" key="GridCell.Tab.2.center" timestamp="1601239609208">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.2.center/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609208" />
+    <state width="1897" height="165" key="GridCell.Tab.2.left" timestamp="1601239609207">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.2.left/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609207" />
+    <state width="1897" height="165" key="GridCell.Tab.2.right" timestamp="1601239609209">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state width="1897" height="165" key="GridCell.Tab.2.right/63.27.1857.1053@63.27.1857.1053" timestamp="1601239609209" />
+    <state x="480" y="187" key="SettingsEditor" timestamp="1600707233303">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state x="480" y="187" key="SettingsEditor/63.27.1857.1053/63.27.1857.1053@63.27.1857.1053" timestamp="1600707233303" />
+    <state x="655" y="253" key="run.anything.popup" timestamp="1601130228055">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state x="655" y="253" key="run.anything.popup/63.27.1857.1053@63.27.1857.1053" timestamp="1601130228055" />
+    <state x="654" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1601062402179">
+      <screen x="63" y="27" width="1857" height="1053" />
+    </state>
+    <state x="654" y="257" width="672" height="678" key="search.everywhere.popup/63.27.1857.1053@63.27.1857.1053" timestamp="1601062402179" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app/renderer/js/components/Main/TopBar/index.js</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

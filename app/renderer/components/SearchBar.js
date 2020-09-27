@@ -89,7 +89,7 @@ const SearchBar = (props) => {
             />
           </ImputField>
         </SearchDataMaster>
-        {gridInfos.style === 'search' ? (
+        {gridInfos.Style === 'search' ? (
           <CloseIconMaster>
             <CloseIcon onClick={closeSearch} style={{ color: 'var(--main-color-4)' }} />
           </CloseIconMaster>

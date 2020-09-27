@@ -1,16 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import MainPage from './components/MainPage';
+import { Provider } from "react-redux";
 import * as serviceWorker from './serviceWorker';
 
-import { HashRouter, Route } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
+import { store } from './js/store';
 
 ReactDOM.render(
-  <HashRouter>
-    <App />
-  </HashRouter>,
+  <Provider store={store}>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </Provider>,
   document.getElementById('root'),
 );
 
 serviceWorker.unregister();
+
+

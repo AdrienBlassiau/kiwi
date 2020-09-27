@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
 
+import { useDispatch, useSelector } from "react-redux";
 import Crop169RoundedIcon from '@material-ui/icons/Crop169Rounded';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
+import { loginSuccess } from '../js/store';
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -46,6 +48,12 @@ const handleClose = () => {
 /////////////////////////////////////////////////////////////////////////////
 
 const MainTopBar = () => {
+
+  const token = useSelector(state => state);
+  console.log("token: "+Object.keys(token.auth));
+  const dispatch = useDispatch();
+  dispatch(loginSuccess());
+
   return (
     <MainTopBarContainer>
       <MainTopBarStyle>

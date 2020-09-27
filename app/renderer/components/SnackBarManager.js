@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import CloseIcon from '@material-ui/icons/Close';
 import SnackBar from './SnackBar';
 
 const SnackBarManager = (props) => {

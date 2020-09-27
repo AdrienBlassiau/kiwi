@@ -1,7 +1,7 @@
 const { Builder, By, Key, until } = require('selenium-webdriver');
 const request = require('request-promise');
 const cheerio = require('cheerio');
-const baseUrl = 'https://fmovies.to';
+const baseUrl = 'https://ffmovies.co';
 const { wait } = require('./utils');
 const timeout = 5000;
 const { newDriver, safeQuit } = require('./driver');
@@ -91,8 +91,8 @@ async function removeOverlay(driver) {
 
   try {
     await driver.manage().window().maximize();
-    await driver.wait(until.elementLocated(By.css("div[style*='" + overlay_css + "']")), timeout);
-    const parentElement = await driver.findElement(By.css("div[style*='" + overlay_css + "']"));
+    await driver.wait(until.elementLocated(By.css("div[Index*='" + overlay_css + "']")), timeout);
+    const parentElement = await driver.findElement(By.css("div[Index*='" + overlay_css + "']"));
     let a = await parentElement.findElement(By.tagName('a'));
     await a.click();
     // await parentElement.click();
@@ -112,13 +112,13 @@ async function clickUntilOk(driver, selector, n, text) {
     .then(async () => {
       // console.log('REQUEST OK !');
       await driver.wait(
-        until.elementLocated(By.xpath("//iframe[@style='width: 100%; height: 100%;']")),
+        until.elementLocated(By.xpath("//iframe[@Index='width: 100%; height: 100%;']")),
         timeout,
       );
       // console.log('ok 2');
       await driver
         .switchTo()
-        .frame(driver.findElement(By.xpath("//iframe[@style='width: 100%; height: 100%;']")));
+        .frame(driver.findElement(By.xpath("//iframe[@Index='width: 100%; height: 100%;']")));
       // console.log("On est sur l'IFRAME");
       // console.log('ok 3');
       await driver.wait(until.elementLocated(By.id('videolink')), timeout);

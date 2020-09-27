@@ -24,6 +24,7 @@ import * as handleScrollLoad from '../events/handleScrollLoad';
 import * as handleMoreInfos from '../events/handleMoreInfos';
 import * as handleOpenModal from '../events/handleOpenModal';
 import * as handleCloseModal from '../events/handleCloseModal';
+import { successCB } from '../js/models/Movie';
 
 const MainPage = () => {
   /////////////////////////////////////////////////////////////////////////////
@@ -271,7 +272,7 @@ const MainPage = () => {
   //   vttTab[lang] = tabRes[1];
   // });
 
-  return (
+  let returnComponeent =
     <div>
       <Style />
       <MasterComponent>
@@ -293,8 +294,9 @@ const MainPage = () => {
         <MainContainer getters={getters} setters={setters} />
         <BottomBar />
       </MasterComponent>
-    </div>
-  );
+    </div>;
+
+  return (returnComponeent);
 };
 
 /////////////////////////////////////////////////////////////////////////////

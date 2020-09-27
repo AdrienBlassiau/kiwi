@@ -1,0 +1,15 @@
+[ignore]
+.*/node_modules/.*
+.*/build/.*
+.*/dist/.*
+.*/dist-assets/.*
+.*/tasks/.*
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]
