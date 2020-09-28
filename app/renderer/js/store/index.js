@@ -6,6 +6,7 @@ import { authReducer } from './auth';
 import { searchReducer } from './search';
 import { pageReducer } from './mainPage';
 import { overlayReducer } from './overlayPage';
+import { streamingReducer } from './streamingPage';
 
 
 const middleware = [
@@ -18,7 +19,8 @@ const store = configureStore({
     auth: authReducer,
     search: searchReducer,
     page: pageReducer,
-    overlay: overlayReducer
+    overlay: overlayReducer,
+    streaming: streamingReducer
   },
   middleware,
 });

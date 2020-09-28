@@ -2,10 +2,19 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../../../Navbar/index';
 import Duration from '../../../../utils/Duration.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentTime } from '../../../../store/streamingPage';
 
 const MediaProgressBar = () =>{
 
-  const [currentTime, setCurrentTime] = useState(520);
+  const currentTime = useSelector(state => state.streaming.currentTime);
+
+  const dispatch = useDispatch();
+
+  const setCurrent = (currentTime) => {
+    dispatch(setCurrentTime({currentTime:currentTime}));
+  }
+
   let duration = 2680;
 
   let preparedComponent =
@@ -19,7 +28,7 @@ const MediaProgressBar = () =>{
         barHeight={2}
         barWidth={600}
         max={duration}
-        setCurrent={setCurrentTime}
+        setCurrent={setCurrent}
         current={currentTime}
         formatter={ (s) => <Duration seconds={s} showMs={false} />}/>
       <MediaEndTimeStyle>

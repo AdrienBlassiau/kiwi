@@ -13,11 +13,29 @@ const SubtitlesList = (props) =>{
   const shiftStatus = props.shiftStatus;
   const setShift=props.setShift;
   const shift=props.shift;
-  const setLastCurrentLine=props.setLastCurrentLine;
-  const setCurrentLine=props.setCurrentLine;
   const currentTime=props.currentTime;
-  const lastCurrentLine=props.lastCurrentLine;
-  
+  const setCurrentTime=props.setCurrentTime;
+  const currentLine=props.currentLine;
+  const setCurrentLine=props.setCurrentLine;
+
+  const Row = ({ index, style, data }) => {
+    const line = data[index];
+    return (
+      <div style={style} key={index}>
+        <SubtitlesLine
+          key={index}
+          shiftStatus={shiftStatus}
+          setShift={setShift}
+          shift={shift}
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
+          currentLine={currentLine}
+          setCurrentLine={() => setCurrentLine(line)}
+          line={line}/>
+      </div>
+    );
+  };
+
   let preparedComponent =
     <SubtitlesContainerStyle ref={scrollRef}>
       {subs.map((data,key) =>
@@ -26,13 +44,31 @@ const SubtitlesList = (props) =>{
           shiftStatus={shiftStatus}
           setShift={setShift}
           shift={shift}
-          setLastCurrentLine={setLastCurrentLine}
           refToCurrent={refToCurrent}
-          setCurrentLine={() => setCurrentLine(data)}
           currentTime={currentTime}
-          lastCurrentLine={lastCurrentLine}
-          line={data}/>)}
+          setCurrentTime={setCurrentTime}
+          currentLine={currentLine}
+          setCurrentLine={() => setCurrentLine(data)}
+          line={data}
+          nextLine={key === subs.length - 1 ? null : subs[key+1]}/>)}
     </SubtitlesContainerStyle>;
+
+  let preparedComponentWithReactWindow =
+    <div>
+      <SubtitlesContainerStyle>
+        <List
+          height={1000}
+          itemCount={subs.length}
+          itemSize={150}
+          width={1000}
+          itemData={subs}
+      >
+        {Row}
+      </List>
+      </SubtitlesContainerStyle>
+      <div ref={refToCurrent} />
+      <div ref={scrollRef} />
+    </div>;
 
   return (preparedComponent)
 };

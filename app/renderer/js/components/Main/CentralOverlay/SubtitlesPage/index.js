@@ -3,19 +3,38 @@ const ReactDOM = require('react-dom');
 
 import styled from 'styled-components';
 import OverlayTitle from '../OverlayTitle/index.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeOverlay } from '../../../../store/overlayPage';
-import { getVTTData } from '../../../../utils/captionsManager';
 
 import SubtitlesShifter from './SubtitlesShifter';
 import { DurationWithShift, timeWithShift } from '../../../../utils/DurationWithShift';
 import SubtitlesList from './SubtitlesList';
+import { setCurrentTime, setCurrentLine, setShift, incrementTime } from '../../../../store/streamingPage';
 
 const SubtitlesPage = () =>{
-  const [currentTime, setCurrentTime] = useState(230.9);
-  const [shift, setShift] = useState(0);
-  const [currentLine, setCurrentLine] = useState(null);
-  const [lastCurrentLine, setLastCurrentLine] = useState(null);
+  const dispatch = useDispatch();
+
+  const currentTime = useSelector(state => state.streaming.currentTime);
+  const subs = useSelector(state => state.streaming.subs);
+  const shift = useSelector(state => state.streaming.shift);
+  const currentLine = useSelector(state => state.streaming.currentLine);
+
+  const setCurrent = (currentTime) => {
+    dispatch(setCurrentTime({currentTime:currentTime}));
+  }
+
+  const incrementTimeDispatched = () => {
+    dispatch(incrementTime());
+  }
+
+  const setShiftDispatched = (shift) => {
+    dispatch(setShift({shift:shift}));
+  }
+
+  const setCurrentLineDispatched = (currentLine) => {
+    dispatch(setCurrentLine({currentLine:currentLine}));
+  }
+
   const [subsToWrite,setSubsToWrite] = useState("");
   const [shiftStatus, setShiftStatus] = useState(true);
 
@@ -24,9 +43,6 @@ const SubtitlesPage = () =>{
   const [clientHeight, setClientHeight] = useState(0);
   const refToCurrent = useRef(null);
   const scrollRef = useRef(null);
-
-  const dispatch = useDispatch();
-  const subs = getVTTData();
 
   const backFun = () => {
     dispatch(changeOverlay({overlayType:"",id:0}));
@@ -54,19 +70,20 @@ const SubtitlesPage = () =>{
 
   useEffect(() => {
     if (refToCurrent && refToCurrent.current && isScrolling){
-      let height = ReactDOM.findDOMNode(ref.current).getBoundingClientRect().height;
-      scrollRef.current.scrollTo(0, ref.current.offsetTop-clientHeight/2+height/2)
+      let height = ReactDOM.findDOMNode(refToCurrent.current).getBoundingClientRect().height;
+      scrollRef.current.scrollTo(0, refToCurrent.current.offsetTop-clientHeight/2+height/2)
     }
   }, [currentLine]);
 
   /*useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(currentTime=>currentTime+2);
-    }, 2000);
+      incrementTimeDispatched();
+    }, 200);
     return () => clearInterval(interval);
   }, []);*/
 
   useEffect(() => {
+    console.log("not scrolling !")
     setIsScrolling(false);
   }, [wheel]);
 
@@ -81,9 +98,9 @@ const SubtitlesPage = () =>{
 
   const resetScroll = () => {
     setIsScrolling(true);
-    if (ref && ref.current){
-      let height = ReactDOM.findDOMNode(ref.current).getBoundingClientRect().height;
-      scrollRef.current.scrollTo(0, ref.current.offsetTop-clientHeight/2+height/2)
+    if (refToCurrent && refToCurrent.current){
+      let height = ReactDOM.findDOMNode(refToCurrent.current).getBoundingClientRect().height;
+      scrollRef.current.scrollTo(0, refToCurrent.current.offsetTop-clientHeight/2+height/2)
     }
   }
 
@@ -92,7 +109,7 @@ const SubtitlesPage = () =>{
     setShiftStatus={setShiftStatus}
     shift={shift}
     currentTime={currentTime}
-    setShift={setShift}
+    setShift={setShiftDispatched}
   />;
 
   const DynamicSubtitlesTitle =
@@ -100,13 +117,13 @@ const SubtitlesPage = () =>{
       isScrolling={isScrolling}
       onClick={resetScroll}>
       {!isScrolling ?<SubtitlesLineTextBeforeStyle>
-        <DurationWithShift seconds={lastCurrentLine.start} showMs={true} shift={shift}/>
+        <DurationWithShift seconds={currentLine.start} showMs={true} shift={shift}/>
       </SubtitlesLineTextBeforeStyle>:null}
       <SubtitlesLineTextStyle>
-        {isScrolling ? "Subtitles" : lastCurrentLine.text}
+        {isScrolling ? "Subtitles" : currentLine.text}
       </SubtitlesLineTextStyle>
       {!isScrolling ?<SubtitlesLineTextAfterStyle>
-        <DurationWithShift seconds={lastCurrentLine.end} showMs={true} shift={shift}/>
+        <DurationWithShift seconds={currentLine.end} showMs={true} shift={shift}/>
       </SubtitlesLineTextAfterStyle>:null}
     </SubtitleLineStyle>;
 
@@ -125,12 +142,12 @@ const SubtitlesPage = () =>{
               refToCurrent={refToCurrent}
               subs={subs}
               shiftStatus={shiftStatus}
-              setShift={setShift}
+              setShift={setShiftDispatched}
               shift={shift}
-              setLastCurrentLine={setLastCurrentLine}
-              setCurrentLine={setCurrentLine}
               currentTime={currentTime}
-              lastCurrentLine={lastCurrentLine}/>
+              setCurrentTime={setCurrent}
+              currentLine={currentLine}
+              setCurrentLine={setCurrentLineDispatched}/>
           </SubtitlesWrapperStyle>
         </SubtitlesMainContainerStyle>
       </SubtitlesPageStyle>

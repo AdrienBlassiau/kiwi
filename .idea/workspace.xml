@@ -2,16 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="339a5824-2d09-4638-893c-691a457a983a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Icon/IconReloadLittle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesList/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesShifter/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/renderer/js/utils/DurationWithShift.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/renderer/js/store/streamingPage/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/OverlayTitle/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/OverlayTitle/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/MediaProgressBar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/BottomBar/MediaProgressBar/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralMain/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesLine/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesLine/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/SubtitlesList/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/components/Main/CentralOverlay/SubtitlesPage/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/renderer/js/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/renderer/js/store/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +143,7 @@
       <workItem from="1601118429220" duration="27315000" />
       <workItem from="1601207808666" duration="26613000" />
       <workItem from="1601239870567" duration="9743000" />
-      <workItem from="1601304753604" duration="12966000" />
+      <workItem from="1601304753604" duration="25129000" />
     </task>
     <servers />
   </component>

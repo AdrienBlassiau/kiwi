@@ -12,14 +12,13 @@ const SubtitlesLine = (props) =>{
   const shiftStatus = props.shiftStatus;
   const setShift = props.setShift;
   const shift = props.shift;
-  const setLastCurrentLine = props.setLastCurrentLine;
   const refToCurrent = props.refToCurrent;
+  const currentLine = props.currentLine;
   const setCurrentLine = props.setCurrentLine;
   const currentTime = props.currentTime;
+  const setCurrentTime = props.setCurrentTime;
 
-  const lastCurrentLine = props.lastCurrentLine;
-  const lastLineNumber = lastCurrentLine ? lastCurrentLine.identifier : "-1";
-
+  const nextLine = props.nextLine;
   const line = props.line;
   const lineNumber = line.identifier;
   const text = line.text;
@@ -30,40 +29,54 @@ const SubtitlesLine = (props) =>{
     if(shiftStatus){
       setShift(start - currentTime);
     }
+    else{
+      setCurrentTime(timeWithShift(start,shift));
+    }
+  }
+
+  const isRealCurrent = () => {
+    return timeWithShift(start,shift) <= currentTime && currentTime <= timeWithShift(end,shift);
+  }
+
+  const isTheoreticalCurrent = () => {
+    return (lineNumber==="1" && currentTime < timeWithShift(start,shift)) ||
+      (currentTime > timeWithShift(end,shift) && currentTime < timeWithShift(nextLine.start,shift)) ||
+      (currentTime > timeWithShift(end,shift) && !nextLine);
+  }
+
+  const manageCurrentLine = () => {
+    let realCurrent = isRealCurrent();
+    let TheoreticalCurrent = isTheoreticalCurrent();
+
+    let current = realCurrent || TheoreticalCurrent;
+    setCurrent(current);
+    if(current){
+      setCurrentLine();
+    }
   }
 
   useEffect(() => {
-    let current = timeWithShift(start,shift) <= currentTime && currentTime <= timeWithShift(end,shift);
-    setCurrent(current);
-    if(current){
-      setLastCurrentLine(line);
-      setCurrentLine();
-    }
+    manageCurrentLine();
   }, [shift]);
 
   useEffect(() => {
-    let current = timeWithShift(start,shift) <= currentTime && currentTime <= timeWithShift(end,shift);
-    setCurrent(current);
-    if(current){
-      setLastCurrentLine(line);
-      setCurrentLine();
-    }
+    manageCurrentLine();
   }, [currentTime]);
 
   let preparedComponent =
     <SubtitleLineStyle
       onClick={handleShifting}
       ref={current ? refToCurrent : null}>
-      <SubtitlesLineTextBeforeStyle lastCurrentLine={lineNumber===lastLineNumber}>
+      <SubtitlesLineTextBeforeStyle current={current}>
         <DurationWithShift seconds={start} showMs={true} shift={shift}/>
       </SubtitlesLineTextBeforeStyle>
       <SubtitlesLineTextStyle
-        lastCurrentLine={lineNumber===lastLineNumber}>
-        {lineNumber===lastLineNumber ?
+        current={current}>
+        {current ?
           generateColoredString(timeWithShift(start,shift),currentTime,timeWithShift(end,shift),text,textPrimaryColor,textIntermediateColor) :
         text}
       </SubtitlesLineTextStyle>
-      <SubtitlesLineTextAfterStyle lastCurrentLine={lineNumber===lastLineNumber}>
+      <SubtitlesLineTextAfterStyle current={current}>
         <DurationWithShift seconds={end} showMs={true} shift={shift}/>
       </SubtitlesLineTextAfterStyle>
     </SubtitleLineStyle>;
@@ -73,20 +86,20 @@ const SubtitlesLine = (props) =>{
 
 const SubtitlesLineTextBeforeStyle = styled.div`
   font-size: 12px;
-  color: ${props => props.lastCurrentLine ? "var(--text-primary)" : "var(--text-intermediate)"};
-  font-weight: ${props => props.lastCurrentLine ? "bold" : "normal"};
+  color: ${props => props.current ? "var(--text-primary)" : "var(--text-intermediate)"};
+  font-weight: ${props => props.current ? "bold" : "normal"};
 `;
 
 const SubtitlesLineTextAfterStyle = styled.div`
   font-size: 12px;
-  color: ${props => props.lastCurrentLine ? "var(--text-primary)" : "var(--text-intermediate)"};
-  font-weight: ${props => props.lastCurrentLine ? "bold" : "normal"};
+  color: ${props => props.current ? "var(--text-primary)" : "var(--text-intermediate)"};
+  font-weight: ${props => props.current ? "bold" : "normal"};
 `;
 
 const SubtitlesLineTextStyle = styled.div`
-  font-size: ${props => props.lastCurrentLine ? "44" : "24"}px;
-  color: ${props => props.lastCurrentLine ? "var(--text-primary)" : "var(--text-intermediate)"};
-  font-weight: ${props => props.lastCurrentLine ? "bold" : "normal"};
+  font-size: ${props => props.current ? "44" : "24"}px;
+  color: ${props => props.current ? "var(--text-primary)" : "var(--text-intermediate)"};
+  font-weight: ${props => props.current ? "bold" : "normal"};
   margin: 30px 10px;
   text-align: center;
   max-width: 1000px;

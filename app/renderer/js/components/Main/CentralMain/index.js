@@ -3,7 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import MovieMainPage from './MovieMainPage';
 import MoviePage from './MoviePage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changePage } from '../../../store/mainPage';
 
 const CentralMain = () =>{
 
