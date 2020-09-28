@@ -7,16 +7,22 @@ import { useDispatch } from 'react-redux';
 import { changeOverlay } from '../../../../store/overlayPage';
 import { getVTTData } from '../../../../utils/captionsManager';
 
-import SubtitlesLine from './SubtitlesLine';
+import SubtitlesShifter from './SubtitlesShifter';
+import { DurationWithShift, timeWithShift } from '../../../../utils/DurationWithShift';
+import SubtitlesList from './SubtitlesList';
 
 const SubtitlesPage = () =>{
   const [currentTime, setCurrentTime] = useState(230.9);
-  const [currentLine, setCurrentLine] = useState("");
-  const [lastCurrentLine, setLastCurrentLine] = useState(0);
-  const [clientHeight, setClientHeight] = useState(0);
+  const [shift, setShift] = useState(0);
+  const [currentLine, setCurrentLine] = useState(null);
+  const [lastCurrentLine, setLastCurrentLine] = useState(null);
+  const [subsToWrite,setSubsToWrite] = useState("");
+  const [shiftStatus, setShiftStatus] = useState(true);
+
+  const [isScrolling, setIsScrolling] = useState(true);
   const [wheel, setWheel] = useState(null);
-  const [isScrolling, setIsScrolling] = useState(null);
-  const ref = useRef(null);
+  const [clientHeight, setClientHeight] = useState(0);
+  const refToCurrent = useRef(null);
   const scrollRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -32,18 +38,31 @@ const SubtitlesPage = () =>{
   });
 
   useEffect(() => {
-    if (ref && ref.current && isScrolling){
+    if(currentLine){
+      const start = currentLine.start;
+      const end = currentLine.end;
+      const text = currentLine.text;
+      if (timeWithShift(start,shift) <= currentTime && currentTime <= timeWithShift(end,shift)){
+        if (text !== subsToWrite){
+          setSubsToWrite(text);
+          console.log(text)
+        }
+      }
+
+    }
+  }, [currentTime]);
+
+  useEffect(() => {
+    if (refToCurrent && refToCurrent.current && isScrolling){
       let height = ReactDOM.findDOMNode(ref.current).getBoundingClientRect().height;
-      setAutoScroll(false);
       scrollRef.current.scrollTo(0, ref.current.offsetTop-clientHeight/2+height/2)
-      setAutoScroll(true);
     }
   }, [currentLine]);
 
   /*useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(currentTime=>currentTime+1);
-    }, 1000);
+      setCurrentTime(currentTime=>currentTime+2);
+    }, 2000);
     return () => clearInterval(interval);
   }, []);*/
 
@@ -60,27 +79,58 @@ const SubtitlesPage = () =>{
     return () => scrollRef.current.removeEventListener("wheel", handleWheel);
   }, []);
 
+  const resetScroll = () => {
+    setIsScrolling(true);
+    if (ref && ref.current){
+      let height = ReactDOM.findDOMNode(ref.current).getBoundingClientRect().height;
+      scrollRef.current.scrollTo(0, ref.current.offsetTop-clientHeight/2+height/2)
+    }
+  }
+
+  const subtitlesShifter = <SubtitlesShifter
+    shiftStatus={shiftStatus}
+    setShiftStatus={setShiftStatus}
+    shift={shift}
+    currentTime={currentTime}
+    setShift={setShift}
+  />;
+
+  const DynamicSubtitlesTitle =
+    <SubtitleLineStyle
+      isScrolling={isScrolling}
+      onClick={resetScroll}>
+      {!isScrolling ?<SubtitlesLineTextBeforeStyle>
+        <DurationWithShift seconds={lastCurrentLine.start} showMs={true} shift={shift}/>
+      </SubtitlesLineTextBeforeStyle>:null}
+      <SubtitlesLineTextStyle>
+        {isScrolling ? "Subtitles" : lastCurrentLine.text}
+      </SubtitlesLineTextStyle>
+      {!isScrolling ?<SubtitlesLineTextAfterStyle>
+        <DurationWithShift seconds={lastCurrentLine.end} showMs={true} shift={shift}/>
+      </SubtitlesLineTextAfterStyle>:null}
+    </SubtitleLineStyle>;
+
 
   let preparedComponent =
     <SubtitleWrapperStyle>
       <SubtitlesPageStyle>
-        <OverlayTitle title={"Subtitles"} backFun={backFun}/>
+        <OverlayTitle
+          leftComponent={subtitlesShifter}
+          title={DynamicSubtitlesTitle}
+          backFun={backFun}/>
         <SubtitlesMainContainerStyle>
           <SubtitlesWrapperStyle>
-            <SubtitlesContainerStyle ref={scrollRef}>
-              {subs.map((data,key) =>
-                <SubtitlesLine
-                  lineNumber={key}
-                  lastCurrentLine={lastCurrentLine}
-                  setLastCurrentLine={setLastCurrentLine}
-                  refToCurrent={ref}
-                  setCurrentLine={() => setCurrentLine(data)}
-                  text={data.text}
-                  start={data.start}
-                  end={data.end}
-                  currentTime={currentTime}
-                  key={key}/>)}
-            </SubtitlesContainerStyle>
+            <SubtitlesList
+              scrollRef={scrollRef}
+              refToCurrent={refToCurrent}
+              subs={subs}
+              shiftStatus={shiftStatus}
+              setShift={setShift}
+              shift={shift}
+              setLastCurrentLine={setLastCurrentLine}
+              setCurrentLine={setCurrentLine}
+              currentTime={currentTime}
+              lastCurrentLine={lastCurrentLine}/>
           </SubtitlesWrapperStyle>
         </SubtitlesMainContainerStyle>
       </SubtitlesPageStyle>
@@ -88,6 +138,31 @@ const SubtitlesPage = () =>{
 
   return (preparedComponent)
 };
+
+const SubtitlesLineTextBeforeStyle = styled.div`
+  font-size: 12px;
+`;
+
+const SubtitlesLineTextAfterStyle = styled.div`
+  font-size: 12px;
+`;
+
+const SubtitlesLineTextStyle = styled.div`
+  text-align: center;
+  margin: 0 5px;
+  max-width: 1000px;
+`;
+
+const SubtitleLineStyle = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding: 10px;
+  cursor: pointer;
+  &:hover{
+    background-color: ${props => props.isScrolling ? "transparent" : "var(--background-contrast)"};
+  }
+`;
 
 const SubtitlesMainContainerStyle = styled.div`
   bottom: 0;
@@ -126,7 +201,7 @@ const SubtitlesContainerStyle = styled.div`
   bottom: 0;
   left: 0;
   padding: 0 50px;
-  margin-top: 50px;
+  margin-top: 85px;
   scroll-behavior: smooth;
 `;
 

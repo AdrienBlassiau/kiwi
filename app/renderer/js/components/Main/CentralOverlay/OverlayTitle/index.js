@@ -6,14 +6,12 @@ import { textPrimaryColor } from '../../../../utils/color';
 
 const OverlayTitle = (props) =>{
   let title = props.title;
+  let leftComponent = props.leftComponent;
   let backFun = props.backFun;
 
   let preparedComponent =
-    <OverlayTitleStyle backFun={backFun}>
-      {backFun ?
-        <OverlayTitleIconStyle onClick={backFun}>
-          <IconBigChevronDown color={textPrimaryColor}/>
-        </OverlayTitleIconStyle> : null}
+    <OverlayTitleStyle>
+      {leftComponent}
       <OverlayTitleTextStyle>
         {title}
       </OverlayTitleTextStyle>
@@ -39,11 +37,11 @@ const OverlayTitleStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  line-height: ${props => props.backFun ? "0": "inherit"};
   font-size: 22px;
   color: var(--text-primary);
   font-weight: bold;
   margin-bottom: 30px;
+  z-index: 100;
 `;
 
 export default OverlayTitle;
